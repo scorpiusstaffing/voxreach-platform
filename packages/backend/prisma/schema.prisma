@@ -97,8 +97,8 @@ model Call {
   phoneNumber      PhoneNumber? @relation(fields: [phoneNumberId], references: [id], onDelete: SetNull)
   campaignId       String?
   campaign         Campaign? @relation(fields: [campaignId], references: [id], onDelete: SetNull)
-  leadId           String?
-  lead             Lead?    @relation(fields: [leadId], references: [id], onDelete: SetNull)
+  leadId           String?  @unique
+  lead             Lead?
   vapiCallId       String?  @unique
   direction        String   // inbound, outbound
   status           String   @default("queued") // queued, ringing, in_progress, completed, failed, no_answer, busy, canceled
@@ -155,7 +155,7 @@ model Lead {
   email          String?
   company        String?
   status         String   @default("pending") // pending, called, succeeded, failed, skipped
-  callId         String?
+  callId         String?  @unique
   call           Call?    @relation(fields: [callId], references: [id], onDelete: SetNull)
   metadata       Json?
   createdAt      DateTime @default(now())
