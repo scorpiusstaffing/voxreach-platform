@@ -159,7 +159,7 @@ router.get('/:id/transcript', async (req: AuthRequest, res: Response) => {
     // Otherwise try to fetch from Vapi
     if (call.vapiCallId) {
       try {
-        const vapiCall = await vapi.getCall(call.vapiCallId);
+        const vapiCall: any = await vapi.getCall(call.vapiCallId);
         if (vapiCall.transcript || vapiCall.artifact?.transcript) {
           const transcript = vapiCall.transcript || vapiCall.artifact?.transcript;
           // Cache it locally

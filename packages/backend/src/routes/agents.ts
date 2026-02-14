@@ -360,7 +360,7 @@ router.post('/:id/test-call', async (req: AuthRequest, res: Response) => {
       return res.status(400).json({ success: false, error: 'No phone number available. Provision one first.' });
     }
 
-    const vapiCall = await vapi.createOutboundCall({
+    const vapiCall: any = await vapi.createOutboundCall({
       assistantId: agent.vapiAssistantId,
       phoneNumberId: fromNumber.vapiPhoneNumberId,
       customerNumber: phoneNumber,
