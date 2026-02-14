@@ -9,19 +9,29 @@ router.post('/vapi', async (req: Request, res: Response) => {
     const event = req.body;
     const { message } = event;
 
+    // Vapi sends different payload shapes depending on the event
     if (!message) {
+      console.log('Webhook: no message in payload, keys:', Object.keys(event));
       return res.status(200).json({ ok: true });
     }
 
     const callId = message.call?.id;
     if (!callId) {
+      console.log('Webhook: no call ID, message type:', message.type);
       return res.status(200).json({ ok: true });
     }
 
+    console.log(`Webhook: ${message.type} for call ${callId}`);
+
     // Find the call in our DB
-    const call = await prisma.call.findFirst({
+    let call = await prisma.call.findFirst({
       where: { vapiCallId: callId },
     });
+
+    // If call not found, try to create it from webhook data (inbound calls)
+    if (!call && message.type === 'status-update' && message.call) {
+      call = await handleNewInboundCall(message.call);
+    }
 
     if (!call) {
       console.warn(`Webhook: call not found for vapiCallId ${callId}`);
@@ -45,7 +55,7 @@ router.post('/vapi', async (req: Request, res: Response) => {
 
       case 'end-of-call-report': {
         const endedAt = new Date();
-        const durationSeconds = message.durationSeconds || (call.startedAt
+        const durationSeconds = message.durationSeconds || message.duration || (call.startedAt
           ? Math.round((endedAt.getTime() - new Date(call.startedAt).getTime()) / 1000)
           : 0);
 
@@ -55,41 +65,54 @@ router.post('/vapi', async (req: Request, res: Response) => {
             status: 'completed',
             endedAt,
             durationSeconds,
-            transcript: message.transcript || null,
-            recordingUrl: message.recordingUrl || null,
-            summary: message.summary || null,
+            transcript: message.transcript || message.artifact?.transcript || null,
+            recordingUrl: message.recordingUrl || message.artifact?.recordingUrl || null,
+            summary: message.summary || message.analysis?.summary || null,
             costCents: message.cost ? Math.round(message.cost * 100) : null,
+            outcome: message.analysis?.successEvaluation || message.endedReason || null,
           },
         });
 
         // Update campaign stats if applicable
         if (call.campaignId) {
+          const isSuccess = message.endedReason !== 'customer-did-not-answer' &&
+                           message.endedReason !== 'voicemail' &&
+                           durationSeconds > 10;
+
           await prisma.campaign.update({
             where: { id: call.campaignId },
-            data: { successfulCalls: { increment: 1 } },
+            data: isSuccess
+              ? { successfulCalls: { increment: 1 } }
+              : { failedCalls: { increment: 1 } },
           });
         }
 
         // Update lead status
         if (call.leadId) {
+          const durationOk = durationSeconds > 10;
           await prisma.lead.update({
             where: { id: call.leadId },
-            data: { status: 'succeeded' },
+            data: { status: durationOk ? 'succeeded' : 'failed' },
           });
         }
         break;
       }
 
       case 'hang': {
+        const reason = message.reason || 'unknown';
+        const noAnswer = ['customer-did-not-answer', 'no-answer', 'busy'].includes(reason);
+        const isVoicemail = reason === 'voicemail';
+
         await prisma.call.update({
           where: { id: call.id },
           data: {
-            status: message.reason === 'customer-did-not-answer' ? 'no_answer' : 'completed',
+            status: noAnswer ? 'no_answer' : isVoicemail ? 'completed' : 'completed',
             endedAt: new Date(),
+            outcome: reason,
           },
         });
 
-        if (call.campaignId && message.reason === 'customer-did-not-answer') {
+        if (call.campaignId && (noAnswer || isVoicemail)) {
           await prisma.campaign.update({
             where: { id: call.campaignId },
             data: { failedCalls: { increment: 1 } },
@@ -98,8 +121,38 @@ router.post('/vapi', async (req: Request, res: Response) => {
         break;
       }
 
+      case 'speech-update':
+      case 'transcript':
+      case 'conversation-update':
+        // Real-time events — could be used for live monitoring
+        // For now, just acknowledge
+        break;
+
+      case 'tool-calls':
+        // Agent is calling a tool (e.g., booking, CRM lookup)
+        // Handle custom tool calls here
+        console.log('Webhook: tool call:', JSON.stringify(message.toolCalls || message.toolCallList, null, 2));
+        break;
+
+      case 'transfer-destination-request':
+        // Agent wants to transfer — respond with destination
+        console.log('Webhook: transfer request for call', callId);
+        // Default: return the agent's transfer number
+        if (call.agentId) {
+          const agent = await prisma.agent.findUnique({ where: { id: call.agentId } });
+          if (agent?.transferNumber) {
+            return res.status(200).json({
+              destination: {
+                type: 'number',
+                number: agent.transferNumber,
+                message: 'Transferring you now.',
+              },
+            });
+          }
+        }
+        break;
+
       default:
-        // Log unknown events but don't fail
         console.log(`Webhook: unhandled event type: ${type}`);
     }
 
@@ -110,6 +163,42 @@ router.post('/vapi', async (req: Request, res: Response) => {
     res.status(200).json({ ok: true });
   }
 });
+
+// Handle inbound calls that we haven't seen before
+async function handleNewInboundCall(vapiCall: any) {
+  try {
+    // Find the phone number this call came in on
+    const phoneNumberId = vapiCall.phoneNumberId;
+    if (!phoneNumberId) return null;
+
+    const phoneNumber = await prisma.phoneNumber.findFirst({
+      where: { vapiPhoneNumberId: phoneNumberId },
+      include: { assignedAgent: true },
+    });
+
+    if (!phoneNumber) return null;
+
+    // Create the call record
+    const call = await prisma.call.create({
+      data: {
+        organizationId: phoneNumber.organizationId,
+        agentId: phoneNumber.assignedAgentId,
+        phoneNumberId: phoneNumber.id,
+        vapiCallId: vapiCall.id,
+        direction: 'inbound',
+        status: 'ringing',
+        fromNumber: vapiCall.customer?.number || 'unknown',
+        toNumber: phoneNumber.number,
+      },
+    });
+
+    console.log(`Webhook: created inbound call record ${call.id} for vapiCall ${vapiCall.id}`);
+    return call;
+  } catch (err) {
+    console.error('Failed to create inbound call record:', err);
+    return null;
+  }
+}
 
 function mapVapiStatus(vapiStatus: string): string {
   const map: Record<string, string> = {
