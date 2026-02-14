@@ -1,0 +1,167 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ==========================================
+// Core Models
+// ==========================================
+
+model User {
+  id             String   @id @default(uuid())
+  email          String   @unique
+  passwordHash   String
+  name           String
+  role           String   @default("owner") // owner, admin, member
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([organizationId])
+  @@index([email])
+}
+
+model Organization {
+  id                   String   @id @default(uuid())
+  name                 String
+  intent               String   // inbound, outbound
+  plan                 String   @default("free") // free, starter, professional, enterprise
+  stripeCustomerId     String?  @unique
+  stripeSubscriptionId String?
+  users                User[]
+  agents               Agent[]
+  phoneNumbers         PhoneNumber[]
+  calls                Call[]
+  campaigns            Campaign[]
+  leads                Lead[]
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+}
+
+model Agent {
+  id               String   @id @default(uuid())
+  organizationId   String
+  organization     Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  name             String
+  vapiAssistantId  String?
+  direction        String   // inbound, outbound
+  voiceProvider    String   @default("11labs")
+  voiceId          String   @default("rachel")
+  systemPrompt     String   @db.Text
+  firstMessage     String   @default("Hello, how can I help you today?")
+  language         String   @default("en")
+  transferNumber   String?
+  endCallPhrases   String[] @default([])
+  isActive         Boolean  @default(true)
+  phoneNumbers     PhoneNumber[]
+  calls            Call[]
+  campaigns        Campaign[]
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([organizationId])
+}
+
+model PhoneNumber {
+  id                String   @id @default(uuid())
+  organizationId    String
+  organization      Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  number            String   @unique
+  type              String   @default("local") // local, toll_free, mobile, sip
+  provider          String   @default("vapi") // vapi, twilio, byo
+  vapiPhoneNumberId String?  @unique
+  assignedAgentId   String?
+  assignedAgent     Agent?   @relation(fields: [assignedAgentId], references: [id], onDelete: SetNull)
+  friendlyName      String?
+  country           String   @default("US")
+  isActive          Boolean  @default(true)
+  calls             Call[]
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([organizationId])
+}
+
+model Call {
+  id               String   @id @default(uuid())
+  organizationId   String
+  organization     Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  agentId          String?
+  agent            Agent?   @relation(fields: [agentId], references: [id], onDelete: SetNull)
+  phoneNumberId    String?
+  phoneNumber      PhoneNumber? @relation(fields: [phoneNumberId], references: [id], onDelete: SetNull)
+  campaignId       String?
+  campaign         Campaign? @relation(fields: [campaignId], references: [id], onDelete: SetNull)
+  leadId           String?
+  lead             Lead?    @relation(fields: [leadId], references: [id], onDelete: SetNull)
+  vapiCallId       String?  @unique
+  direction        String   // inbound, outbound
+  status           String   @default("queued") // queued, ringing, in_progress, completed, failed, no_answer, busy, canceled
+  fromNumber       String
+  toNumber         String
+  startedAt        DateTime?
+  endedAt          DateTime?
+  durationSeconds  Int?
+  transcript       String?  @db.Text
+  recordingUrl     String?
+  summary          String?  @db.Text
+  outcome          String?
+  costCents        Int?
+  metadata         Json?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([organizationId])
+  @@index([agentId])
+  @@index([campaignId])
+  @@index([vapiCallId])
+  @@index([status])
+}
+
+model Campaign {
+  id              String   @id @default(uuid())
+  organizationId  String
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  name            String
+  agentId         String
+  agent           Agent    @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  status          String   @default("draft") // draft, active, paused, completed, archived
+  totalLeads      Int      @default(0)
+  calledLeads     Int      @default(0)
+  successfulCalls Int      @default(0)
+  failedCalls     Int      @default(0)
+  leads           Lead[]
+  calls           Call[]
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([organizationId])
+  @@index([status])
+}
+
+model Lead {
+  id             String   @id @default(uuid())
+  campaignId     String
+  campaign       Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  name           String
+  phone          String
+  email          String?
+  company        String?
+  status         String   @default("pending") // pending, called, succeeded, failed, skipped
+  callId         String?
+  call           Call?    @relation(fields: [callId], references: [id], onDelete: SetNull)
+  metadata       Json?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([campaignId])
+  @@index([organizationId])
+  @@index([status])
+}
