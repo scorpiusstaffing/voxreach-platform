@@ -63,8 +63,8 @@ router.post('/signup', async (req: Request, res: Response) => {
 
     const token = jwt.sign(
       { userId: result.user.id, organizationId: result.org.id },
-      config.jwtSecret,
-      { expiresIn: config.jwtExpiresIn }
+      config.jwtSecret as jwt.Secret,
+      { expiresIn: config.jwtExpiresIn as string }
     );
 
     res.status(201).json({
@@ -101,8 +101,8 @@ router.post('/login', async (req: Request, res: Response) => {
 
     const token = jwt.sign(
       { userId: user.id, organizationId: user.organizationId },
-      config.jwtSecret,
-      { expiresIn: config.jwtExpiresIn }
+      config.jwtSecret as jwt.Secret,
+      { expiresIn: config.jwtExpiresIn as string }
     );
 
     res.json({

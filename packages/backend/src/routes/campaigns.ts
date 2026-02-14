@@ -135,7 +135,7 @@ router.post('/:id/start', async (req: AuthRequest, res: Response) => {
     const results = [];
     for (const lead of leads) {
       try {
-        const vapiCall = await vapi.createOutboundCall({
+        const vapiCall: any = await vapi.createOutboundCall({
           assistantId: campaign.agent.vapiAssistantId!,
           phoneNumberId: phoneNumber.vapiPhoneNumberId!,
           customerNumber: lead.phone,
