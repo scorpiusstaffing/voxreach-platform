@@ -577,7 +577,7 @@ function EditAgentModal({ agent, onClose, onUpdated }: { agent: Agent; onClose: 
       if (form.analysisEnabled) {
         payload.analysisPlan = { ...(form.analysisSummaryPrompt && { summaryPrompt: form.analysisSummaryPrompt }), ...(form.analysisSuccessEvaluation && { successEvaluation: form.analysisSuccessEvaluation }) };
       }
-      await api.patch(\`/agents/\${agent.id}\`, payload);
+      await api.patch(`/agents/\${agent.id}`, payload);
       onUpdated();
     } catch (err: any) {
       setError(err.message);
@@ -619,7 +619,7 @@ function EditAgentModal({ agent, onClose, onUpdated }: { agent: Agent; onClose: 
 
           <div className="bg-[#161B22] rounded-xl p-4 space-y-3 border border-[#21262D]">
             <div className="flex items-center gap-2 text-sm font-medium text-[#E5E7EB]"><Brain className="w-4 h-4 text-cyan-400" /> AI Model</div>
-            <div className="grid grid-cols-1 gap-2">{modelOptions.map((m) => (<label key={\`\${m.provider}/\${m.model}\`} className={\`flex items-center gap-3 p-3 border rounded-lg cursor-pointer transition-colors \${form.modelProvider === m.provider && form.modelName === m.model ? 'border-cyan-500 bg-cyan-500/10' : 'border-[#21262D] hover:border-[#6B7280]'}\`}><input type="radio" name="model" checked={form.modelProvider === m.provider && form.modelName === m.model} onChange={() => { update('modelProvider', m.provider); update('modelName', m.model); }} className="accent-cyan-500" /><div><span className="text-sm font-medium text-white">{m.name}</span><span className="text-xs text-[#6B7280] ml-2">{m.description}</span></div></label>))}</div>
+            <div className="grid grid-cols-1 gap-2">{modelOptions.map((m) => (<label key={`\${m.provider}/\${m.model}`} className={`flex items-center gap-3 p-3 border rounded-lg cursor-pointer transition-colors \${form.modelProvider === m.provider && form.modelName === m.model ? 'border-cyan-500 bg-cyan-500/10' : 'border-[#21262D] hover:border-[#6B7280]'}`}><input type="radio" name="model" checked={form.modelProvider === m.provider && form.modelName === m.model} onChange={() => { update('modelProvider', m.provider); update('modelName', m.model); }} className="accent-cyan-500" /><div><span className="text-sm font-medium text-white">{m.name}</span><span className="text-xs text-[#6B7280] ml-2">{m.description}</span></div></label>))}</div>
           </div>
 
           {orgTools.length > 0 && (
@@ -640,7 +640,7 @@ function EditAgentModal({ agent, onClose, onUpdated }: { agent: Agent; onClose: 
             )}
           </div>
 
-          <button type="button" onClick={() => setShowAdvanced(!showAdvanced)} className="flex items-center gap-2 text-sm text-[#6B7280] hover:text-[#E5E7EB] transition-colors"><ChevronDown className={\`w-4 h-4 transition-transform \${showAdvanced ? 'rotate-180' : ''}\`} /> Advanced</button>
+          <button type="button" onClick={() => setShowAdvanced(!showAdvanced)} className="flex items-center gap-2 text-sm text-[#6B7280] hover:text-[#E5E7EB] transition-colors"><ChevronDown className={`w-4 h-4 transition-transform \${showAdvanced ? 'rotate-180' : ''}`} /> Advanced</button>
 
           {showAdvanced && (
             <div className="space-y-4 pt-2 border-t border-[#21262D]">
@@ -676,7 +676,7 @@ function TestCallModal({ agent, onClose }: { agent: Agent; onClose: () => void }
     setLoading(true);
     setError('');
     try {
-      const res = await api.post(\`/agents/\${agent.id}/test-call\`, { phoneNumber });
+      const res = await api.post(`/agents/\${agent.id}/test-call`, { phoneNumber });
       setResult(res.data);
     } catch (err: any) {
       setError(err.message);

@@ -140,13 +140,13 @@ export default function PhoneNumbers() {
 
   const getProviderBadgeColor = (provider: string) => {
     switch (provider) {
-      case 'twilio': return 'bg-blue-500/10 text-blue-400 border-blue-500/20';
-      case 'vonage': return 'bg-purple-500/10 text-purple-400 border-purple-500/20';
-      case 'telnyx': return 'bg-green-500/10 text-green-400 border-green-500/20';
+      case 'twilio': return 'bg-blue-50 text-blue-700';
+      case 'vonage': return 'bg-purple-50 text-purple-700';
+      case 'telnyx': return 'bg-green-50 text-green-700';
       case 'byo-phone-number':
-      case 'byo-sip-trunk': return 'bg-orange-500/10 text-orange-400 border-orange-500/20';
-      case 'vapi': return 'bg-[#161B22] text-[#9CA3AF] border-[#21262D]';
-      default: return 'bg-[#161B22] text-[#9CA3AF] border-[#21262D]';
+      case 'byo-sip-trunk': return 'bg-orange-50 text-orange-700';
+      case 'vapi': return 'bg-[#21262D] text-[#9CA3AF]';
+      default: return 'bg-[#21262D] text-[#9CA3AF]';
     }
   };
 
@@ -154,7 +154,7 @@ export default function PhoneNumbers() {
 
   return (
     <div className="p-8 max-w-5xl">
-      <Link to="/dashboard" className="flex items-center gap-1 text-sm text-[#6B7280] hover:text-white mb-4 transition-colors">
+      <Link to="/dashboard" className="flex items-center gap-1 text-sm text-[#6B7280] hover:text-[#9CA3AF] mb-4">
         <ArrowLeft className="w-4 h-4" /> Dashboard
       </Link>
 
@@ -162,7 +162,7 @@ export default function PhoneNumbers() {
         <h1 className="text-2xl font-semibold text-white">Phone Numbers</h1>
         <button
           onClick={() => setShowAddModal(true)}
-          className="flex items-center gap-2 btn-cyan px-5 py-2.5"
+          className="flex items-center gap-2 bg-cyan-500 text-white px-5 py-2.5 rounded-lg font-medium hover:bg-cyan-400"
         >
           <Plus className="w-4 h-4" /> Add Phone Number
         </button>
@@ -179,12 +179,12 @@ export default function PhoneNumbers() {
         </div>
       ) : numbers.length === 0 ? (
         <div className="bg-[#161B22] rounded-xl border border-[#21262D] p-12 text-center">
-          <Phone className="w-12 h-12 text-[#6B7280] mx-auto mb-4" />
+          <Phone className="w-12 h-12 text-gray-300 mx-auto mb-4" />
           <h3 className="text-lg font-medium text-white mb-2">No phone numbers yet</h3>
-          <p className="text-[#9CA3AF] mb-6">Add a phone number from your preferred provider.</p>
+          <p className="text-[#6B7280] mb-6">Add a phone number from your preferred provider.</p>
           <button 
             onClick={() => setShowAddModal(true)} 
-            className="btn-cyan px-6 py-2.5"
+            className="bg-cyan-500 text-white px-6 py-2.5 rounded-lg font-medium hover:bg-cyan-400"
           >
             Add Phone Number
           </button>
@@ -192,28 +192,28 @@ export default function PhoneNumbers() {
       ) : (
         <div className="space-y-4">
           {numbers.map((num) => (
-            <div key={num.id} className="bg-[#161B22] rounded-xl border border-[#21262D] p-6 card-glow">
+            <div key={num.id} className="bg-[#161B22] rounded-xl border border-[#21262D] p-6 hover:shadow-sm transition-shadow">
               <div className="flex items-start justify-between">
                 <div>
                   <div className="flex items-center gap-3">
                     <h3 className="font-semibold text-white font-mono text-lg">{num.number}</h3>
                     <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
-                      num.isActive ? 'badge-success-dark' : 'badge-neutral-dark'
+                      num.isActive ? 'bg-green-50 text-green-700' : 'bg-[#21262D] text-[#6B7280]'
                     }`}>
                       {num.isActive ? 'Active' : 'Inactive'}
                     </span>
-                    <span className={`text-xs font-medium px-2 py-0.5 rounded-full border ${getProviderBadgeColor(num.provider)}`}>
+                    <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${getProviderBadgeColor(num.provider)}`}>
                       {num.provider === 'byo-phone-number' ? 'BYO SIP' : num.provider}
                     </span>
                   </div>
                   {num.friendlyName && (
-                    <div className="text-sm text-[#9CA3AF] mt-1">{num.friendlyName}</div>
+                    <div className="text-sm text-[#6B7280] mt-1">{num.friendlyName}</div>
                   )}
                   <div className="text-sm text-[#6B7280] mt-1">
                     {num.assignedAgent ? (
                       <span className="text-cyan-400 font-medium">→ {num.assignedAgent.name}</span>
                     ) : (
-                      <span className="text-yellow-400">No agent assigned</span>
+                      <span className="text-yellow-600">No agent assigned</span>
                     )}
                     {' · '}{num.type} · {num.country}
                   </div>
@@ -221,14 +221,14 @@ export default function PhoneNumbers() {
                 <div className="flex gap-1.5">
                   <button
                     onClick={() => setEditNumber(num)}
-                    className="p-2 text-[#6B7280] hover:text-white hover:bg-[#21262D] rounded-lg transition-colors"
+                    className="p-2 text-[#6B7280] hover:text-[#9CA3AF] hover:bg-[#0A0E17] rounded-lg"
                     title="Configure"
                   >
                     <Settings className="w-4 h-4" />
                   </button>
                   <button
                     onClick={() => deleteNumber(num)}
-                    className="p-2 text-[#6B7280] hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+                    className="p-2 text-[#6B7280] hover:text-red-600 hover:bg-red-50 rounded-lg"
                     title="Delete"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -261,3 +261,542 @@ export default function PhoneNumbers() {
     </div>
   );
 }
+
+// Add Number Modal with multi-step flow
+function AddNumberModal({ 
+  agents, 
+  credentials, 
+  onClose, 
+  onCreated, 
+  onCredentialsChanged 
+}: { 
+  agents: Agent[]; 
+  credentials: Credential[];
+  onClose: () => void; 
+  onCreated: () => void;
+  onCredentialsChanged: () => void;
+}) {
+  const [step, setStep] = useState<'provider' | 'credentials' | 'details'>('provider');
+  const [selectedProvider, setSelectedProvider] = useState<ProviderType | null>(null);
+  const [selectedCredential, setSelectedCredential] = useState<string>('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  // Form state
+  const [formData, setFormData] = useState({
+    number: '',
+    sipUri: '',
+    friendlyName: '',
+    assignedAgentId: '',
+    twilioAccountSid: '',
+    twilioAuthToken: '',
+    vonageApiKey: '',
+    vonageApiSecret: '',
+    telnyxApiKey: '',
+    gatewayIp: '',
+    gatewayPort: '5060',
+    authUsername: '',
+    authPassword: '',
+  });
+
+  const provider = PROVIDERS.find(p => p.id === selectedProvider);
+
+  const handleProviderSelect = (providerId: ProviderType) => {
+    setSelectedProvider(providerId);
+    const p = PROVIDERS.find(p => p.id === providerId);
+    if (p?.requiresCredential) {
+      const existingCreds = credentials.filter(c => c.provider === providerId);
+      if (existingCreds.length > 0) {
+        setSelectedCredential(existingCreds[0].id);
+      }
+      setStep('credentials');
+    } else {
+      setStep('details');
+    }
+  };
+
+  const handleCreateCredential = async () => {
+    setLoading(true);
+    setError('');
+    try {
+      let payload: any = { provider: selectedProvider };
+      
+      if (selectedProvider === 'vonage') {
+        payload.vonageApiKey = formData.vonageApiKey;
+        payload.vonageApiSecret = formData.vonageApiSecret;
+        payload.name = `Vonage - ${formData.vonageApiKey.slice(0, 8)}...`;
+      } else if (selectedProvider === 'telnyx') {
+        payload.telnyxApiKey = formData.telnyxApiKey;
+        payload.name = `Telnyx - ${formData.telnyxApiKey.slice(0, 8)}...`;
+      } else if (selectedProvider === 'byo-sip-trunk') {
+        payload.gateways = [{
+          ip: formData.gatewayIp,
+          port: parseInt(formData.gatewayPort) || 5060,
+        }];
+        if (formData.authUsername) {
+          payload.outboundAuthenticationPlan = {
+            authUsername: formData.authUsername,
+            authPassword: formData.authPassword,
+          };
+        }
+        payload.name = `BYO SIP - ${formData.gatewayIp}`;
+      }
+
+      const res = await api.post('/credentials', payload);
+      setSelectedCredential(res.data.id);
+      onCredentialsChanged();
+      setStep('details');
+    } catch (err: any) {
+      setError(err.message || 'Failed to create credential');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSubmit = async () => {
+    setLoading(true);
+    setError('');
+    try {
+      let payload: any = {
+        provider: selectedProvider,
+        friendlyName: formData.friendlyName || undefined,
+        assignedAgentId: formData.assignedAgentId || undefined,
+      };
+
+      if (selectedProvider === 'vapi') {
+        // Vapi numbers are auto-generated
+      } else if (selectedProvider === 'twilio') {
+        payload.number = formData.number;
+        payload.twilioAccountSid = formData.twilioAccountSid;
+        payload.twilioAuthToken = formData.twilioAuthToken;
+      } else if (selectedProvider === 'byo-sip-trunk') {
+        payload.provider = 'byo-phone-number';
+        payload.credentialId = selectedCredential;
+        if (formData.sipUri) {
+          payload.sipUri = formData.sipUri;
+        } else {
+          payload.number = formData.number;
+        }
+        payload.numberE164CheckEnabled = true;
+      } else {
+        payload.credentialId = selectedCredential;
+        payload.number = formData.number;
+      }
+
+      await api.post('/phone-numbers', payload);
+      onCreated();
+    } catch (err: any) {
+      setError(err.message || 'Failed to create phone number');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const filteredCredentials = credentials.filter(c => c.provider === selectedProvider);
+
+  return (
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={onClose}>
+      <div className="bg-[#161B22] rounded-2xl w-full max-w-lg max-h-[85vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+        <div className="sticky top-0 bg-[#161B22] p-6 border-b border-gray-100 flex items-center justify-between z-10">
+          <div>
+            <h2 className="text-lg font-semibold text-white">
+              {step === 'provider' && 'Add Phone Number'}
+              {step === 'credentials' && 'Provider Credentials'}
+              {step === 'details' && 'Number Details'}
+            </h2>
+            <p className="text-sm text-[#6B7280] mt-0.5">
+              {step === 'provider' && 'Choose your phone number provider'}
+              {step === 'credentials' && `${provider?.name} authentication`}
+              {step === 'details' && 'Configure your phone number'}
+            </p>
+          </div>
+          <button onClick={onClose} className="p-2 text-[#6B7280] hover:text-[#9CA3AF]"><X className="w-5 h-5" /></button>
+        </div>
+
+        <div className="p-6">
+          {error && (
+            <div className="bg-red-50 text-red-700 text-sm rounded-lg px-4 py-3 mb-4 flex items-start gap-2">
+              <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
+              {error}
+            </div>
+          )}
+
+          {step === 'provider' && (
+            <div className="space-y-3">
+              {PROVIDERS.map((p) => (
+                <button
+                  key={p.id}
+                  onClick={() => handleProviderSelect(p.id)}
+                  className="w-full flex items-center gap-4 p-4 border border-[#21262D] rounded-xl hover:border-brand-300 hover:bg-cyan-500/10/30 transition-colors text-left"
+                >
+                  <div className="p-3 bg-[#21262D] rounded-lg text-[#9CA3AF]">
+                    {p.icon}
+                  </div>
+                  <div className="flex-1">
+                    <div className="font-medium text-white">{p.name}</div>
+                    <div className="text-sm text-[#6B7280]">{p.description}</div>
+                  </div>
+                  <ChevronRight className="w-5 h-5 text-[#6B7280]" />
+                </button>
+              ))}
+            </div>
+          )}
+
+          {step === 'credentials' && provider && (
+            <div className="space-y-4">
+              {filteredCredentials.length > 0 && (
+                <div>
+                  <label className="block text-sm font-medium text-[#E5E7EB] mb-2">
+                    Use existing credential
+                  </label>
+                  <select
+                    value={selectedCredential}
+                    onChange={(e) => setSelectedCredential(e.target.value)}
+                    className="w-full px-4 py-2.5 border border-[#21262D] rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
+                  >
+                    <option value="">Create new credential...</option>
+                    {filteredCredentials.map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.name || `${c.provider} credential`}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              {(!selectedCredential || filteredCredentials.length === 0) && (
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2 text-sm text-[#9CA3AF]">
+                    <Key className="w-4 h-4" />
+                    <span>Enter your {provider.name} credentials</span>
+                  </div>
+
+                  {selectedProvider === 'vonage' && (
+                    <>
+                      <div>
+                        <label className="block text-sm font-medium text-[#E5E7EB] mb-1.5">API Key</label>
+                        <input
+                          type="text"
+                          value={formData.vonageApiKey}
+                          onChange={(e) => setFormData(d => ({ ...d, vonageApiKey: e.target.value }))}
+                          className="w-full px-4 py-2.5 border border-[#21262D] rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
+                          placeholder="Your Vonage API Key"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-[#E5E7EB] mb-1.5">API Secret</label>
+                        <input
+                          type="password"
+                          value={formData.vonageApiSecret}
+                          onChange={(e) => setFormData(d => ({ ...d, vonageApiSecret: e.target.value }))}
+                          className="w-full px-4 py-2.5 border border-[#21262D] rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
+                          placeholder="Your Vonage API Secret"
+                        />
+                      </div>
+                    </>
+                  )}
+
+                  {selectedProvider === 'telnyx' && (
+                    <div>
+                      <label className="block text-sm font-medium text-[#E5E7EB] mb-1.5">API Key</label>
+                      <input
+                        type="password"
+                        value={formData.telnyxApiKey}
+                        onChange={(e) => setFormData(d => ({ ...d, telnyxApiKey: e.target.value }))}
+                        className="w-full px-4 py-2.5 border border-[#21262D] rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
+                        placeholder="Your Telnyx API Key"
+                      />
+                    </div>
+                  )}
+
+                  {selectedProvider === 'byo-sip-trunk' && (
+                    <>
+                      <div>
+                        <label className="block text-sm font-medium text-[#E5E7EB] mb-1.5">Gateway IP Address</label>
+                        <input
+                          type="text"
+                          value={formData.gatewayIp}
+                          onChange={(e) => setFormData(d => ({ ...d, gatewayIp: e.target.value }))}
+                          className="w-full px-4 py-2.5 border border-[#21262D] rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
+                          placeholder="e.g., 192.168.1.1 or sip.example.com"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-[#E5E7EB] mb-1.5">Gateway Port (optional)</label>
+                        <input
+                          type="text"
+                          value={formData.gatewayPort}
+                          onChange={(e) => setFormData(d => ({ ...d, gatewayPort: e.target.value }))}
+                          className="w-full px-4 py-2.5 border border-[#21262D] rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
+                          placeholder="5060"
+                        />
+                      </div>
+                      <div className="border-t border-[#21262D] pt-4 mt-4">
+                        <div className="text-sm font-medium text-[#E5E7EB] mb-3">Authentication (optional)</div>
+                        <div className="grid grid-cols-2 gap-3">
+                          <div>
+                            <label className="block text-xs font-medium text-[#9CA3AF] mb-1.5">Username</label>
+                            <input
+                              type="text"
+                              value={formData.authUsername}
+                              onChange={(e) => setFormData(d => ({ ...d, authUsername: e.target.value }))}
+                              className="w-full px-3 py-2 border border-[#21262D] rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-medium text-[#9CA3AF] mb-1.5">Password</label>
+                            <input
+                              type="password"
+                              value={formData.authPassword}
+                              onChange={(e) => setFormData(d => ({ ...d, authPassword: e.target.value }))}
+                              className="w-full px-3 py-2 border border-[#21262D] rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </>
+                  )}
+
+                  <div className="flex gap-3 pt-4">
+                    <button 
+                      onClick={() => setStep('provider')} 
+                      className="flex-1 py-2.5 border border-[#21262D] rounded-lg font-medium text-[#E5E7EB] hover:bg-[#0A0E17]"
+                    >
+                      Back
+                    </button>
+                    <button
+                      onClick={handleCreateCredential}
+                      disabled={loading || (
+                        selectedProvider === 'vonage' 
+                          ? !formData.vonageApiKey || !formData.vonageApiSecret
+                          : selectedProvider === 'telnyx'
+                          ? !formData.telnyxApiKey
+                          : !formData.gatewayIp
+                      )}
+                      className="flex-1 py-2.5 bg-cyan-500 text-white rounded-lg font-medium hover:bg-cyan-400 disabled:opacity-50 flex items-center justify-center gap-2"
+                    >
+                      {loading && <Loader2 className="w-4 h-4 animate-spin" />}
+                      Continue
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {selectedCredential && (
+                <div className="flex gap-3 pt-4">
+                  <button 
+                    onClick={() => setStep('provider')} 
+                    className="flex-1 py-2.5 border border-[#21262D] rounded-lg font-medium text-[#E5E7EB] hover:bg-[#0A0E17]"
+                  >
+                    Back
+                  </button>
+                  <button
+                    onClick={() => setStep('details')}
+                    className="flex-1 py-2.5 bg-cyan-500 text-white rounded-lg font-medium hover:bg-cyan-400"
+                  >
+                    Continue
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+
+          {step === 'details' && (
+            <div className="space-y-5">
+              {selectedProvider !== 'vapi' && (
+                <div>
+                  <label className="block text-sm font-medium text-[#E5E7EB] mb-1.5">
+                    {selectedProvider === 'byo-sip-trunk' ? 'Phone Number or SIP URI' : 'Phone Number'}
+                  </label>
+                  <input
+                    type="text"
+                    value={selectedProvider === 'byo-sip-trunk' ? (formData.number || formData.sipUri) : formData.number}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (selectedProvider === 'byo-sip-trunk' && value.startsWith('sip:')) {
+                        setFormData(d => ({ ...d, sipUri: value, number: '' }));
+                      } else {
+                        setFormData(d => ({ ...d, number: value, sipUri: '' }));
+                      }
+                    }}
+                    className="w-full px-4 py-2.5 border border-[#21262D] rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
+                    placeholder={selectedProvider === 'byo-sip-trunk' ? '+1234567890 or sip:user@example.com' : '+1234567890'}
+                  />
+                  <p className="text-xs text-[#6B7280] mt-1">
+                    {selectedProvider === 'byo-sip-trunk' 
+                      ? 'Enter E.164 format number or SIP URI (sip:user@domain.com)'
+                      : 'Enter the phone number in E.164 format (e.g., +1234567890)'}
+                  </p>
+                </div>
+              )}
+
+              {selectedProvider === 'twilio' && (
+                <>
+                  <div>
+                    <label className="block text-sm font-medium text-[#E5E7EB] mb-1.5">Account SID</label>
+                    <input
+                      type="text"
+                      value={formData.twilioAccountSid}
+                      onChange={(e) => setFormData(d => ({ ...d, twilioAccountSid: e.target.value }))}
+                      className="w-full px-4 py-2.5 border border-[#21262D] rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
+                      placeholder="AC..."
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-[#E5E7EB] mb-1.5">Auth Token</label>
+                    <input
+                      type="password"
+                      value={formData.twilioAuthToken}
+                      onChange={(e) => setFormData(d => ({ ...d, twilioAuthToken: e.target.value }))}
+                      className="w-full px-4 py-2.5 border border-[#21262D] rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
+                    />
+                  </div>
+                </>
+              )}
+
+              <div>
+                <label className="block text-sm font-medium text-[#E5E7EB] mb-1.5">Friendly Name (optional)</label>
+                <input
+                  type="text"
+                  value={formData.friendlyName}
+                  onChange={(e) => setFormData(d => ({ ...d, friendlyName: e.target.value }))}
+                  className="w-full px-4 py-2.5 border border-[#21262D] rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
+                  placeholder="e.g., Main Line, Sales Number"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-[#E5E7EB] mb-1.5">Assign to Agent (optional)</label>
+                <select
+                  value={formData.assignedAgentId}
+                  onChange={(e) => setFormData(d => ({ ...d, assignedAgentId: e.target.value }))}
+                  className="w-full px-4 py-2.5 border border-[#21262D] rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
+                >
+                  <option value="">Assign later</option>
+                  {agents.map((a) => (
+                    <option key={a.id} value={a.id}>{a.name}</option>
+                  ))}
+                </select>
+              </div>
+
+              {selectedProvider === 'vapi' && (
+                <div className="bg-blue-50 rounded-lg p-4 text-sm text-blue-700">
+                  This provisions a free US number through Vapi for testing purposes.
+                </div>
+              )}
+
+              <div className="flex gap-3 pt-2">
+                <button 
+                  onClick={() => selectedProvider === 'vapi' ? setStep('provider') : setStep('credentials')} 
+                  className="flex-1 py-2.5 border border-[#21262D] rounded-lg font-medium text-[#E5E7EB] hover:bg-[#0A0E17]"
+                >
+                  Back
+                </button>
+                <button
+                  onClick={handleSubmit}
+                  disabled={loading || (
+                    selectedProvider === 'vapi' 
+                      ? false 
+                      : selectedProvider === 'twilio'
+                      ? !formData.number || !formData.twilioAccountSid || !formData.twilioAuthToken
+                      : !formData.number && !formData.sipUri
+                  )}
+                  className="flex-1 py-2.5 bg-cyan-500 text-white rounded-lg font-medium hover:bg-cyan-400 disabled:opacity-50 flex items-center justify-center gap-2"
+                >
+                  {loading && <Loader2 className="w-4 h-4 animate-spin" />}
+                  {selectedProvider === 'vapi' ? 'Get Number' : 'Import Number'}
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Edit number modal
+function EditNumberModal({ number, agents, onClose, onUpdated }: { number: PhoneNum; agents: Agent[]; onClose: () => void; onUpdated: () => void }) {
+  const [friendlyName, setFriendlyName] = useState(number.friendlyName || '');
+  const [agentId, setAgentId] = useState(number.assignedAgent?.id || '');
+  const [isActive, setIsActive] = useState(number.isActive);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    try {
+      await api.patch(`/phone-numbers/${number.id}`, {
+        friendlyName: friendlyName || null,
+        assignedAgentId: agentId || null,
+        isActive,
+      });
+      onUpdated();
+    } catch (err: any) {
+      setError(err.message || 'Failed to update');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={onClose}>
+      <div className="bg-[#161B22] rounded-2xl w-full max-w-md" onClick={(e) => e.stopPropagation()}>
+        <div className="p-6 border-b border-gray-100 flex items-center justify-between">
+          <h2 className="text-lg font-semibold text-white">Configure {number.number}</h2>
+          <button onClick={onClose} className="p-2 text-[#6B7280] hover:text-[#9CA3AF]"><X className="w-5 h-5" /></button>
+        </div>
+        <form onSubmit={handleSubmit} className="p-6 space-y-5">
+          {error && <div className="bg-red-50 text-red-700 text-sm rounded-lg px-4 py-3">{error}</div>}
+
+          <div>
+            <label className="block text-sm font-medium text-[#E5E7EB] mb-1.5">Friendly Name</label>
+            <input 
+              type="text" 
+              value={friendlyName} 
+              onChange={(e) => setFriendlyName(e.target.value)} 
+              placeholder="e.g., Main Line" 
+              className="w-full px-4 py-2.5 border border-[#21262D] rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none" 
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-[#E5E7EB] mb-1.5">Assigned Agent</label>
+            <select 
+              value={agentId} 
+              onChange={(e) => setAgentId(e.target.value)} 
+              className="w-full px-4 py-2.5 border border-[#21262D] rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
+            >
+              <option value="">None</option>
+              {agents.map((a) => <option key={a.id} value={a.id}>{a.name}</option>)}
+            </select>
+            <p className="text-xs text-[#6B7280] mt-1">Inbound calls to this number will be handled by the assigned agent.</p>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <input
+              type="checkbox"
+              id="isActive"
+              checked={isActive}
+              onChange={(e) => setIsActive(e.target.checked)}
+              className="w-4 h-4 text-cyan-400 border-[#21262D] rounded focus:ring-cyan-500"
+            />
+            <label htmlFor="isActive" className="text-sm font-medium text-[#E5E7EB]">
+              Number is active
+            </label>
+          </div>
+
+          <div className="flex gap-3 pt-2">
+            <button type="button" onClick={onClose} className="flex-1 py-2.5 border border-[#21262D] rounded-lg font-medium text-[#E5E7EB] hover:bg-[#0A0E17]">Cancel</button>
+            <button type="submit" disabled={loading} className="flex-1 py-2.5 bg-cyan-500 text-white rounded-lg font-medium hover:bg-cyan-400 disabled:opacity-50">
+              {loading ? 'Saving...' : 'Save'}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
