@@ -76,8 +76,7 @@ export default function PhoneNumbers() {
   if (authLoading || !user) return null;
 
   return (
-    <div className="min-h-screen bg-gray-50 ml-64 p-8">
-      <div className="max-w-4xl">
+    <div className="p-8 max-w-5xl">
         <Link to="/dashboard" className="flex items-center gap-1 text-sm text-gray-400 hover:text-gray-600 mb-4">
           <ArrowLeft className="w-4 h-4" /> Dashboard
         </Link>
@@ -199,7 +198,6 @@ export default function PhoneNumbers() {
           />
         )}
       </div>
-    </div>
   );
 }
 
