@@ -131,20 +131,40 @@ export interface CreateAssistantParams {
 
 // Map voice provider names to Vapi API expected format
 // Vapi API expects: 'vapi', '11labs', 'deepgram', 'openai', 'azure', 'playht', 'cartesia'
+// Frontend sends display names like 'ElevenLabs', we need to map to Vapi API names
 const voiceProviderMap: Record<string, string> = {
-  'elevenlabs': '11labs',  // Frontend shows ElevenLabs, Vapi expects 11labs
+  // ElevenLabs (Vapi expects '11labs')
+  'elevenlabs': '11labs',
   '11labs': '11labs',
+  'ElevenLabs': '11labs',
+  // Deepgram (Vapi expects 'deepgram')
   'deepgram': 'deepgram',
+  'Deepgram': 'deepgram',
+  // OpenAI (Vapi expects 'openai')
   'openai': 'openai',
+  'OpenAI': 'openai',
+  // Vapi built-in voices
   'vapi': 'vapi',
+  'Vapi': 'vapi',
+  // Azure
   'azure': 'azure',
+  'Azure': 'azure',
+  // PlayHT
   'playht': 'playht',
+  'PlayHT': 'playht',
+  'playht2': 'playht',
+  // Cartesia
   'cartesia': 'cartesia',
+  'Cartesia': 'cartesia',
 };
 
 function mapVoiceProvider(provider: string | undefined): string {
   if (!provider) return 'vapi'; // Default to Vapi's built-in voice
-  return voiceProviderMap[provider] || 'vapi';
+  const mapped = voiceProviderMap[provider];
+  if (mapped) return mapped;
+  // Try lowercase fallback
+  const lower = provider.toLowerCase();
+  return voiceProviderMap[lower] || 'vapi';
 }
 
 export async function createAssistant(params: CreateAssistantParams) {
@@ -162,10 +182,10 @@ export async function createAssistant(params: CreateAssistantParams) {
     },
 
     // Voice - map provider names to Vapi API format
-    // Default to Vapi's built-in voice to avoid ElevenLabs "Couldn't Find 11labs Voice" error
+    // Frontend must provide voiceId appropriate for the selected provider
     voice: {
       provider: mapVoiceProvider(params.voiceProvider),
-      voiceId: params.voiceId || 'jennifer', // Vapi built-in voice (was 'rachel' for ElevenLabs)
+      voiceId: params.voiceId || 'jennifer', // Default to Vapi's built-in voice
       ...(params.voiceSpeed !== undefined && { speed: params.voiceSpeed }),
       ...(params.voiceChunkPlan && { chunkPlan: params.voiceChunkPlan }),
       ...(params.voiceFormatPlan && { formatPlan: params.voiceFormatPlan }),

@@ -361,7 +361,7 @@ function CreateAgentModal({ intent, onClose, onCreated }: { intent: string; onCl
             <div className="bg-gray-50 rounded-xl p-4 space-y-4">
               <div className="flex items-center gap-2 text-sm font-medium text-gray-700"><Volume2 className="w-4 h-4" /> Voice</div>
               <div className="grid grid-cols-2 gap-3">
-                <div><label className="block text-xs text-gray-500 mb-1">Provider</label><select value={form.voiceProvider} onChange={(e) => { update('voiceProvider', e.target.value); const first = voiceOptions.find((v) => v.provider === e.target.value); if (first) update('voiceId', first.voiceId); }} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">{voiceProviders.map((p) => (<option key={p.id} value={p.id}>{p.name}</option>))}</select></div>
+                <div><label className="block text-xs text-gray-500 mb-1">Provider</label><select value={form.voiceProvider} onChange={(e) => { const newProvider = e.target.value; const first = voiceOptions.find((v) => v.provider === newProvider); update('voiceProvider', newProvider); update('voiceId', first?.voiceId || ''); }} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">{voiceProviders.map((p) => (<option key={p.id} value={p.id}>{p.name}</option>))}</select></div>
                 <div><label className="block text-xs text-gray-500 mb-1">Voice</label><select value={form.voiceId} onChange={(e) => update('voiceId', e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">{filteredVoices.map((v) => (<option key={v.voiceId} value={v.voiceId}>{v.name} ({v.gender}, {v.accent})</option>))}</select></div>
               </div>
             </div>
@@ -507,7 +507,7 @@ function EditAgentModal({ agent, onClose, onUpdated }: { agent: Agent; onClose: 
           <div className="bg-gray-50 rounded-xl p-4 space-y-4">
             <div className="flex items-center gap-2 text-sm font-medium text-gray-700"><Volume2 className="w-4 h-4" /> Voice</div>
             <div className="grid grid-cols-2 gap-3">
-              <div><label className="block text-xs text-gray-500 mb-1">Provider</label><select value={form.voiceProvider} onChange={(e) => { update('voiceProvider', e.target.value); const first = voiceOptions.find((v) => v.provider === e.target.value); if (first) update('voiceId', first.voiceId); }} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">{voiceProviders.map((p) => (<option key={p.id} value={p.id}>{p.name}</option>))}</select></div>
+              <div><label className="block text-xs text-gray-500 mb-1">Provider</label><select value={form.voiceProvider} onChange={(e) => { const newProvider = e.target.value; const first = voiceOptions.find((v) => v.provider === newProvider); update('voiceProvider', newProvider); update('voiceId', first?.voiceId || ''); }} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">{voiceProviders.map((p) => (<option key={p.id} value={p.id}>{p.name}</option>))}</select></div>
               <div><label className="block text-xs text-gray-500 mb-1">Voice</label><select value={form.voiceId} onChange={(e) => update('voiceId', e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">{filteredVoices.map((v) => (<option key={v.voiceId} value={v.voiceId}>{v.name} ({v.gender}, {v.accent})</option>))}</select></div>
             </div>
           </div>
