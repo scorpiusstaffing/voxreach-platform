@@ -23,7 +23,14 @@ const app = express();
 
 // Middleware
 app.use(helmet());
-app.use(cors({ origin: config.frontendUrl, credentials: true }));
+app.use(cors({
+  origin: [
+    config.frontendUrl,
+    'https://www.voxreach.io',
+    'https://voxreach.io',
+  ],
+  credentials: true
+}));
 app.use(morgan('short'));
 app.use(express.json());
 
