@@ -183,13 +183,26 @@ export async function createAssistant(params: CreateAssistantParams) {
 
     // Voice - map provider names to Vapi API format
     // Frontend must provide voiceId appropriate for the selected provider
-    voice: {
-      provider: mapVoiceProvider(params.voiceProvider),
-      voiceId: params.voiceId || 'jennifer', // Default to Vapi's built-in voice
-      ...(params.voiceSpeed !== undefined && { speed: params.voiceSpeed }),
-      ...(params.voiceChunkPlan && { chunkPlan: params.voiceChunkPlan }),
-      ...(params.voiceFormatPlan && { formatPlan: params.voiceFormatPlan }),
-    },
+    // Only ElevenLabs and OpenAI support voice speed
+    voice: (() => {
+      const provider = mapVoiceProvider(params.voiceProvider);
+      const voiceConfig: Record<string, unknown> = {
+        provider,
+        voiceId: params.voiceId || 'jennifer', // Default to Vapi's built-in voice
+      };
+      // Only add speed for providers that support it (11labs = ElevenLabs)
+      const supportsSpeed = provider === '11labs' || provider === 'openai';
+      if (supportsSpeed && params.voiceSpeed !== undefined) {
+        voiceConfig.speed = params.voiceSpeed;
+      }
+      if (params.voiceChunkPlan) {
+        voiceConfig.chunkPlan = params.voiceChunkPlan;
+      }
+      if (params.voiceFormatPlan) {
+        voiceConfig.formatPlan = params.voiceFormatPlan;
+      }
+      return voiceConfig;
+    })(),
 
     // Transcriber
     transcriber: {
