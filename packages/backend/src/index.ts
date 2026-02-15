@@ -11,6 +11,7 @@ import { prisma } from './db';
 import authRoutes from './routes/auth';
 import agentRoutes from './routes/agents';
 import phoneNumberRoutes from './routes/phoneNumbers';
+import credentialRoutes from './routes/credentials';
 import callRoutes from './routes/calls';
 import campaignRoutes from './routes/campaigns';
 import webhookRoutes from './routes/webhooks';
@@ -35,6 +36,7 @@ app.get('/health', (_req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/agents', agentRoutes);
 app.use('/api/phone-numbers', phoneNumberRoutes);
+app.use('/api/credentials', credentialRoutes);
 app.use('/api/calls', callRoutes);
 app.use('/api/campaigns', campaignRoutes);
 app.use('/api/webhooks', webhookRoutes);

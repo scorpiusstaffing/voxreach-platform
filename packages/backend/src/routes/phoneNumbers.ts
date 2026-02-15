@@ -7,7 +7,7 @@ import * as vapi from '../services/vapi';
 const router = Router();
 router.use(authenticate);
 
-// GET /api/phone-numbers
+// GET /api/phone-numbers — List org's phone numbers
 router.get('/', async (req: AuthRequest, res: Response) => {
   try {
     const numbers = await prisma.phoneNumber.findMany({
@@ -22,35 +22,53 @@ router.get('/', async (req: AuthRequest, res: Response) => {
   }
 });
 
-// GET /api/phone-numbers/vapi — list all numbers directly from Vapi (for import)
-router.get('/vapi', async (req: AuthRequest, res: Response) => {
-  try {
-    const vapiNumbers = await vapi.listPhoneNumbers();
-
-    // Get existing imported numbers
-    const existing = await prisma.phoneNumber.findMany({
-      where: { organizationId: req.organizationId },
-      select: { vapiPhoneNumberId: true },
-    });
-    const importedIds = new Set(existing.map((n: any) => n.vapiPhoneNumberId).filter(Boolean));
-
-    // Mark which ones are already imported
-    const enriched = (vapiNumbers as any[]).map((n: any) => ({
-      ...n,
-      imported: importedIds.has(n.id),
-    }));
-
-    res.json({ success: true, data: enriched });
-  } catch (err: any) {
-    console.error('List Vapi numbers error:', err);
-    res.status(502).json({ success: false, error: `Failed to fetch Vapi numbers: ${err.message}` });
-  }
-});
-
-// POST /api/phone-numbers — provision a new number via Vapi
+// POST /api/phone-numbers — Create/import a phone number
 router.post('/', async (req: AuthRequest, res: Response) => {
   try {
-    const { friendlyName, assignedAgentId, fallbackNumber } = req.body;
+    const {
+      provider,
+      number,
+      friendlyName,
+      assignedAgentId,
+      fallbackNumber,
+      // Twilio-specific
+      twilioAccountSid,
+      twilioAuthToken,
+      // Credential-based providers (vonage, telnyx, byo)
+      credentialId,
+      // BYO SIP specific
+      sipUri,
+      numberE164CheckEnabled,
+    } = req.body;
+
+    if (!provider) {
+      return res.status(400).json({ success: false, error: 'Provider is required' });
+    }
+
+    // Validate provider-specific required fields
+    if (provider !== 'vapi' && !number && !sipUri) {
+      return res.status(400).json({ success: false, error: 'Phone number or SIP URI is required' });
+    }
+
+    if (provider === 'twilio') {
+      if (!twilioAccountSid || !twilioAuthToken) {
+        return res.status(400).json({ success: false, error: 'Twilio Account SID and Auth Token are required' });
+      }
+    }
+
+    if (provider === 'vonage' || provider === 'telnyx' || provider === 'byo-phone-number') {
+      if (!credentialId) {
+        return res.status(400).json({ success: false, error: 'Credential ID is required for this provider' });
+      }
+
+      // Verify the credential belongs to this organization
+      const credential = await prisma.credential.findFirst({
+        where: { id: credentialId, organizationId: req.organizationId },
+      });
+      if (!credential) {
+        return res.status(400).json({ success: false, error: 'Invalid credential ID' });
+      }
+    }
 
     // Get the agent's Vapi assistant ID if assigning
     let vapiAssistantId: string | undefined;
@@ -64,30 +82,50 @@ router.post('/', async (req: AuthRequest, res: Response) => {
 
     const webhookUrl = config.webhookUrl || `https://backend-production-fc92.up.railway.app/api/webhooks/vapi`;
 
-    // Provision via Vapi
+    // Create phone number via Vapi
     let vapiNumber: any;
     try {
       vapiNumber = await vapi.createPhoneNumber({
-        name: friendlyName || 'Voxreach Number',
+        provider,
+        name: friendlyName || (number || sipUri || 'VoxReach Number'),
+        number,
+        sipUri,
         assistantId: vapiAssistantId,
         serverUrl: webhookUrl,
         fallbackNumber,
+        twilioAccountSid,
+        twilioAuthToken,
+        credentialId,
+        numberE164CheckEnabled,
       });
     } catch (err: any) {
-      console.error('Vapi phone provision failed:', err);
-      return res.status(502).json({ success: false, error: `Failed to provision number: ${err.message}` });
+      console.error('Vapi phone number creation failed:', err);
+      return res.status(502).json({ success: false, error: `Failed to create phone number: ${err.message}` });
+    }
+
+    // Check for duplicate (same org + number)
+    const existingNumber = number ? await prisma.phoneNumber.findFirst({
+      where: { organizationId: req.organizationId, number },
+    }) : null;
+
+    if (existingNumber) {
+      // Delete the Vapi number we just created since we have a duplicate
+      try {
+        await vapi.deletePhoneNumber(vapiNumber.id);
+      } catch {}
+      return res.status(409).json({ success: false, error: 'This phone number is already in your account' });
     }
 
     const phoneNumber = await prisma.phoneNumber.create({
       data: {
         organizationId: req.organizationId!,
-        number: vapiNumber.number || vapiNumber.sipUri || 'pending',
-        type: 'local',
-        provider: 'vapi',
+        number: vapiNumber.number || vapiNumber.sipUri || number || 'unknown',
+        type: provider === 'byo-phone-number' ? 'sip' : 'local',
+        provider: provider,
         vapiPhoneNumberId: vapiNumber.id,
-        assignedAgentId,
-        friendlyName: friendlyName || null,
-        country: 'US',
+        assignedAgentId: assignedAgentId || null,
+        friendlyName: friendlyName || vapiNumber.name || null,
+        country: vapiNumber.number?.startsWith('+1') ? 'US' : vapiNumber.number?.startsWith('+65') ? 'SG' : 'US',
         isActive: true,
       },
     });
@@ -95,73 +133,6 @@ router.post('/', async (req: AuthRequest, res: Response) => {
     res.status(201).json({ success: true, data: phoneNumber });
   } catch (err) {
     console.error('Create phone number error:', err);
-    res.status(500).json({ success: false, error: 'Internal server error' });
-  }
-});
-
-// POST /api/phone-numbers/import — import an existing Vapi phone number
-router.post('/import', async (req: AuthRequest, res: Response) => {
-  try {
-    const { vapiPhoneNumberId, friendlyName, assignedAgentId } = req.body;
-
-    if (!vapiPhoneNumberId) {
-      return res.status(400).json({ success: false, error: 'vapiPhoneNumberId is required' });
-    }
-
-    // Check if already imported
-    const existing = await prisma.phoneNumber.findFirst({
-      where: { vapiPhoneNumberId },
-    });
-    if (existing) {
-      return res.status(409).json({ success: false, error: 'This number is already imported' });
-    }
-
-    // Fetch from Vapi
-    let vapiNumber: any;
-    try {
-      vapiNumber = await vapi.getPhoneNumber(vapiPhoneNumberId);
-    } catch (err: any) {
-      return res.status(502).json({ success: false, error: `Failed to fetch number from Vapi: ${err.message}` });
-    }
-
-    // Update Vapi number with webhook and agent if specified
-    const webhookUrl = config.webhookUrl || `https://backend-production-fc92.up.railway.app/api/webhooks/vapi`;
-    const updatePayload: Record<string, unknown> = {
-      server: { url: webhookUrl },
-    };
-
-    if (assignedAgentId) {
-      const agent = await prisma.agent.findFirst({
-        where: { id: assignedAgentId, organizationId: req.organizationId },
-      });
-      if (agent?.vapiAssistantId) {
-        updatePayload.assistantId = agent.vapiAssistantId;
-      }
-    }
-
-    try {
-      await vapi.updatePhoneNumber(vapiPhoneNumberId, updatePayload);
-    } catch (err) {
-      console.warn('Failed to update Vapi phone with webhook:', err);
-    }
-
-    const phoneNumber = await prisma.phoneNumber.create({
-      data: {
-        organizationId: req.organizationId!,
-        number: vapiNumber.number || vapiNumber.sipUri || 'unknown',
-        type: vapiNumber.provider === 'byo-phone-number' ? 'byo' : 'local',
-        provider: vapiNumber.provider || 'vapi',
-        vapiPhoneNumberId: vapiNumber.id,
-        assignedAgentId: assignedAgentId || null,
-        friendlyName: friendlyName || vapiNumber.name || null,
-        country: vapiNumber.number?.startsWith('+1') ? 'US' : vapiNumber.number?.startsWith('+65') ? 'SG' : 'US',
-        isActive: vapiNumber.status === 'active',
-      },
-    });
-
-    res.status(201).json({ success: true, data: phoneNumber });
-  } catch (err) {
-    console.error('Import phone number error:', err);
     res.status(500).json({ success: false, error: 'Internal server error' });
   }
 });
@@ -219,13 +190,13 @@ router.delete('/:id', async (req: AuthRequest, res: Response) => {
     });
     if (!number) return res.status(404).json({ success: false, error: 'Phone number not found' });
 
-    // Delete from Vapi (only if we provisioned it)
-    if (number.vapiPhoneNumberId && number.provider === 'vapi') {
+    // Delete from Vapi
+    if (number.vapiPhoneNumberId) {
       try { await vapi.deletePhoneNumber(number.vapiPhoneNumberId); } catch {}
     }
 
     await prisma.phoneNumber.delete({ where: { id: number.id } });
-    res.json({ success: true, message: 'Phone number released' });
+    res.json({ success: true, message: 'Phone number deleted' });
   } catch (err) {
     console.error('Delete phone number error:', err);
     res.status(500).json({ success: false, error: 'Internal server error' });

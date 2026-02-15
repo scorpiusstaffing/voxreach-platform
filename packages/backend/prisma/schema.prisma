@@ -40,6 +40,7 @@ model Organization {
   campaigns            Campaign[]
   leads                Lead[]
   tools                Tool[]
+  credentials          Credential[]
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
 }
@@ -107,13 +108,26 @@ model Tool {
   @@index([organizationId])
 }
 
+model Credential {
+  id                String   @id @default(uuid())
+  organizationId    String
+  organization      Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  provider          String   // twilio, vonage, telnyx, byo-sip-trunk
+  vapiCredentialId  String?  @unique
+  name              String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([organizationId])
+}
+
 model PhoneNumber {
   id                String   @id @default(uuid())
   organizationId    String
   organization      Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  number            String   @unique
+  number            String
   type              String   @default("local") // local, toll_free, mobile, sip
-  provider          String   @default("vapi") // vapi, twilio, byo
+  provider          String   @default("vapi") // vapi, twilio, vonage, telnyx, byo-phone-number
   vapiPhoneNumberId String?  @unique
   assignedAgentId   String?
   assignedAgent     Agent?   @relation(fields: [assignedAgentId], references: [id], onDelete: SetNull)
@@ -124,6 +138,7 @@ model PhoneNumber {
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 
+  @@unique([organizationId, number])
   @@index([organizationId])
 }
 

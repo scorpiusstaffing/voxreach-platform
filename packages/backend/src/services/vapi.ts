@@ -352,18 +352,33 @@ export async function listAssistants() {
 // ============================================
 
 export interface CreatePhoneNumberParams {
+  provider: 'vapi' | 'twilio' | 'vonage' | 'telnyx' | 'byo-phone-number';
   name?: string;
+  number?: string; // Required for twilio, vonage, telnyx, byo
   assistantId?: string;
   serverUrl?: string;
   fallbackNumber?: string;
+  // Twilio-specific (inline credentials)
+  twilioAccountSid?: string;
+  twilioAuthToken?: string;
+  // For vonage, telnyx, byo — uses credentialId
+  credentialId?: string;
+  // BYO SIP specific
+  numberE164CheckEnabled?: boolean;
+  sipUri?: string;
 }
 
 export async function createPhoneNumber(params: CreatePhoneNumberParams) {
   const body: Record<string, unknown> = {
-    provider: 'vapi',
+    provider: params.provider,
     name: params.name || 'Voxreach Number',
   };
 
+  // Add number or sipUri for non-vapi providers
+  if (params.number) body.number = params.number;
+  if (params.sipUri) body.sipUri = params.sipUri;
+
+  // Assistant and server config
   if (params.assistantId) body.assistantId = params.assistantId;
   if (params.serverUrl) {
     body.server = { url: params.serverUrl };
@@ -376,27 +391,21 @@ export async function createPhoneNumber(params: CreatePhoneNumberParams) {
     };
   }
 
-  return vapiRequest('POST', '/phone-number', body);
-}
+  // Provider-specific credentials
+  if (params.provider === 'twilio') {
+    if (params.twilioAccountSid) body.twilioAccountSid = params.twilioAccountSid;
+    if (params.twilioAuthToken) body.twilioAuthToken = params.twilioAuthToken;
+  }
 
-export async function importPhoneNumber(params: {
-  provider: string;
-  number: string;
-  credentialId: string;
-  name?: string;
-  assistantId?: string;
-  serverUrl?: string;
-}) {
-  const body: Record<string, unknown> = {
-    provider: 'byo-phone-number',
-    number: params.number,
-    credentialId: params.credentialId,
-    numberE164CheckEnabled: true,
-    name: params.name || params.number,
-  };
+  // Credential-based providers (vonage, telnyx, byo-phone-number)
+  if (params.credentialId) {
+    body.credentialId = params.credentialId;
+  }
 
-  if (params.assistantId) body.assistantId = params.assistantId;
-  if (params.serverUrl) body.server = { url: params.serverUrl };
+  // BYO SIP specific
+  if (params.provider === 'byo-phone-number' && params.numberE164CheckEnabled !== undefined) {
+    body.numberE164CheckEnabled = params.numberE164CheckEnabled;
+  }
 
   return vapiRequest('POST', '/phone-number', body);
 }
@@ -597,21 +606,71 @@ export async function deleteSquad(squadId: string) {
 }
 
 // ============================================
-// Credentials (for BYO phone numbers)
+// Credentials (for BYO phone numbers and providers)
 // ============================================
 
 export async function listCredentials() {
   return vapiRequest('GET', '/credential');
 }
 
-export async function createCredential(params: {
-  provider: 'twilio' | 'vonage' | 'telnyx' | '11labs' | 'openai' | 'anthropic' | 'groq';
-  name: string;
+export interface CreateCredentialParams {
+  provider: 'twilio' | 'vonage' | 'telnyx' | 'byo-sip-trunk';
+  name?: string;
+  // Twilio
+  accountSid?: string;
+  authToken?: string;
   apiKey?: string;
-  username?: string;
-  password?: string;
-}) {
-  return vapiRequest('POST', '/credential', params);
+  apiSecret?: string;
+  // Vonage
+  vonageApiKey?: string;
+  vonageApiSecret?: string;
+  // Telnyx
+  telnyxApiKey?: string;
+  // BYO SIP Trunk
+  gateways?: Array<{
+    ip: string;
+    port?: number;
+    netmask?: number;
+    inboundEnabled?: boolean;
+    outboundEnabled?: boolean;
+  }>;
+  outboundAuthenticationPlan?: {
+    authUsername: string;
+    authPassword?: string;
+  };
+  sipTrunkingProvider?: string;
+}
+
+export async function createCredential(params: CreateCredentialParams) {
+  const body: Record<string, unknown> = {
+    provider: params.provider,
+  };
+
+  if (params.name) body.name = params.name;
+
+  if (params.provider === 'twilio') {
+    if (params.accountSid) body.accountSid = params.accountSid;
+    if (params.authToken) body.authToken = params.authToken;
+    if (params.apiKey) body.apiKey = params.apiKey;
+    if (params.apiSecret) body.apiSecret = params.apiSecret;
+  } else if (params.provider === 'vonage') {
+    if (params.vonageApiKey) body.apiKey = params.vonageApiKey;
+    if (params.vonageApiSecret) body.apiSecret = params.vonageApiSecret;
+  } else if (params.provider === 'telnyx') {
+    if (params.telnyxApiKey) body.apiKey = params.telnyxApiKey;
+  } else if (params.provider === 'byo-sip-trunk') {
+    if (params.gateways) body.gateways = params.gateways;
+    if (params.outboundAuthenticationPlan) {
+      body.outboundAuthenticationPlan = params.outboundAuthenticationPlan;
+    }
+    if (params.sipTrunkingProvider) body.sipTrunkingProvider = params.sipTrunkingProvider;
+  }
+
+  return vapiRequest('POST', '/credential', body);
+}
+
+export async function getCredential(credentialId: string) {
+  return vapiRequest('GET', `/credential/${credentialId}`);
 }
 
 export async function deleteCredential(credentialId: string) {
