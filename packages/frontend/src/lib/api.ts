@@ -1,4 +1,7 @@
-const API_BASE = import.meta.env.VITE_API_URL || '/api';
+const API_BASE = import.meta.env.VITE_API_URL || 
+  (window.location.hostname.includes('voxreach.io') 
+    ? 'https://backend-production-fc92.up.railway.app/api' 
+    : '/api');
 
 function getToken(): string | null {
   return localStorage.getItem('voxreach_token');
