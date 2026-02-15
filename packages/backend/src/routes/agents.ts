@@ -201,7 +201,7 @@ router.post('/', async (req: AuthRequest, res: Response) => {
       });
       
       // Convert DB tools to Vapi format
-      toolsConfig = dbTools.map(t => ({
+      toolsConfig = dbTools.map((t: any) => ({
         type: t.type === 'transfer' ? 'transfer' : 'function',
         name: t.name,
         description: t.description,
@@ -481,7 +481,7 @@ router.patch('/:id', async (req: AuthRequest, res: Response) => {
             const dbTools = await prisma.tool.findMany({
               where: { id: { in: toolIds }, organizationId: req.organizationId },
             });
-            const toolsConfig = dbTools.map(t => ({
+            const toolsConfig = dbTools.map((t: any) => ({
               type: t.type === 'transfer' ? 'transfer' : 'function',
               name: t.name,
               description: t.description,

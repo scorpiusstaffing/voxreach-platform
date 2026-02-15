@@ -29,7 +29,7 @@ router.post('/signup', async (req: Request, res: Response) => {
     const passwordHash = await bcrypt.hash(password, 12);
 
     // Create org + user in transaction
-    const result = await prisma.$transaction(async (tx) => {
+    const result = await prisma.$transaction(async (tx: any) => {
       const org = await tx.organization.create({
         data: { name: organizationName, intent },
       });

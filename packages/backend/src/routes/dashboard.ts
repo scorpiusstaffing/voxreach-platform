@@ -47,7 +47,7 @@ router.get('/stats', async (req: AuthRequest, res: Response) => {
         totalCalls,
         activeCampaigns,
         totalMinutes: Math.round((totalMinutes._sum.durationSeconds || 0) / 60),
-        callBreakdown: callStats.reduce((acc, s) => ({ ...acc, [s.status]: s._count }), {}),
+        callBreakdown: callStats.reduce((acc: any, s: any) => ({ ...acc, [s.status]: s._count }), {}),
         recentCalls,
       },
     });

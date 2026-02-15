@@ -32,7 +32,7 @@ router.get('/vapi', async (req: AuthRequest, res: Response) => {
       where: { organizationId: req.organizationId },
       select: { vapiPhoneNumberId: true },
     });
-    const importedIds = new Set(existing.map((n) => n.vapiPhoneNumberId).filter(Boolean));
+    const importedIds = new Set(existing.map((n: any) => n.vapiPhoneNumberId).filter(Boolean));
 
     // Mark which ones are already imported
     const enriched = (vapiNumbers as any[]).map((n: any) => ({

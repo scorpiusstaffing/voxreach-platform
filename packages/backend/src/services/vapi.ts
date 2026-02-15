@@ -494,7 +494,9 @@ export async function uploadFile(file: UploadFileParams) {
   // For file uploads, we need multipart/form-data
   const formData = new FormData();
   formData.append('name', file.name);
-  formData.append('file', new Blob([file.content], { type: file.contentType || 'application/octet-stream' }));
+  // Convert Buffer to Uint8Array for Blob compatibility
+  const content = typeof file.content === 'string' ? file.content : new Uint8Array(file.content);
+  formData.append('file', new Blob([content], { type: file.contentType || 'application/octet-stream' }));
 
   const res = await fetch(`${VAPI_BASE}/file`, {
     method: 'POST',
