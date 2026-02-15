@@ -188,7 +188,6 @@ export default function Tools() {
             </div>
           </div>
         )}
-      </div>
     </div>
   );
 }
@@ -524,4 +523,5 @@ function EditToolModal({ tool, onClose, onUpdated }: { tool: Tool; onClose: () =
       </div>
     </div>
   );
+}
 }
