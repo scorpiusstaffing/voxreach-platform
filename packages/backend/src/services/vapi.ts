@@ -130,9 +130,10 @@ export interface CreateAssistantParams {
 }
 
 // Map voice provider names to Vapi API expected format
+// Vapi API expects: 'vapi', '11labs', 'deepgram', 'openai', 'azure', 'playht', 'cartesia'
 const voiceProviderMap: Record<string, string> = {
-  '11labs': 'elevenlabs',
-  'elevenlabs': 'elevenlabs',
+  'elevenlabs': '11labs',  // Frontend shows ElevenLabs, Vapi expects 11labs
+  '11labs': '11labs',
   'deepgram': 'deepgram',
   'openai': 'openai',
   'vapi': 'vapi',
@@ -142,8 +143,8 @@ const voiceProviderMap: Record<string, string> = {
 };
 
 function mapVoiceProvider(provider: string | undefined): string {
-  if (!provider) return 'vapi'; // Default to Vapi's built-in voice to avoid ElevenLabs issues
-  return voiceProviderMap[provider] || provider;
+  if (!provider) return 'vapi'; // Default to Vapi's built-in voice
+  return voiceProviderMap[provider] || 'vapi';
 }
 
 export async function createAssistant(params: CreateAssistantParams) {
@@ -175,6 +176,7 @@ export async function createAssistant(params: CreateAssistantParams) {
       provider: params.transcriberProvider || 'deepgram',
       model: params.transcriberModel || 'nova-3',
       language: params.transcriberLanguage || params.language || 'en',
+      // Note: endUtteranceSilenceThreshold is not supported by Vapi API - removed
       ...(params.transcriberConfig && {
         ...(params.transcriberConfig.confidenceThreshold !== undefined && {
           confidenceThreshold: params.transcriberConfig.confidenceThreshold,
@@ -184,9 +186,6 @@ export async function createAssistant(params: CreateAssistantParams) {
         }),
         ...(params.transcriberConfig.keytermsPrompt && {
           keytermsPrompt: params.transcriberConfig.keytermsPrompt,
-        }),
-        ...(params.transcriberConfig.endUtteranceSilenceThreshold !== undefined && {
-          endUtteranceSilenceThreshold: params.transcriberConfig.endUtteranceSilenceThreshold,
         }),
         ...(params.transcriberConfig.fallbackPlan && {
           fallbackPlan: params.transcriberConfig.fallbackPlan,
@@ -270,7 +269,7 @@ export async function createAssistant(params: CreateAssistantParams) {
     body.recordingEnabled = params.recordingEnabled;
   }
 
-  // Server messages to receive
+  // Server messages to receive (must be valid Vapi event types)
   body.serverMessages = [
     'status-update',
     'end-of-call-report',
@@ -281,7 +280,6 @@ export async function createAssistant(params: CreateAssistantParams) {
     'transfer-destination-request',
     'conversation-update',
     'voice-input',
-    'speech',
   ];
 
   return vapiRequest('POST', '/assistant', body);
