@@ -38,13 +38,13 @@ export default function Settings() {
 
   return (
     <div className="p-8 max-w-5xl">
-      <Link to="/dashboard" className="flex items-center gap-1 text-sm text-gray-400 hover:text-gray-600 mb-4">
+      <Link to="/dashboard" className="flex items-center gap-1 text-sm text-[#6B7280] hover:text-[#9CA3AF] mb-4">
         <ArrowLeft className="w-4 h-4" /> Dashboard
       </Link>
 
       <div className="flex items-center gap-3 mb-8">
-        <Settings2 className="w-7 h-7 text-brand-600" />
-        <h1 className="text-2xl font-semibold text-gray-900">Settings</h1>
+        <Settings2 className="w-7 h-7 text-cyan-400" />
+        <h1 className="text-2xl font-semibold text-white">Settings</h1>
       </div>
 
       <div className="grid grid-cols-4 gap-6">
@@ -54,7 +54,7 @@ export default function Settings() {
             <button
               onClick={() => setActiveTab('profile')}
               className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
-                activeTab === 'profile' ? 'bg-brand-50 text-brand-700' : 'text-gray-700 hover:bg-gray-50'
+                activeTab === 'profile' ? 'bg-cyan-500/10 text-cyan-400' : 'text-[#E5E7EB] hover:bg-[#0A0E17]'
               }`}
             >
               <User className="w-4 h-4" /> Profile
@@ -62,7 +62,7 @@ export default function Settings() {
             <button
               onClick={() => setActiveTab('organization')}
               className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
-                activeTab === 'organization' ? 'bg-brand-50 text-brand-700' : 'text-gray-700 hover:bg-gray-50'
+                activeTab === 'organization' ? 'bg-cyan-500/10 text-cyan-400' : 'text-[#E5E7EB] hover:bg-[#0A0E17]'
               }`}
             >
               <Building2 className="w-4 h-4" /> Organization
@@ -70,7 +70,7 @@ export default function Settings() {
             <button
               onClick={() => setActiveTab('notifications')}
               className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
-                activeTab === 'notifications' ? 'bg-brand-50 text-brand-700' : 'text-gray-700 hover:bg-gray-50'
+                activeTab === 'notifications' ? 'bg-cyan-500/10 text-cyan-400' : 'text-[#E5E7EB] hover:bg-[#0A0E17]'
               }`}
             >
               <Bell className="w-4 h-4" /> Notifications
@@ -78,7 +78,7 @@ export default function Settings() {
             <button
               onClick={() => setActiveTab('security')}
               className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
-                activeTab === 'security' ? 'bg-brand-50 text-brand-700' : 'text-gray-700 hover:bg-gray-50'
+                activeTab === 'security' ? 'bg-cyan-500/10 text-cyan-400' : 'text-[#E5E7EB] hover:bg-[#0A0E17]'
               }`}
             >
               <Shield className="w-4 h-4" /> Security
@@ -88,7 +88,7 @@ export default function Settings() {
 
         {/* Content */}
         <div className="col-span-3">
-          <div className="bg-white rounded-xl border border-gray-200">
+          <div className="bg-[#161B22] rounded-xl border border-[#21262D]">
             {activeTab === 'profile' && (
               <ProfileSettings user={user} saving={saving} setSaving={setSaving} message={message} setMessage={setMessage} />
             )}
@@ -133,7 +133,7 @@ function ProfileSettings({ user, saving, setSaving, message, setMessage }: any) 
 
   return (
     <form onSubmit={handleSubmit} className="p-6">
-      <h2 className="text-lg font-semibold text-gray-900 mb-4">Profile Settings</h2>
+      <h2 className="text-lg font-semibold text-white mb-4">Profile Settings</h2>
 
       {message && (
         <div className={`mb-4 text-sm rounded-lg px-4 py-3 ${
@@ -145,31 +145,31 @@ function ProfileSettings({ user, saving, setSaving, message, setMessage }: any) 
 
       <div className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1.5">Full Name</label>
+          <label className="block text-sm font-medium text-[#E5E7EB] mb-1.5">Full Name</label>
           <input
             type="text"
             value={form.name}
             onChange={(e) => setForm((f: any) => ({ ...f, name: e.target.value }))}
-            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 outline-none"
+            className="w-full px-4 py-2.5 border border-[#21262D] rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1.5">Email</label>
+          <label className="block text-sm font-medium text-[#E5E7EB] mb-1.5">Email</label>
           <input
             type="email"
             value={form.email}
             disabled
-            className="w-full px-4 py-2.5 border border-gray-200 rounded-lg bg-gray-50 text-gray-500"
+            className="w-full px-4 py-2.5 border border-[#21262D] rounded-lg bg-[#0A0E17] text-[#6B7280]"
           />
-          <p className="text-xs text-gray-400 mt-1">Email cannot be changed</p>
+          <p className="text-xs text-[#6B7280] mt-1">Email cannot be changed</p>
         </div>
 
         <div className="pt-4">
           <button
             type="submit"
             disabled={saving}
-            className="flex items-center gap-2 bg-brand-600 text-white px-5 py-2.5 rounded-lg font-medium hover:bg-brand-700 disabled:opacity-50"
+            className="flex items-center gap-2 bg-cyan-500 text-white px-5 py-2.5 rounded-lg font-medium hover:bg-cyan-400 disabled:opacity-50"
           >
             <Save className="w-4 h-4" />
             {saving ? 'Saving...' : 'Save Changes'}
@@ -211,7 +211,7 @@ function OrganizationSettings({ organization, saving, setSaving, message, setMes
 
   return (
     <form onSubmit={handleSubmit} className="p-6">
-      <h2 className="text-lg font-semibold text-gray-900 mb-4">Organization Settings</h2>
+      <h2 className="text-lg font-semibold text-white mb-4">Organization Settings</h2>
 
       {message && (
         <div className={`mb-4 text-sm rounded-lg px-4 py-3 ${
@@ -223,27 +223,27 @@ function OrganizationSettings({ organization, saving, setSaving, message, setMes
 
       <div className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1.5">Organization Name</label>
+          <label className="block text-sm font-medium text-[#E5E7EB] mb-1.5">Organization Name</label>
           <input
             type="text"
             value={form.name}
             onChange={(e) => setForm((f: any) => ({ ...f, name: e.target.value }))}
-            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 outline-none"
+            className="w-full px-4 py-2.5 border border-[#21262D] rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1.5">Primary Use Case</label>
+          <label className="block text-sm font-medium text-[#E5E7EB] mb-1.5">Primary Use Case</label>
           <select
             value={form.intent}
             onChange={(e) => setForm((f: any) => ({ ...f, intent: e.target.value }))}
-            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 outline-none"
+            className="w-full px-4 py-2.5 border border-[#21262D] rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
           >
             <option value="outbound">Outbound Calls (Sales, Outreach)</option>
             <option value="inbound">Inbound Calls (Support, Reception)</option>
             <option value="both">Both</option>
           </select>
-          <p className="text-xs text-gray-400 mt-1">
+          <p className="text-xs text-[#6B7280] mt-1">
             This helps us customize your experience and default templates
           </p>
         </div>
@@ -252,7 +252,7 @@ function OrganizationSettings({ organization, saving, setSaving, message, setMes
           <button
             type="submit"
             disabled={saving}
-            className="flex items-center gap-2 bg-brand-600 text-white px-5 py-2.5 rounded-lg font-medium hover:bg-brand-700 disabled:opacity-50"
+            className="flex items-center gap-2 bg-cyan-500 text-white px-5 py-2.5 rounded-lg font-medium hover:bg-cyan-400 disabled:opacity-50"
           >
             <Save className="w-4 h-4" />
             {saving ? 'Saving...' : 'Save Changes'}
@@ -291,7 +291,7 @@ function NotificationSettings({ saving, setSaving, message, setMessage }: any) {
 
   return (
     <form onSubmit={handleSubmit} className="p-6">
-      <h2 className="text-lg font-semibold text-gray-900 mb-4">Notification Settings</h2>
+      <h2 className="text-lg font-semibold text-white mb-4">Notification Settings</h2>
 
       {message && (
         <div className={`mb-4 text-sm rounded-lg px-4 py-3 ${
@@ -303,7 +303,7 @@ function NotificationSettings({ saving, setSaving, message, setMessage }: any) {
 
       <div className="space-y-4">
         <div className="space-y-3">
-          <h3 className="text-sm font-medium text-gray-700">Email Notifications</h3>
+          <h3 className="text-sm font-medium text-[#E5E7EB]">Email Notifications</h3>
 
           <label className="flex items-center gap-3 cursor-pointer">
             <input
@@ -312,7 +312,7 @@ function NotificationSettings({ saving, setSaving, message, setMessage }: any) {
               onChange={(e) => setSettings((s: any) => ({ ...s, emailCallSummary: e.target.checked }))}
               className="w-4 h-4 accent-brand-600"
             />
-            <span className="text-sm text-gray-700">Call summaries after each call</span>
+            <span className="text-sm text-[#E5E7EB]">Call summaries after each call</span>
           </label>
 
           <label className="flex items-center gap-3 cursor-pointer">
@@ -322,7 +322,7 @@ function NotificationSettings({ saving, setSaving, message, setMessage }: any) {
               onChange={(e) => setSettings((s: any) => ({ ...s, emailDailyDigest: e.target.checked }))}
               className="w-4 h-4 accent-brand-600"
             />
-            <span className="text-sm text-gray-700">Daily activity digest</span>
+            <span className="text-sm text-[#E5E7EB]">Daily activity digest</span>
           </label>
 
           <label className="flex items-center gap-3 cursor-pointer">
@@ -332,12 +332,12 @@ function NotificationSettings({ saving, setSaving, message, setMessage }: any) {
               onChange={(e) => setSettings((s: any) => ({ ...s, emailCampaignComplete: e.target.checked }))}
               className="w-4 h-4 accent-brand-600"
             />
-            <span className="text-sm text-gray-700">Campaign completion alerts</span>
+            <span className="text-sm text-[#E5E7EB]">Campaign completion alerts</span>
           </label>
         </div>
 
-        <div className="border-t border-gray-100 pt-4 mt-4">
-          <h3 className="text-sm font-medium text-gray-700 mb-3">Webhooks</h3>
+        <div className="border-t border-[#21262D] pt-4 mt-4">
+          <h3 className="text-sm font-medium text-[#E5E7EB] mb-3">Webhooks</h3>
 
           <label className="flex items-center gap-3 cursor-pointer mb-3">
             <input
@@ -346,18 +346,18 @@ function NotificationSettings({ saving, setSaving, message, setMessage }: any) {
               onChange={(e) => setSettings((s: any) => ({ ...s, webhookEnabled: e.target.checked }))}
               className="w-4 h-4 accent-brand-600"
             />
-            <span className="text-sm text-gray-700">Enable webhook notifications</span>
+            <span className="text-sm text-[#E5E7EB]">Enable webhook notifications</span>
           </label>
 
           {settings.webhookEnabled && (
             <div>
-              <label className="block text-xs text-gray-500 mb-1">Webhook URL</label>
+              <label className="block text-xs text-[#6B7280] mb-1">Webhook URL</label>
               <input
                 type="url"
                 value={settings.webhookUrl}
                 onChange={(e) => setSettings((s: any) => ({ ...s, webhookUrl: e.target.value }))}
                 placeholder="https://your-app.com/webhook"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                className="w-full px-3 py-2 border border-[#21262D] rounded-lg text-sm"
               />
             </div>
           )}
@@ -367,7 +367,7 @@ function NotificationSettings({ saving, setSaving, message, setMessage }: any) {
           <button
             type="submit"
             disabled={saving}
-            className="flex items-center gap-2 bg-brand-600 text-white px-5 py-2.5 rounded-lg font-medium hover:bg-brand-700 disabled:opacity-50"
+            className="flex items-center gap-2 bg-cyan-500 text-white px-5 py-2.5 rounded-lg font-medium hover:bg-cyan-400 disabled:opacity-50"
           >
             <Save className="w-4 h-4" />
             {saving ? 'Saving...' : 'Save Changes'}
@@ -413,7 +413,7 @@ function SecuritySettings({ saving, setSaving, message, setMessage }: any) {
 
   return (
     <form onSubmit={handleSubmit} className="p-6">
-      <h2 className="text-lg font-semibold text-gray-900 mb-4">Security Settings</h2>
+      <h2 className="text-lg font-semibold text-white mb-4">Security Settings</h2>
 
       {message && (
         <div className={`mb-4 text-sm rounded-lg px-4 py-3 ${
@@ -425,32 +425,32 @@ function SecuritySettings({ saving, setSaving, message, setMessage }: any) {
 
       <div className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1.5">Current Password</label>
+          <label className="block text-sm font-medium text-[#E5E7EB] mb-1.5">Current Password</label>
           <input
             type="password"
             value={form.currentPassword}
             onChange={(e) => setForm((f: any) => ({ ...f, currentPassword: e.target.value }))}
-            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 outline-none"
+            className="w-full px-4 py-2.5 border border-[#21262D] rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1.5">New Password</label>
+          <label className="block text-sm font-medium text-[#E5E7EB] mb-1.5">New Password</label>
           <input
             type="password"
             value={form.newPassword}
             onChange={(e) => setForm((f: any) => ({ ...f, newPassword: e.target.value }))}
-            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 outline-none"
+            className="w-full px-4 py-2.5 border border-[#21262D] rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1.5">Confirm New Password</label>
+          <label className="block text-sm font-medium text-[#E5E7EB] mb-1.5">Confirm New Password</label>
           <input
             type="password"
             value={form.confirmPassword}
             onChange={(e) => setForm((f: any) => ({ ...f, confirmPassword: e.target.value }))}
-            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 outline-none"
+            className="w-full px-4 py-2.5 border border-[#21262D] rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
           />
         </div>
 
@@ -458,7 +458,7 @@ function SecuritySettings({ saving, setSaving, message, setMessage }: any) {
           <button
             type="submit"
             disabled={saving || !form.currentPassword || !form.newPassword || !form.confirmPassword}
-            className="flex items-center gap-2 bg-brand-600 text-white px-5 py-2.5 rounded-lg font-medium hover:bg-brand-700 disabled:opacity-50"
+            className="flex items-center gap-2 bg-cyan-500 text-white px-5 py-2.5 rounded-lg font-medium hover:bg-cyan-400 disabled:opacity-50"
           >
             <Key className="w-4 h-4" />
             {saving ? 'Updating...' : 'Update Password'}

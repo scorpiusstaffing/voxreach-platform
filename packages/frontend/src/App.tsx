@@ -22,7 +22,9 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 function ProtectedLayout({ children }: { children: React.ReactNode }) {
   return (
     <ProtectedRoute>
-      <Layout>{children}</Layout>
+      <div className="min-h-screen bg-[#0A0E17]">
+        <Layout>{children}</Layout>
+      </div>
     </ProtectedRoute>
   );
 }

@@ -68,18 +68,18 @@ export default function Campaigns() {
 
   return (
     <div className="p-8 max-w-5xl">
-      <Link to="/dashboard" className="flex items-center gap-1 text-sm text-gray-400 hover:text-gray-600 mb-4">
+      <Link to="/dashboard" className="flex items-center gap-1 text-sm text-[#6B7280] hover:text-[#9CA3AF] mb-4">
         <ArrowLeft className="w-4 h-4" /> Dashboard
       </Link>
 
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-semibold text-gray-900">Campaigns</h1>
-          <p className="text-gray-500 mt-1">Create and manage outbound calling campaigns</p>
+          <h1 className="text-2xl font-semibold text-white">Campaigns</h1>
+          <p className="text-[#6B7280] mt-1">Create and manage outbound calling campaigns</p>
         </div>
         <button
           onClick={() => setShowCreate(true)}
-          className="flex items-center gap-2 bg-brand-600 text-white px-5 py-2.5 rounded-lg font-medium hover:bg-brand-700 transition-colors"
+          className="flex items-center gap-2 bg-cyan-500 text-white px-5 py-2.5 rounded-lg font-medium hover:bg-cyan-400 transition-colors"
         >
           <Plus className="w-4 h-4" /> New Campaign
         </button>
@@ -88,20 +88,20 @@ export default function Campaigns() {
       {loading ? (
         <div className="space-y-4">
           {[1, 2].map((i) => (
-            <div key={i} className="bg-white rounded-xl border border-gray-200 p-6 animate-pulse">
-              <div className="h-5 bg-gray-100 rounded w-40 mb-2" />
-              <div className="h-4 bg-gray-100 rounded w-60" />
+            <div key={i} className="bg-[#161B22] rounded-xl border border-[#21262D] p-6 animate-pulse">
+              <div className="h-5 bg-[#21262D] rounded w-40 mb-2" />
+              <div className="h-4 bg-[#21262D] rounded w-60" />
             </div>
           ))}
         </div>
       ) : campaigns.length === 0 ? (
-        <div className="bg-white rounded-xl border border-gray-200 p-12 text-center">
-          <Megaphone className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No campaigns yet</h3>
-          <p className="text-gray-500 mb-6">Create your first campaign to start making outbound calls at scale.</p>
+        <div className="bg-[#161B22] rounded-xl border border-[#21262D] p-12 text-center">
+          <Megaphone className="w-12 h-12 text-[#4B5563] mx-auto mb-4" />
+          <h3 className="text-lg font-medium text-white mb-2">No campaigns yet</h3>
+          <p className="text-[#6B7280] mb-6">Create your first campaign to start making outbound calls at scale.</p>
           <button
             onClick={() => setShowCreate(true)}
-            className="bg-brand-600 text-white px-6 py-2.5 rounded-lg font-medium hover:bg-brand-700"
+            className="bg-cyan-500 text-white px-6 py-2.5 rounded-lg font-medium hover:bg-cyan-400"
           >
             Create Campaign
           </button>
@@ -109,24 +109,24 @@ export default function Campaigns() {
       ) : (
         <div className="space-y-4">
           {campaigns.map((campaign) => (
-            <div key={campaign.id} className="bg-white rounded-xl border border-gray-200 p-6 hover:shadow-sm transition-shadow">
+            <div key={campaign.id} className="bg-[#161B22] rounded-xl border border-[#21262D] p-6 hover:shadow-[0_0_30px_rgba(0,180,216,0.08)] transition-shadow">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <div className="flex items-center gap-3">
-                    <h3 className="font-semibold text-gray-900">{campaign.name}</h3>
+                    <h3 className="font-semibold text-white">{campaign.name}</h3>
                     <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
                       campaign.status === 'running' ? 'bg-green-50 text-green-700' :
                       campaign.status === 'paused' ? 'bg-yellow-50 text-yellow-700' :
-                      campaign.status === 'completed' ? 'bg-gray-100 text-gray-600' :
+                      campaign.status === 'completed' ? 'bg-[#21262D] text-[#9CA3AF]' :
                       'bg-blue-50 text-blue-700'
                     }`}>
                       {campaign.status}
                     </span>
                   </div>
                   {campaign.description && (
-                    <p className="text-sm text-gray-500 mt-1">{campaign.description}</p>
+                    <p className="text-sm text-[#6B7280] mt-1">{campaign.description}</p>
                   )}
-                  <div className="flex items-center gap-4 text-sm text-gray-400 mt-2">
+                  <div className="flex items-center gap-4 text-sm text-[#6B7280] mt-2">
                     <span className="flex items-center gap-1">
                       <Target className="w-3.5 h-3.5" /> {campaign.totalContacts} contacts
                     </span>
@@ -140,7 +140,7 @@ export default function Campaigns() {
                     )}
                   </div>
                   {campaign.callsMade > 0 && (
-                    <div className="mt-3 flex gap-4 text-xs text-gray-500">
+                    <div className="mt-3 flex gap-4 text-xs text-[#6B7280]">
                       <div className="flex items-center gap-1">
                         <span className="w-2 h-2 rounded-full bg-green-400" />
                         {campaign.callsConnected} connected ({Math.round((campaign.callsConnected / campaign.callsMade) * 100)}%)
@@ -168,7 +168,7 @@ export default function Campaigns() {
                   )}
                   <button
                     onClick={() => deleteCampaign(campaign.id)}
-                    className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg"
+                    className="p-2 text-[#6B7280] hover:text-red-600 hover:bg-red-50 rounded-lg"
                     title="Delete"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -227,10 +227,10 @@ function CreateCampaignModal({ onClose, onCreated }: { onClose: () => void; onCr
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={onClose}>
-      <div className="bg-white rounded-2xl w-full max-w-xl" onClick={(e) => e.stopPropagation()}>
-        <div className="p-6 border-b border-gray-100 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-gray-900">Create Campaign</h2>
-          <button onClick={onClose} className="p-2 text-gray-400 hover:text-gray-600">
+      <div className="bg-[#161B22] rounded-2xl w-full max-w-xl" onClick={(e) => e.stopPropagation()}>
+        <div className="p-6 border-b border-[#21262D] flex items-center justify-between">
+          <h2 className="text-lg font-semibold text-white">Create Campaign</h2>
+          <button onClick={onClose} className="p-2 text-[#6B7280] hover:text-[#9CA3AF]">
             <span className="sr-only">Close</span>
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -242,34 +242,34 @@ function CreateCampaignModal({ onClose, onCreated }: { onClose: () => void; onCr
           {error && <div className="bg-red-50 text-red-700 text-sm rounded-lg px-4 py-3">{error}</div>}
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1.5">Campaign Name</label>
+            <label className="block text-sm font-medium text-[#E5E7EB] mb-1.5">Campaign Name</label>
             <input
               type="text"
               value={form.name}
               onChange={(e) => update('name', e.target.value)}
               placeholder="e.g., Q1 Sales Outreach"
-              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 outline-none"
+              className="w-full px-4 py-2.5 border border-[#21262D] rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1.5">Description (optional)</label>
+            <label className="block text-sm font-medium text-[#E5E7EB] mb-1.5">Description (optional)</label>
             <textarea
               value={form.description}
               onChange={(e) => update('description', e.target.value)}
               rows={3}
               placeholder="Describe the purpose of this campaign..."
-              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 outline-none resize-none"
+              className="w-full px-4 py-2.5 border border-[#21262D] rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none resize-none"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1.5">Select Agent</label>
+            <label className="block text-sm font-medium text-[#E5E7EB] mb-1.5">Select Agent</label>
             <select
               value={form.agentId}
               onChange={(e) => update('agentId', e.target.value)}
-              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 outline-none"
+              className="w-full px-4 py-2.5 border border-[#21262D] rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
               required
             >
               <option value="">Choose an agent...</option>
@@ -288,14 +288,14 @@ function CreateCampaignModal({ onClose, onCreated }: { onClose: () => void; onCr
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-2.5 border border-gray-300 rounded-lg font-medium text-gray-700 hover:bg-gray-50"
+              className="flex-1 py-2.5 border border-[#21262D] rounded-lg font-medium text-[#E5E7EB] hover:bg-[#0A0E17]"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading || !form.agentId}
-              className="flex-1 py-2.5 bg-brand-600 text-white rounded-lg font-medium hover:bg-brand-700 disabled:opacity-50"
+              className="flex-1 py-2.5 bg-cyan-500 text-white rounded-lg font-medium hover:bg-cyan-400 disabled:opacity-50"
             >
               {loading ? 'Creating...' : 'Create Campaign'}
             </button>
