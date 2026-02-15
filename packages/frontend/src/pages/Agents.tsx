@@ -250,7 +250,7 @@ function CreateAgentModal({ intent, onClose, onCreated }: { intent: string; onCl
 
   const [form, setForm] = useState({
     name: '', direction: intent, systemPrompt: '', firstMessage: '',
-    voiceProvider: '11labs', voiceId: 'rachel', voiceSpeed: 1.0,
+    voiceProvider: 'vapi', voiceId: 'Elliot', voiceSpeed: 1.0,
     modelProvider: 'openai', modelName: 'gpt-4o', temperature: 0.7,
     maxTokens: undefined as number | undefined, language: 'en', transferNumber: '',
     maxDurationSeconds: intent === 'outbound' ? 300 : 600,
@@ -272,7 +272,7 @@ function CreateAgentModal({ intent, onClose, onCreated }: { intent: string; onCl
     setShowAdvanced(false);
     setForm({
       name: '', direction: intent, systemPrompt: '', firstMessage: '',
-      voiceProvider: '11labs', voiceId: 'rachel', voiceSpeed: 1.0,
+      voiceProvider: 'vapi', voiceId: 'Elliot', voiceSpeed: 1.0,
       modelProvider: 'openai', modelName: 'gpt-4o', temperature: 0.7,
       maxTokens: undefined, language: 'en', transferNumber: '',
       maxDurationSeconds: intent === 'outbound' ? 300 : 600,
@@ -329,7 +329,7 @@ function CreateAgentModal({ intent, onClose, onCreated }: { intent: string; onCl
 
   const update = (field: string, value: any) => setForm((f) => ({ ...f, [field]: value }));
   const filteredVoices = voiceOptions.filter((v) => v.provider === form.voiceProvider);
-  const voiceProviders = [{ id: '11labs', name: 'ElevenLabs' }, { id: 'deepgram', name: 'Deepgram' }, { id: 'openai', name: 'OpenAI' }, { id: 'vapi', name: 'Vapi' }, { id: 'azure', name: 'Azure' }, { id: 'playht', name: 'PlayHT' }, { id: 'cartesia', name: 'Cartesia' }];
+  const voiceProviders = [{ id: 'vapi', name: 'Vapi (default)' }, { id: '11labs', name: 'ElevenLabs (requires key)' }, { id: 'deepgram', name: 'Deepgram (requires key)' }, { id: 'openai', name: 'OpenAI (requires key)' }];
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={onClose}>
@@ -489,7 +489,7 @@ function EditAgentModal({ agent, onClose, onUpdated }: { agent: Agent; onClose: 
 
   const update = (field: string, value: any) => setForm((f) => ({ ...f, [field]: value }));
   const filteredVoices = voiceOptions.filter((v) => v.provider === form.voiceProvider);
-  const voiceProviders = [{ id: '11labs', name: 'ElevenLabs' }, { id: 'deepgram', name: 'Deepgram' }, { id: 'openai', name: 'OpenAI' }, { id: 'vapi', name: 'Vapi' }, { id: 'azure', name: 'Azure' }, { id: 'playht', name: 'PlayHT' }, { id: 'cartesia', name: 'Cartesia' }];
+  const voiceProviders = [{ id: 'vapi', name: 'Vapi (default)' }, { id: '11labs', name: 'ElevenLabs (requires key)' }, { id: 'deepgram', name: 'Deepgram (requires key)' }, { id: 'openai', name: 'OpenAI (requires key)' }];
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={onClose}>

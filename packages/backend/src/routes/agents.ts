@@ -34,8 +34,8 @@ router.get('/templates', async (_req: AuthRequest, res: Response) => {
       direction: 'outbound',
       systemPrompt: `You are a professional sales representative. Your goal is to qualify leads, understand their needs, and book appointments.\n\nRules:\n- Be friendly and professional\n- Ask ONE question at a time\n- Listen carefully to responses\n- If interested, book a meeting\n- If not interested, thank them politely\n- Keep the call under 3 minutes`,
       firstMessage: 'Hi, this is {{agentName}} from {{company}}. I\'m reaching out because we help businesses like yours {{value_prop}}. Do you have a quick moment?',
-      voiceProvider: '11labs',
-      voiceId: 'rachel',
+      voiceProvider: 'vapi',
+      voiceId: 'Elliot',
       backgroundSound: 'office',
       maxDurationSeconds: 300,
       firstMessageMode: 'assistant-speaks-first',
@@ -48,8 +48,8 @@ router.get('/templates', async (_req: AuthRequest, res: Response) => {
       direction: 'outbound',
       systemPrompt: `You are an AI recruitment assistant. You're calling hiring managers to present qualified candidates.\n\nRules:\n- Be direct and professional\n- Quickly explain who you are and why you're calling\n- Present the candidate briefly (role, experience level)\n- Ask if they're open to seeing the CV\n- If yes, confirm best email\n- Keep it under 2 minutes`,
       firstMessage: 'Hi, this is {{agentName}} from {{company}}. I\'m reaching out because we have a strong candidate for a role that might be relevant to your team. Are you the right person to discuss this with?',
-      voiceProvider: 'deepgram',
-      voiceId: 'aura-asteria-en',
+      voiceProvider: 'vapi',
+      voiceId: 'Savannah',
       backgroundSound: 'office',
       maxDurationSeconds: 180,
       firstMessageMode: 'assistant-speaks-first',
@@ -61,8 +61,8 @@ router.get('/templates', async (_req: AuthRequest, res: Response) => {
       direction: 'inbound',
       systemPrompt: `You are a friendly AI receptionist. You answer incoming calls, help with common questions, capture lead information, and transfer to the right department when needed.\n\nRules:\n- Always greet warmly\n- Ask how you can help\n- For appointments: collect name, email, preferred date/time\n- For questions: answer from your knowledge base\n- For complex issues: offer to transfer to a human\n- Always confirm information back to the caller`,
       firstMessage: 'Thank you for calling {{company}}. How can I help you today?',
-      voiceProvider: '11labs',
-      voiceId: 'rachel',
+      voiceProvider: 'vapi',
+      voiceId: 'Lily',
       backgroundSound: 'off',
       maxDurationSeconds: 600,
       firstMessageMode: 'assistant-speaks-first',
@@ -74,7 +74,7 @@ router.get('/templates', async (_req: AuthRequest, res: Response) => {
       systemPrompt: `You are an appointment scheduling assistant. You help callers book, reschedule, or cancel appointments.\n\nRules:\n- Collect: name, phone, email, preferred date/time, reason for visit\n- Offer 2-3 available time slots\n- Confirm all details back\n- Send confirmation details\n- Be patient and clear, especially with dates and times`,
       firstMessage: 'Hi! I can help you schedule an appointment. What type of appointment are you looking for?',
       voiceProvider: 'vapi',
-      voiceId: 'michael',
+      voiceId: 'Rohan',
       backgroundSound: 'off',
       maxDurationSeconds: 600,
       firstMessageMode: 'assistant-speaks-first',
@@ -85,8 +85,8 @@ router.get('/templates', async (_req: AuthRequest, res: Response) => {
       direction: 'outbound',
       systemPrompt: `You are a lead qualification specialist. Your job is to call leads, ask qualifying questions, and determine if they're a good fit.\n\nQualification criteria:\n- Budget: Do they have budget allocated?\n- Authority: Are they the decision maker?\n- Need: Do they have the problem you solve?\n- Timeline: When are they looking to implement?\n\nRules:\n- Ask questions naturally, not like a survey\n- ONE question at a time\n- If qualified, book a demo call\n- If not qualified, thank them and end politely`,
       firstMessage: 'Hi {{leadName}}, this is {{agentName}} from {{company}}. You recently expressed interest in {{product}}. I wanted to learn more about what you\'re looking for. Do you have a couple minutes?',
-      voiceProvider: '11labs',
-      voiceId: 'drew',
+      voiceProvider: 'vapi',
+      voiceId: 'Cole',
       backgroundSound: 'office',
       maxDurationSeconds: 300,
       firstMessageMode: 'assistant-speaks-first',
@@ -101,55 +101,45 @@ router.get('/templates', async (_req: AuthRequest, res: Response) => {
 // Voice IDs must match what each provider's API expects
 router.get('/voice-options', async (_req: AuthRequest, res: Response) => {
   const voiceOptions = [
-    // ElevenLabs voices (provider: '11labs')
-    { provider: '11labs', voiceId: 'rachel', name: 'Rachel', gender: 'female', accent: 'American' },
-    { provider: '11labs', voiceId: 'domi', name: 'Domi', gender: 'female', accent: 'American' },
-    { provider: '11labs', voiceId: 'bella', name: 'Bella', gender: 'female', accent: 'American' },
-    { provider: '11labs', voiceId: 'antoni', name: 'Antoni', gender: 'male', accent: 'American' },
-    { provider: '11labs', voiceId: 'elli', name: 'Elli', gender: 'female', accent: 'American' },
-    { provider: '11labs', voiceId: 'josh', name: 'Josh', gender: 'male', accent: 'American' },
-    { provider: '11labs', voiceId: 'arnold', name: 'Arnold', gender: 'male', accent: 'American' },
-    { provider: '11labs', voiceId: 'adam', name: 'Adam', gender: 'male', accent: 'American' },
-    { provider: '11labs', voiceId: 'sam', name: 'Sam', gender: 'male', accent: 'American' },
-    { provider: '11labs', voiceId: 'nicole', name: 'Nicole', gender: 'female', accent: 'Australian' },
-    { provider: '11labs', voiceId: 'glinda', name: 'Glinda', gender: 'female', accent: 'American' },
+    // Vapi built-in voices (provider: 'vapi') - these work with just a Vapi key
+    // Note: Vapi voice IDs are case-sensitive and must be capitalized
+    { provider: 'vapi', voiceId: 'Elliot', name: 'Elliot', gender: 'male', accent: 'American' },
+    { provider: 'vapi', voiceId: 'Savannah', name: 'Savannah', gender: 'female', accent: 'American' },
+    { provider: 'vapi', voiceId: 'Rohan', name: 'Rohan', gender: 'male', accent: 'American' },
+    { provider: 'vapi', voiceId: 'Lily', name: 'Lily', gender: 'female', accent: 'American' },
+    { provider: 'vapi', voiceId: 'Hana', name: 'Hana', gender: 'female', accent: 'American' },
+    { provider: 'vapi', voiceId: 'Neha', name: 'Neha', gender: 'female', accent: 'American' },
+    { provider: 'vapi', voiceId: 'Cole', name: 'Cole', gender: 'male', accent: 'American' },
+    { provider: 'vapi', voiceId: 'Harry', name: 'Harry', gender: 'male', accent: 'American' },
+    { provider: 'vapi', voiceId: 'Paige', name: 'Paige', gender: 'female', accent: 'American' },
+    { provider: 'vapi', voiceId: 'Spencer', name: 'Spencer', gender: 'male', accent: 'American' },
+    { provider: 'vapi', voiceId: 'Nico', name: 'Nico', gender: 'male', accent: 'American' },
+    { provider: 'vapi', voiceId: 'Kai', name: 'Kai', gender: 'male', accent: 'American' },
+    { provider: 'vapi', voiceId: 'Emma', name: 'Emma', gender: 'female', accent: 'American' },
+    { provider: 'vapi', voiceId: 'Sagar', name: 'Sagar', gender: 'male', accent: 'American' },
+    { provider: 'vapi', voiceId: 'Neil', name: 'Neil', gender: 'male', accent: 'American' },
+    { provider: 'vapi', voiceId: 'Leah', name: 'Leah', gender: 'female', accent: 'American' },
+    { provider: 'vapi', voiceId: 'Tara', name: 'Tara', gender: 'female', accent: 'American' },
+    { provider: 'vapi', voiceId: 'Jess', name: 'Jess', gender: 'female', accent: 'American' },
+    { provider: 'vapi', voiceId: 'Leo', name: 'Leo', gender: 'male', accent: 'American' },
+    { provider: 'vapi', voiceId: 'Dan', name: 'Dan', gender: 'male', accent: 'American' },
+    { provider: 'vapi', voiceId: 'Mia', name: 'Mia', gender: 'female', accent: 'American' },
+    { provider: 'vapi', voiceId: 'Zac', name: 'Zac', gender: 'male', accent: 'American' },
+    { provider: 'vapi', voiceId: 'Zoe', name: 'Zoe', gender: 'female', accent: 'American' },
 
-    // Deepgram voices (provider: 'deepgram') - uses 'aura-' prefix format
-    { provider: 'deepgram', voiceId: 'aura-asteria-en', name: 'Asteria', gender: 'female', accent: 'British' },
-    { provider: 'deepgram', voiceId: 'aura-luna-en', name: 'Luna', gender: 'female', accent: 'American' },
-    { provider: 'deepgram', voiceId: 'aura-stella-en', name: 'Stella', gender: 'female', accent: 'American' },
-    { provider: 'deepgram', voiceId: 'aura-athena-en', name: 'Athena', gender: 'female', accent: 'British' },
-    { provider: 'deepgram', voiceId: 'aura-hera-en', name: 'Hera', gender: 'female', accent: 'American' },
-    { provider: 'deepgram', voiceId: 'aura-orion-en', name: 'Orion', gender: 'male', accent: 'American' },
-    { provider: 'deepgram', voiceId: 'aura-arcas-en', name: 'Arcas', gender: 'male', accent: 'British' },
-    { provider: 'deepgram', voiceId: 'aura-perseus-en', name: 'Perseus', gender: 'male', accent: 'American' },
-    { provider: 'deepgram', voiceId: 'aura-angus-en', name: 'Angus', gender: 'male', accent: 'Irish' },
-    { provider: 'deepgram', voiceId: 'aura-orpheus-en', name: 'Orpheus', gender: 'male', accent: 'American' },
+    // Other providers require additional API keys - shown for reference
+    // ElevenLabs voices (requires ElevenLabs API key)
+    { provider: '11labs', voiceId: 'rachel', name: 'Rachel (requires key)', gender: 'female', accent: 'American' },
+    { provider: '11labs', voiceId: 'domi', name: 'Domi (requires key)', gender: 'female', accent: 'American' },
 
-    // Vapi built-in voices (provider: 'vapi') - lowercase IDs
-    { provider: 'vapi', voiceId: 'jennifer', name: 'Jennifer', gender: 'female', accent: 'American' },
-    { provider: 'vapi', voiceId: 'michael', name: 'Michael', gender: 'male', accent: 'American' },
+    // Deepgram voices (requires Deepgram API key)
+    { provider: 'deepgram', voiceId: 'aura-asteria-en', name: 'Asteria (requires key)', gender: 'female', accent: 'British' },
+    { provider: 'deepgram', voiceId: 'aura-luna-en', name: 'Luna (requires key)', gender: 'female', accent: 'American' },
 
-    // OpenAI voices (provider: 'openai')
-    { provider: 'openai', voiceId: 'alloy', name: 'Alloy', gender: 'neutral', accent: 'American' },
-    { provider: 'openai', voiceId: 'echo', name: 'Echo', gender: 'male', accent: 'American' },
-    { provider: 'openai', voiceId: 'fable', name: 'Fable', gender: 'male', accent: 'British' },
-    { provider: 'openai', voiceId: 'onyx', name: 'Onyx', gender: 'male', accent: 'American' },
-    { provider: 'openai', voiceId: 'nova', name: 'Nova', gender: 'female', accent: 'American' },
-    { provider: 'openai', voiceId: 'shimmer', name: 'Shimmer', gender: 'female', accent: 'American' },
-
-    // Azure voices (provider: 'azure')
-    { provider: 'azure', voiceId: 'en-US-JennyNeural', name: 'Jenny', gender: 'female', accent: 'American' },
-    { provider: 'azure', voiceId: 'en-US-GuyNeural', name: 'Guy', gender: 'male', accent: 'American' },
-    { provider: 'azure', voiceId: 'en-GB-SoniaNeural', name: 'Sonia', gender: 'female', accent: 'British' },
-    { provider: 'azure', voiceId: 'en-AU-NatashaNeural', name: 'Natasha', gender: 'female', accent: 'Australian' },
-
-    // PlayHT voices (provider: 'playht')
-    { provider: 'playht', voiceId: 'larry', name: 'Larry', gender: 'male', accent: 'American' },
-    { provider: 'playht', voiceId: 'olivia', name: 'Olivia', gender: 'female', accent: 'American' },
-
-    // Cartesia voices (provider: 'cartesia') - uses UUID format
-    { provider: 'cartesia', voiceId: 'sonic', name: 'Sonic', gender: 'neutral', accent: 'American' },
+    // OpenAI voices (requires OpenAI API key)
+    { provider: 'openai', voiceId: 'alloy', name: 'Alloy (requires key)', gender: 'neutral', accent: 'American' },
+    { provider: 'openai', voiceId: 'echo', name: 'Echo (requires key)', gender: 'male', accent: 'American' },
+    { provider: 'openai', voiceId: 'nova', name: 'Nova (requires key)', gender: 'female', accent: 'American' },
   ];
 
   res.json({ success: true, data: voiceOptions });
@@ -235,8 +225,8 @@ router.post('/', async (req: AuthRequest, res: Response) => {
         name: `${name} (Voxreach)`,
         firstMessage: firstMessage || 'Hello, how can I help you today?',
         systemPrompt,
-        voiceProvider: voiceProvider || '11labs',
-        voiceId: voiceId || 'rachel',
+        voiceProvider: voiceProvider || 'vapi',
+        voiceId: voiceId || 'Elliot',
         voiceSpeed,
         voiceChunkPlan,
         voiceFormatPlan,
@@ -307,8 +297,8 @@ router.post('/', async (req: AuthRequest, res: Response) => {
         vapiAssistantId: vapiAssistant.id,
         systemPrompt,
         firstMessage: firstMessage || 'Hello, how can I help you today?',
-        voiceProvider: voiceProvider || '11labs',
-        voiceId: voiceId || 'rachel',
+        voiceProvider: voiceProvider || 'vapi',
+        voiceId: voiceId || 'Elliot',
         language: language || 'en',
         transferNumber,
         endCallPhrases: endCallPhrases || [],
