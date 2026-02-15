@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../lib/auth';
 import { api } from '../lib/api';
-import { Phone, Users, PhoneCall, BarChart3, Plus, LogOut, Settings, PhoneOutgoing } from 'lucide-react';
+import { Phone, Users, PhoneCall, BarChart3, Plus, LogOut, Settings, PhoneOutgoing, Zap } from 'lucide-react';
 
 interface Stats {
   totalAgents: number;
@@ -48,6 +48,7 @@ export default function Dashboard() {
         <nav className="flex-1 p-4 space-y-1">
           <NavItem icon={<BarChart3 className="w-5 h-5" />} label="Dashboard" href="/dashboard" active />
           <NavItem icon={<Users className="w-5 h-5" />} label="Agents" href="/dashboard/agents" />
+          <NavItem icon={<Zap className="w-5 h-5" />} label="Tools" href="/dashboard/tools" />
           <NavItem icon={<Phone className="w-5 h-5" />} label="Phone Numbers" href="/dashboard/numbers" />
           <NavItem icon={<PhoneCall className="w-5 h-5" />} label="Calls" href="/dashboard/calls" />
           {isOutbound && (

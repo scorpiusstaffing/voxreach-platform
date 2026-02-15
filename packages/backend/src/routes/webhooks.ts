@@ -59,6 +59,22 @@ router.post('/vapi', async (req: Request, res: Response) => {
           ? Math.round((endedAt.getTime() - new Date(call.startedAt).getTime()) / 1000)
           : 0);
 
+        // Extract structured data from analysis if available
+        const analysis = message.analysis || {};
+        const structuredData = analysis.structuredData || null;
+        
+        // Merge with existing metadata
+        const existingMetadata = (call.metadata as Record<string, any>) || {};
+        const updatedMetadata = {
+          ...existingMetadata,
+          analysis: {
+            summary: analysis.summary,
+            successEvaluation: analysis.successEvaluation,
+            structuredData,
+          },
+          endedReason: message.endedReason,
+        };
+
         await prisma.call.update({
           where: { id: call.id },
           data: {
@@ -67,9 +83,10 @@ router.post('/vapi', async (req: Request, res: Response) => {
             durationSeconds,
             transcript: message.transcript || message.artifact?.transcript || null,
             recordingUrl: message.recordingUrl || message.artifact?.recordingUrl || null,
-            summary: message.summary || message.analysis?.summary || null,
+            summary: analysis.summary || message.summary || null,
             costCents: message.cost ? Math.round(message.cost * 100) : null,
-            outcome: message.analysis?.successEvaluation || message.endedReason || null,
+            outcome: analysis.successEvaluation || message.endedReason || null,
+            metadata: updatedMetadata,
           },
         });
 

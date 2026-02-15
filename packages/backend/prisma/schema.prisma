@@ -39,6 +39,7 @@ model Organization {
   calls                Call[]
   campaigns            Campaign[]
   leads                Lead[]
+  tools                Tool[]
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
 }
@@ -63,6 +64,45 @@ model Agent {
   campaigns        Campaign[]
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
+
+  // Extended Vapi configuration stored as JSON
+  vapiConfig       Json?
+
+  // Relations
+  tools            Tool[]
+
+  @@index([organizationId])
+}
+
+model Tool {
+  id              String   @id @default(uuid())
+  organizationId  String
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  name            String
+  description     String   @db.Text
+  type            String   @default("api") // api, function, transfer
+
+  // Parameter schema (JSON Schema format)
+  parameters      Json?
+
+  // For API Request tools
+  apiEndpoint     String?
+  apiMethod       String?  @default("POST")
+  apiHeaders      Json?    // { "Authorization": "Bearer token", ... }
+  apiBodyTemplate String?  @db.Text
+
+  // For Transfer tools
+  transferNumber  String?
+  transferMessage String?
+
+  // Vapi tool ID for reference
+  vapiToolId      String?
+
+  // Relations
+  agents          Agent[]
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
   @@index([organizationId])
 }

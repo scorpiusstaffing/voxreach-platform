@@ -12,7 +12,10 @@ router.get('/', async (req: AuthRequest, res: Response) => {
   try {
     const agents = await prisma.agent.findMany({
       where: { organizationId: req.organizationId },
-      include: { phoneNumbers: { select: { id: true, number: true, friendlyName: true } } },
+      include: { 
+        phoneNumbers: { select: { id: true, number: true, friendlyName: true } },
+        tools: { select: { id: true, name: true, type: true } },
+      },
       orderBy: { createdAt: 'desc' },
     });
     res.json({ success: true, data: agents });
@@ -128,6 +131,20 @@ router.get('/voice-options', async (_req: AuthRequest, res: Response) => {
     { provider: 'openai', voiceId: 'onyx', name: 'Onyx', gender: 'male', accent: 'American' },
     { provider: 'openai', voiceId: 'nova', name: 'Nova', gender: 'female', accent: 'American' },
     { provider: 'openai', voiceId: 'shimmer', name: 'Shimmer', gender: 'female', accent: 'American' },
+
+    // Azure voices
+    { provider: 'azure', voiceId: 'en-US-JennyNeural', name: 'Jenny', gender: 'female', accent: 'American' },
+    { provider: 'azure', voiceId: 'en-US-GuyNeural', name: 'Guy', gender: 'male', accent: 'American' },
+    { provider: 'azure', voiceId: 'en-GB-SoniaNeural', name: 'Sonia', gender: 'female', accent: 'British' },
+    { provider: 'azure', voiceId: 'en-AU-NatashaNeural', name: 'Natasha', gender: 'female', accent: 'Australian' },
+
+    // PlayHT voices
+    { provider: 'playht', voiceId: 'jennifer', name: 'Jennifer', gender: 'female', accent: 'American' },
+    { provider: 'playht', voiceId: 'michael', name: 'Michael', gender: 'male', accent: 'American' },
+
+    // Cartesia voices
+    { provider: 'cartesia', voiceId: '248be419-c632-4f23-adf1-5324ed7dbf1f', name: 'British Lady', gender: 'female', accent: 'British' },
+    { provider: 'cartesia', voiceId: 'c2ac25f9-ecc4-4f56-9095-651354df60c0', name: 'Morgan', gender: 'male', accent: 'American' },
   ];
 
   res.json({ success: true, data: voiceOptions });
@@ -153,12 +170,20 @@ router.post('/', async (req: AuthRequest, res: Response) => {
     const {
       name, direction, systemPrompt, firstMessage,
       voiceProvider, voiceId, voiceSpeed,
-      modelProvider, modelName, temperature,
+      modelProvider, modelName, temperature, maxTokens,
       transcriberProvider, transcriberModel, transcriberLanguage,
-      language, transferNumber, endCallPhrases,
+      transcriberConfig,
+      language, transferNumber, endCallPhrases, endCallFunctionEnabled,
       maxDurationSeconds, backgroundSound, firstMessageMode,
       voicemailDetection, voicemailMessage, endCallMessage,
       silenceTimeoutSeconds, templateId,
+      // Advanced features
+      tools, toolIds,
+      knowledgeBase,
+      analysisPlan,
+      voiceChunkPlan, voiceFormatPlan,
+      hipaaEnabled, recordingEnabled,
+      firstMessageInterruptionsEnabled,
     } = req.body;
 
     if (!name || !direction || !systemPrompt) {
@@ -167,6 +192,36 @@ router.post('/', async (req: AuthRequest, res: Response) => {
 
     // Build webhook URL for this org
     const webhookUrl = config.webhookUrl || `https://backend-production-fc92.up.railway.app/api/webhooks/vapi`;
+
+    // Fetch tool configurations if toolIds provided
+    let toolsConfig: any[] = tools || [];
+    if (toolIds?.length) {
+      const dbTools = await prisma.tool.findMany({
+        where: { id: { in: toolIds }, organizationId: req.organizationId },
+      });
+      
+      // Convert DB tools to Vapi format
+      toolsConfig = dbTools.map(t => ({
+        type: t.type === 'transfer' ? 'transfer' : 'function',
+        name: t.name,
+        description: t.description,
+        parameters: t.parameters || {},
+        ...(t.apiEndpoint && {
+          server: {
+            url: t.apiEndpoint,
+            method: t.apiMethod || 'POST',
+            headers: t.apiHeaders || {},
+          },
+        }),
+        ...(t.transferNumber && {
+          transferConfig: {
+            mode: 'number',
+            destination: t.transferNumber,
+            message: t.transferMessage,
+          },
+        }),
+      }));
+    }
 
     // Create Vapi assistant
     let vapiAssistant: any = null;
@@ -178,14 +233,19 @@ router.post('/', async (req: AuthRequest, res: Response) => {
         voiceProvider: voiceProvider || '11labs',
         voiceId: voiceId || 'rachel',
         voiceSpeed,
+        voiceChunkPlan,
+        voiceFormatPlan,
         modelProvider: modelProvider || 'openai',
         modelName: modelName || 'gpt-4o',
         temperature,
+        maxTokens,
         transcriberProvider: transcriberProvider || 'deepgram',
         transcriberModel: transcriberModel || 'nova-3',
         transcriberLanguage: transcriberLanguage || language || 'en',
+        transcriberConfig,
         language: language || 'en',
         endCallPhrases: endCallPhrases || [],
+        endCallFunctionEnabled,
         transferNumber,
         maxDurationSeconds: maxDurationSeconds || (direction === 'outbound' ? 300 : 600),
         backgroundSound: backgroundSound || (direction === 'outbound' ? 'office' : 'off'),
@@ -195,11 +255,44 @@ router.post('/', async (req: AuthRequest, res: Response) => {
         endCallMessage,
         silenceTimeoutSeconds: silenceTimeoutSeconds || 30,
         serverUrl: webhookUrl,
+        tools: toolsConfig,
+        knowledgeBase,
+        analysisPlan,
+        hipaaEnabled,
+        recordingEnabled,
+        firstMessageInterruptionsEnabled,
       });
     } catch (err: any) {
       console.error('Vapi assistant creation failed:', err);
       return res.status(502).json({ success: false, error: `Failed to create voice agent: ${err.message}` });
     }
+
+    // Build vapiConfig JSON to store extended settings
+    const vapiConfig = {
+      modelProvider: modelProvider || 'openai',
+      modelName: modelName || 'gpt-4o',
+      temperature,
+      maxTokens,
+      voiceSpeed,
+      voiceChunkPlan,
+      voiceFormatPlan,
+      transcriberProvider: transcriberProvider || 'deepgram',
+      transcriberModel: transcriberModel || 'nova-3',
+      transcriberConfig,
+      maxDurationSeconds: maxDurationSeconds || (direction === 'outbound' ? 300 : 600),
+      backgroundSound: backgroundSound || (direction === 'outbound' ? 'office' : 'off'),
+      firstMessageMode: firstMessageMode || 'assistant-speaks-first',
+      voicemailDetection: voicemailDetection ?? (direction === 'outbound'),
+      voicemailMessage,
+      endCallMessage,
+      silenceTimeoutSeconds: silenceTimeoutSeconds || 30,
+      endCallFunctionEnabled,
+      knowledgeBase,
+      analysisPlan,
+      hipaaEnabled,
+      recordingEnabled,
+      firstMessageInterruptionsEnabled,
+    };
 
     const agent = await prisma.agent.create({
       data: {
@@ -214,6 +307,10 @@ router.post('/', async (req: AuthRequest, res: Response) => {
         language: language || 'en',
         transferNumber,
         endCallPhrases: endCallPhrases || [],
+        vapiConfig,
+        ...(toolIds?.length && {
+          tools: { connect: toolIds.map((id: string) => ({ id })) },
+        }),
       },
     });
 
@@ -231,6 +328,7 @@ router.get('/:id', async (req: AuthRequest, res: Response) => {
       where: { id: req.params.id, organizationId: req.organizationId },
       include: {
         phoneNumbers: true,
+        tools: true,
         calls: { take: 20, orderBy: { createdAt: 'desc' } },
       },
     });
@@ -259,18 +357,55 @@ router.patch('/:id', async (req: AuthRequest, res: Response) => {
   try {
     const agent = await prisma.agent.findFirst({
       where: { id: req.params.id, organizationId: req.organizationId },
+      include: { tools: true },
     });
     if (!agent) return res.status(404).json({ success: false, error: 'Agent not found' });
 
     const {
       name, systemPrompt, firstMessage,
       voiceProvider, voiceId, voiceSpeed,
-      modelProvider, modelName, temperature,
+      modelProvider, modelName, temperature, maxTokens,
       language, transferNumber, endCallPhrases, isActive,
       maxDurationSeconds, backgroundSound, firstMessageMode,
       voicemailDetection, voicemailMessage, endCallMessage,
       silenceTimeoutSeconds,
+      // Advanced features
+      voiceChunkPlan, voiceFormatPlan,
+      transcriberConfig,
+      endCallFunctionEnabled,
+      knowledgeBase,
+      analysisPlan,
+      hipaaEnabled, recordingEnabled,
+      firstMessageInterruptionsEnabled,
+      toolIds,
     } = req.body;
+
+    // Get existing vapiConfig and merge updates
+    const existingConfig = (agent.vapiConfig as Record<string, any>) || {};
+    const updatedVapiConfig = {
+      ...existingConfig,
+      ...(modelProvider !== undefined && { modelProvider }),
+      ...(modelName !== undefined && { modelName }),
+      ...(temperature !== undefined && { temperature }),
+      ...(maxTokens !== undefined && { maxTokens }),
+      ...(voiceSpeed !== undefined && { voiceSpeed }),
+      ...(voiceChunkPlan !== undefined && { voiceChunkPlan }),
+      ...(voiceFormatPlan !== undefined && { voiceFormatPlan }),
+      ...(transcriberConfig !== undefined && { transcriberConfig }),
+      ...(maxDurationSeconds !== undefined && { maxDurationSeconds }),
+      ...(backgroundSound !== undefined && { backgroundSound }),
+      ...(firstMessageMode !== undefined && { firstMessageMode }),
+      ...(voicemailDetection !== undefined && { voicemailDetection }),
+      ...(voicemailMessage !== undefined && { voicemailMessage }),
+      ...(endCallMessage !== undefined && { endCallMessage }),
+      ...(silenceTimeoutSeconds !== undefined && { silenceTimeoutSeconds }),
+      ...(endCallFunctionEnabled !== undefined && { endCallFunctionEnabled }),
+      ...(knowledgeBase !== undefined && { knowledgeBase }),
+      ...(analysisPlan !== undefined && { analysisPlan }),
+      ...(hipaaEnabled !== undefined && { hipaaEnabled }),
+      ...(recordingEnabled !== undefined && { recordingEnabled }),
+      ...(firstMessageInterruptionsEnabled !== undefined && { firstMessageInterruptionsEnabled }),
+    };
 
     // Update Vapi assistant if exists
     if (agent.vapiAssistantId) {
@@ -278,19 +413,22 @@ router.patch('/:id', async (req: AuthRequest, res: Response) => {
         const vapiUpdate: Record<string, unknown> = {};
         if (name) vapiUpdate.name = `${name} (Voxreach)`;
         if (firstMessage) vapiUpdate.firstMessage = firstMessage;
-        if (systemPrompt || modelProvider || modelName || temperature !== undefined) {
+        if (systemPrompt || modelProvider || modelName || temperature !== undefined || maxTokens !== undefined) {
           vapiUpdate.model = {
-            provider: modelProvider || 'openai',
-            model: modelName || 'gpt-4o',
+            provider: modelProvider || existingConfig.modelProvider || 'openai',
+            model: modelName || existingConfig.modelName || 'gpt-4o',
             messages: [{ role: 'system', content: systemPrompt || agent.systemPrompt }],
-            ...(temperature !== undefined && { temperature }),
+            ...(temperature !== undefined ? { temperature } : existingConfig.temperature !== undefined ? { temperature: existingConfig.temperature } : {}),
+            ...(maxTokens !== undefined ? { maxTokens } : existingConfig.maxTokens !== undefined ? { maxTokens: existingConfig.maxTokens } : {}),
           };
         }
-        if (voiceProvider || voiceId || voiceSpeed !== undefined) {
+        if (voiceProvider || voiceId || voiceSpeed !== undefined || voiceChunkPlan || voiceFormatPlan) {
           vapiUpdate.voice = {
             provider: voiceProvider || agent.voiceProvider,
             voiceId: voiceId || agent.voiceId,
-            ...(voiceSpeed !== undefined && { speed: voiceSpeed }),
+            ...(voiceSpeed !== undefined ? { speed: voiceSpeed } : existingConfig.voiceSpeed !== undefined ? { speed: existingConfig.voiceSpeed } : {}),
+            ...(voiceChunkPlan !== undefined ? { chunkPlan: voiceChunkPlan } : existingConfig.voiceChunkPlan ? { chunkPlan: existingConfig.voiceChunkPlan } : {}),
+            ...(voiceFormatPlan !== undefined ? { formatPlan: voiceFormatPlan } : existingConfig.voiceFormatPlan ? { formatPlan: existingConfig.voiceFormatPlan } : {}),
           };
         }
         if (maxDurationSeconds) vapiUpdate.maxDurationSeconds = maxDurationSeconds;
@@ -301,11 +439,86 @@ router.patch('/:id', async (req: AuthRequest, res: Response) => {
           vapiUpdate.voicemailDetection = voicemailDetection ? { provider: 'vapi' } : 'off';
         }
         if (voicemailMessage) vapiUpdate.voicemailMessage = voicemailMessage;
-        if (silenceTimeoutSeconds) {
+        if (silenceTimeoutSeconds !== undefined) {
           vapiUpdate.messagePlan = { idleTimeoutSeconds: silenceTimeoutSeconds };
         }
         if (transferNumber !== undefined) {
           vapiUpdate.forwardingPhoneNumber = transferNumber || null;
+        }
+        if (endCallFunctionEnabled !== undefined) {
+          vapiUpdate.endCallFunctionEnabled = endCallFunctionEnabled;
+        }
+        if (transcriberConfig !== undefined || req.body.transcriberProvider !== undefined) {
+          vapiUpdate.transcriber = {
+            provider: req.body.transcriberProvider || existingConfig.transcriberProvider || 'deepgram',
+            model: req.body.transcriberModel || existingConfig.transcriberModel || 'nova-3',
+            language: req.body.transcriberLanguage || language || agent.language || 'en',
+            ...(transcriberConfig !== undefined ? transcriberConfig : existingConfig.transcriberConfig || {}),
+          };
+        }
+        if (knowledgeBase !== undefined) {
+          vapiUpdate.knowledgeBase = knowledgeBase;
+        }
+        if (analysisPlan !== undefined) {
+          vapiUpdate.analysisPlan = analysisPlan;
+        }
+        if (hipaaEnabled !== undefined || recordingEnabled !== undefined) {
+          vapiUpdate.compliancePlan = {
+            ...(hipaaEnabled !== undefined && { hipaaEnabled }),
+            ...(recordingEnabled !== undefined && { pciEnabled: false }),
+          };
+        }
+        if (recordingEnabled !== undefined) {
+          vapiUpdate.recordingEnabled = recordingEnabled;
+        }
+        if (firstMessageInterruptionsEnabled !== undefined) {
+          vapiUpdate.firstMessageInterruptionsEnabled = firstMessageInterruptionsEnabled;
+        }
+
+        // Handle tools update
+        if (toolIds !== undefined) {
+          if (toolIds.length > 0) {
+            const dbTools = await prisma.tool.findMany({
+              where: { id: { in: toolIds }, organizationId: req.organizationId },
+            });
+            const toolsConfig = dbTools.map(t => ({
+              type: t.type === 'transfer' ? 'transfer' : 'function',
+              name: t.name,
+              description: t.description,
+              parameters: t.parameters || {},
+              ...(t.apiEndpoint && {
+                server: {
+                  url: t.apiEndpoint,
+                  method: t.apiMethod || 'POST',
+                  headers: t.apiHeaders || {},
+                },
+              }),
+              ...(t.transferNumber && {
+                transferConfig: {
+                  mode: 'number',
+                  destination: t.transferNumber,
+                  message: t.transferMessage,
+                },
+              }),
+            }));
+            vapiUpdate.model = {
+              ...(vapiUpdate.model || {
+                provider: existingConfig.modelProvider || 'openai',
+                model: existingConfig.modelName || 'gpt-4o',
+                messages: [{ role: 'system', content: agent.systemPrompt }],
+              }),
+              tools: toolsConfig,
+            };
+          } else {
+            vapiUpdate.model = {
+              ...(vapiUpdate.model || {
+                provider: existingConfig.modelProvider || 'openai',
+                model: existingConfig.modelName || 'gpt-4o',
+                messages: [{ role: 'system', content: agent.systemPrompt }],
+              }),
+              tools: [],
+            };
+          }
         }
 
         if (Object.keys(vapiUpdate).length > 0) {
@@ -316,19 +529,31 @@ router.patch('/:id', async (req: AuthRequest, res: Response) => {
       }
     }
 
+    // Build update data for Prisma
+    const updateData: any = {
+      ...(name !== undefined && { name }),
+      ...(systemPrompt !== undefined && { systemPrompt }),
+      ...(firstMessage !== undefined && { firstMessage }),
+      ...(voiceProvider !== undefined && { voiceProvider }),
+      ...(voiceId !== undefined && { voiceId }),
+      ...(language !== undefined && { language }),
+      ...(transferNumber !== undefined && { transferNumber }),
+      ...(endCallPhrases !== undefined && { endCallPhrases }),
+      ...(isActive !== undefined && { isActive }),
+      vapiConfig: updatedVapiConfig,
+    };
+
+    // Handle tool relations update
+    if (toolIds !== undefined) {
+      updateData.tools = {
+        set: toolIds.map((id: string) => ({ id })),
+      };
+    }
+
     const updated = await prisma.agent.update({
       where: { id: agent.id },
-      data: {
-        ...(name !== undefined && { name }),
-        ...(systemPrompt !== undefined && { systemPrompt }),
-        ...(firstMessage !== undefined && { firstMessage }),
-        ...(voiceProvider !== undefined && { voiceProvider }),
-        ...(voiceId !== undefined && { voiceId }),
-        ...(language !== undefined && { language }),
-        ...(transferNumber !== undefined && { transferNumber }),
-        ...(endCallPhrases !== undefined && { endCallPhrases }),
-        ...(isActive !== undefined && { isActive }),
-      },
+      data: updateData,
+      include: { tools: true },
     });
 
     res.json({ success: true, data: updated });

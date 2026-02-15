@@ -5,6 +5,7 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
 import Agents from './pages/Agents';
+import Tools from './pages/Tools';
 import PhoneNumbers from './pages/PhoneNumbers';
 import Calls from './pages/Calls';
 
@@ -23,6 +24,7 @@ export default function App() {
       <Route path="/signup" element={<Signup />} />
       <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
       <Route path="/dashboard/agents" element={<ProtectedRoute><Agents /></ProtectedRoute>} />
+      <Route path="/dashboard/tools" element={<ProtectedRoute><Tools /></ProtectedRoute>} />
       <Route path="/dashboard/numbers" element={<ProtectedRoute><PhoneNumbers /></ProtectedRoute>} />
       <Route path="/dashboard/calls" element={<ProtectedRoute><Calls /></ProtectedRoute>} />
     </Routes>

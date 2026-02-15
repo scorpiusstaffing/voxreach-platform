@@ -13,6 +13,10 @@ import callRoutes from './routes/calls';
 import campaignRoutes from './routes/campaigns';
 import webhookRoutes from './routes/webhooks';
 import dashboardRoutes from './routes/dashboard';
+import toolRoutes from './routes/tools';
+import fileRoutes from './routes/files';
+import toolRoutes from './routes/tools';
+import fileRoutes from './routes/files';
 
 const app = express();
 
@@ -35,6 +39,10 @@ app.use('/api/calls', callRoutes);
 app.use('/api/campaigns', campaignRoutes);
 app.use('/api/webhooks', webhookRoutes);
 app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/tools', toolRoutes);
+app.use('/api/files', fileRoutes);
+app.use('/api/tools', toolRoutes);
+app.use('/api/files', fileRoutes);
 
 // 404 handler
 app.use((_req, res) => {
