@@ -57,18 +57,23 @@ router.post('/', async (req: AuthRequest, res: Response) => {
       return res.status(400).json({ success: false, error: 'name, description, and type are required' });
     }
 
-    // Validate based on type
-    if (type === 'function' && !apiEndpoint) {
+    // Map frontend type to internal/Vapi type
+    // Frontend sends: 'api', 'transfer', 'endCall'
+    // Vapi expects: 'function', 'transfer', 'endCall'
+    const mappedType = type === 'api' ? 'function' : type;
+
+    // Validate based on mapped type
+    if (mappedType === 'function' && !apiEndpoint) {
       return res.status(400).json({ success: false, error: 'apiEndpoint is required for API Request tools' });
     }
-    if (type === 'transfer' && !transferNumber) {
+    if (mappedType === 'transfer' && !transferNumber) {
       return res.status(400).json({ success: false, error: 'transferNumber is required for Transfer tools' });
     }
 
     // Create in Vapi first
     let vapiTool: any = null;
     try {
-      if (type === 'function') {
+      if (mappedType === 'function') {
         vapiTool = await vapi.createTool({
           type: 'function',
           name,
@@ -81,7 +86,7 @@ router.post('/', async (req: AuthRequest, res: Response) => {
             headers: apiHeaders || {},
           },
         });
-      } else if (type === 'transfer') {
+      } else if (mappedType === 'transfer') {
         vapiTool = await vapi.createTool({
           type: 'transfer',
           name,
@@ -92,7 +97,7 @@ router.post('/', async (req: AuthRequest, res: Response) => {
             message: transferMessage,
           },
         });
-      } else if (type === 'endCall') {
+      } else if (mappedType === 'endCall') {
         vapiTool = await vapi.createTool({
           type: 'endCall',
           name,

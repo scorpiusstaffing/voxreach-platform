@@ -215,6 +215,7 @@ export default function Agents() {
           intent={organization?.intent || 'outbound'}
           onClose={() => setShowCreate(false)}
           onCreated={() => { setShowCreate(false); loadAgents(); }}
+          key={showCreate ? 'create-modal' : 'hidden'}
         />
       )}
 
@@ -265,6 +266,25 @@ function CreateAgentModal({ intent, onClose, onCreated }: { intent: string; onCl
   const [error, setError] = useState('');
 
   useEffect(() => {
+    // Reset state when modal opens
+    setStep('template');
+    setError('');
+    setShowAdvanced(false);
+    setForm({
+      name: '', direction: intent, systemPrompt: '', firstMessage: '',
+      voiceProvider: '11labs', voiceId: 'rachel', voiceSpeed: 1.0,
+      modelProvider: 'openai', modelName: 'gpt-4o', temperature: 0.7,
+      maxTokens: undefined, language: 'en', transferNumber: '',
+      maxDurationSeconds: intent === 'outbound' ? 300 : 600,
+      backgroundSound: intent === 'outbound' ? 'office' : 'off',
+      firstMessageMode: 'assistant-speaks-first', voicemailDetection: intent === 'outbound',
+      voicemailMessage: '', endCallMessage: '', silenceTimeoutSeconds: 30,
+      endCallFunctionEnabled: false, firstMessageInterruptionsEnabled: false, recordingEnabled: true,
+      transcriberProvider: 'deepgram', transcriberModel: 'nova-3',
+      transcriberConfig: { confidenceThreshold: 0.4, wordBoost: [], keytermsPrompt: '', endUtteranceSilenceThreshold: 700 },
+      toolIds: [], analysisEnabled: false, analysisSummaryPrompt: '', analysisSuccessEvaluation: '',
+    });
+
     Promise.all([
       api.get('/agents/templates').then((r) => setTemplates(r.data)),
       api.get('/agents/voice-options').then((r) => setVoiceOptions(r.data)),
@@ -279,6 +299,7 @@ function CreateAgentModal({ intent, onClose, onCreated }: { intent: string; onCl
       maxDurationSeconds: t.maxDurationSeconds || f.maxDurationSeconds, firstMessageMode: t.firstMessageMode || f.firstMessageMode,
       voicemailDetection: t.voicemailDetection ?? f.voicemailDetection, voicemailMessage: t.voicemailMessage || f.voicemailMessage,
     }));
+    setError(''); // Clear error when switching templates
     setStep('configure');
   };
 
@@ -392,7 +413,7 @@ function CreateAgentModal({ intent, onClose, onCreated }: { intent: string; onCl
             )}
 
             <div className="flex gap-3 pt-2">
-              <button type="button" onClick={() => step === 'configure' ? setStep('template') : onClose()} className="flex-1 py-2.5 border border-gray-300 rounded-lg font-medium text-gray-700 hover:bg-gray-50">{step === 'configure' ? 'Back' : 'Cancel'}</button>
+              <button type="button" onClick={() => { if (step === 'configure') { setError(''); setStep('template'); } else { onClose(); } }} className="flex-1 py-2.5 border border-gray-300 rounded-lg font-medium text-gray-700 hover:bg-gray-50">{step === 'configure' ? 'Back' : 'Cancel'}</button>
               <button type="submit" disabled={loading} className="flex-1 py-2.5 bg-brand-600 text-white rounded-lg font-medium hover:bg-brand-700 disabled:opacity-50">{loading ? 'Creating...' : 'Create Agent'}</button>
             </div>
           </form>

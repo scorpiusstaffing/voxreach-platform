@@ -129,6 +129,23 @@ export interface CreateAssistantParams {
   firstMessageInterruptionsEnabled?: boolean;
 }
 
+// Map voice provider names to Vapi API expected format
+const voiceProviderMap: Record<string, string> = {
+  '11labs': 'elevenlabs',
+  'elevenlabs': 'elevenlabs',
+  'deepgram': 'deepgram',
+  'openai': 'openai',
+  'vapi': 'vapi',
+  'azure': 'azure',
+  'playht': 'playht',
+  'cartesia': 'cartesia',
+};
+
+function mapVoiceProvider(provider: string | undefined): string {
+  if (!provider) return 'elevenlabs';
+  return voiceProviderMap[provider] || provider;
+}
+
 export async function createAssistant(params: CreateAssistantParams) {
   const body: Record<string, unknown> = {
     name: params.name,
@@ -143,9 +160,9 @@ export async function createAssistant(params: CreateAssistantParams) {
       ...(params.maxTokens !== undefined && { maxTokens: params.maxTokens }),
     },
 
-    // Voice
+    // Voice - map provider names to Vapi API format
     voice: {
-      provider: params.voiceProvider || '11labs',
+      provider: mapVoiceProvider(params.voiceProvider),
       voiceId: params.voiceId || 'rachel',
       ...(params.voiceSpeed !== undefined && { speed: params.voiceSpeed }),
       ...(params.voiceChunkPlan && { chunkPlan: params.voiceChunkPlan }),
