@@ -197,6 +197,45 @@ router.put('/organization', authenticate, async (req: AuthRequest, res: Response
   }
 });
 
+// PATCH /api/auth/organization - Update organization settings (alternative method)
+router.patch('/organization', authenticate, async (req: AuthRequest, res: Response) => {
+  try {
+    const { name, intent, plan, vapiKey, stripeCustomerId } = req.body;
+    const organizationId = req.organizationId;
+
+    if (!organizationId) {
+      return res.status(401).json({ success: false, error: 'Not authenticated' });
+    }
+
+    // Build update data with only provided fields
+    const updateData: Record<string, unknown> = {};
+    if (name !== undefined) updateData.name = name;
+    if (intent !== undefined) updateData.intent = intent;
+    if (plan !== undefined) updateData.plan = plan;
+    if (vapiKey !== undefined) updateData.vapiKey = vapiKey;
+    if (stripeCustomerId !== undefined) updateData.stripeCustomerId = stripeCustomerId;
+
+    // Update the organization
+    const updatedOrg = await prisma.organization.update({
+      where: { id: organizationId },
+      data: updateData,
+    });
+
+    res.json({
+      success: true,
+      data: {
+        id: updatedOrg.id,
+        name: updatedOrg.name,
+        intent: updatedOrg.intent,
+        plan: updatedOrg.plan,
+      },
+    });
+  } catch (err) {
+    console.error('Update organization error:', err);
+    res.status(500).json({ success: false, error: 'Internal server error' });
+  }
+});
+
 // PATCH /api/auth/organization - Update organization settings (same as PUT for compatibility)
 router.patch('/organization', authenticate, async (req: AuthRequest, res: Response) => {
   try {
