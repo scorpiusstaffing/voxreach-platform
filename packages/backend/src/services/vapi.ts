@@ -142,7 +142,7 @@ const voiceProviderMap: Record<string, string> = {
 };
 
 function mapVoiceProvider(provider: string | undefined): string {
-  if (!provider) return 'elevenlabs';
+  if (!provider) return 'vapi'; // Default to Vapi's built-in voice to avoid ElevenLabs issues
   return voiceProviderMap[provider] || provider;
 }
 
@@ -161,9 +161,10 @@ export async function createAssistant(params: CreateAssistantParams) {
     },
 
     // Voice - map provider names to Vapi API format
+    // Default to Vapi's built-in voice to avoid ElevenLabs "Couldn't Find 11labs Voice" error
     voice: {
       provider: mapVoiceProvider(params.voiceProvider),
-      voiceId: params.voiceId || 'rachel',
+      voiceId: params.voiceId || 'jennifer', // Vapi built-in voice (was 'rachel' for ElevenLabs)
       ...(params.voiceSpeed !== undefined && { speed: params.voiceSpeed }),
       ...(params.voiceChunkPlan && { chunkPlan: params.voiceChunkPlan }),
       ...(params.voiceFormatPlan && { formatPlan: params.voiceFormatPlan }),
