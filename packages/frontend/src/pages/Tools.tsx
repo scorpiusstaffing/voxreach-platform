@@ -524,4 +524,3 @@ function EditToolModal({ tool, onClose, onUpdated }: { tool: Tool; onClose: () =
     </div>
   );
 }
-}
