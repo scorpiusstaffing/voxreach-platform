@@ -99,47 +99,119 @@ router.get('/templates', async (_req: AuthRequest, res: Response) => {
 
 // GET /api/agents/voice-options — available voices
 // Voice IDs must match what each provider's API expects
+// Based on Vapi API documentation and testing
 router.get('/voice-options', async (_req: AuthRequest, res: Response) => {
   const voiceOptions = [
-    // Vapi built-in voices (provider: 'vapi') - these work with just a Vapi key
-    // Note: Vapi voice IDs are case-sensitive and must be capitalized
-    { provider: 'vapi', voiceId: 'Elliot', name: 'Elliot', gender: 'male', accent: 'American' },
-    { provider: 'vapi', voiceId: 'Savannah', name: 'Savannah', gender: 'female', accent: 'American' },
-    { provider: 'vapi', voiceId: 'Rohan', name: 'Rohan', gender: 'male', accent: 'American' },
-    { provider: 'vapi', voiceId: 'Lily', name: 'Lily', gender: 'female', accent: 'American' },
-    { provider: 'vapi', voiceId: 'Hana', name: 'Hana', gender: 'female', accent: 'American' },
-    { provider: 'vapi', voiceId: 'Neha', name: 'Neha', gender: 'female', accent: 'American' },
-    { provider: 'vapi', voiceId: 'Cole', name: 'Cole', gender: 'male', accent: 'American' },
-    { provider: 'vapi', voiceId: 'Harry', name: 'Harry', gender: 'male', accent: 'American' },
-    { provider: 'vapi', voiceId: 'Paige', name: 'Paige', gender: 'female', accent: 'American' },
-    { provider: 'vapi', voiceId: 'Spencer', name: 'Spencer', gender: 'male', accent: 'American' },
-    { provider: 'vapi', voiceId: 'Nico', name: 'Nico', gender: 'male', accent: 'American' },
-    { provider: 'vapi', voiceId: 'Kai', name: 'Kai', gender: 'male', accent: 'American' },
-    { provider: 'vapi', voiceId: 'Emma', name: 'Emma', gender: 'female', accent: 'American' },
-    { provider: 'vapi', voiceId: 'Sagar', name: 'Sagar', gender: 'male', accent: 'American' },
-    { provider: 'vapi', voiceId: 'Neil', name: 'Neil', gender: 'male', accent: 'American' },
-    { provider: 'vapi', voiceId: 'Leah', name: 'Leah', gender: 'female', accent: 'American' },
-    { provider: 'vapi', voiceId: 'Tara', name: 'Tara', gender: 'female', accent: 'American' },
-    { provider: 'vapi', voiceId: 'Jess', name: 'Jess', gender: 'female', accent: 'American' },
-    { provider: 'vapi', voiceId: 'Leo', name: 'Leo', gender: 'male', accent: 'American' },
-    { provider: 'vapi', voiceId: 'Dan', name: 'Dan', gender: 'male', accent: 'American' },
-    { provider: 'vapi', voiceId: 'Mia', name: 'Mia', gender: 'female', accent: 'American' },
-    { provider: 'vapi', voiceId: 'Zac', name: 'Zac', gender: 'male', accent: 'American' },
-    { provider: 'vapi', voiceId: 'Zoe', name: 'Zoe', gender: 'female', accent: 'American' },
+    // ============================================
+    // VAPI BUILT-IN VOICES (provider: 'vapi')
+    // These work immediately with just a Vapi key
+    // ============================================
+    { provider: 'vapi', voiceId: 'Elliot', name: 'Elliot', gender: 'male', accent: 'American', requiresCredential: false },
+    { provider: 'vapi', voiceId: 'Savannah', name: 'Savannah', gender: 'female', accent: 'American', requiresCredential: false },
+    { provider: 'vapi', voiceId: 'Rohan', name: 'Rohan', gender: 'male', accent: 'American', requiresCredential: false },
+    { provider: 'vapi', voiceId: 'Lily', name: 'Lily', gender: 'female', accent: 'American', requiresCredential: false },
+    { provider: 'vapi', voiceId: 'Hana', name: 'Hana', gender: 'female', accent: 'American', requiresCredential: false },
+    { provider: 'vapi', voiceId: 'Neha', name: 'Neha', gender: 'female', accent: 'American', requiresCredential: false },
+    { provider: 'vapi', voiceId: 'Cole', name: 'Cole', gender: 'male', accent: 'American', requiresCredential: false },
+    { provider: 'vapi', voiceId: 'Harry', name: 'Harry', gender: 'male', accent: 'American', requiresCredential: false },
+    { provider: 'vapi', voiceId: 'Paige', name: 'Paige', gender: 'female', accent: 'American', requiresCredential: false },
+    { provider: 'vapi', voiceId: 'Spencer', name: 'Spencer', gender: 'male', accent: 'American', requiresCredential: false },
+    { provider: 'vapi', voiceId: 'Nico', name: 'Nico', gender: 'male', accent: 'American', requiresCredential: false },
+    { provider: 'vapi', voiceId: 'Kai', name: 'Kai', gender: 'male', accent: 'American', requiresCredential: false },
+    { provider: 'vapi', voiceId: 'Emma', name: 'Emma', gender: 'female', accent: 'American', requiresCredential: false },
+    { provider: 'vapi', voiceId: 'Sagar', name: 'Sagar', gender: 'male', accent: 'American', requiresCredential: false },
+    { provider: 'vapi', voiceId: 'Neil', name: 'Neil', gender: 'male', accent: 'American', requiresCredential: false },
+    { provider: 'vapi', voiceId: 'Leah', name: 'Leah', gender: 'female', accent: 'American', requiresCredential: false },
+    { provider: 'vapi', voiceId: 'Tara', name: 'Tara', gender: 'female', accent: 'American', requiresCredential: false },
+    { provider: 'vapi', voiceId: 'Jess', name: 'Jess', gender: 'female', accent: 'American', requiresCredential: false },
+    { provider: 'vapi', voiceId: 'Leo', name: 'Leo', gender: 'male', accent: 'American', requiresCredential: false },
+    { provider: 'vapi', voiceId: 'Dan', name: 'Dan', gender: 'male', accent: 'American', requiresCredential: false },
+    { provider: 'vapi', voiceId: 'Mia', name: 'Mia', gender: 'female', accent: 'American', requiresCredential: false },
+    { provider: 'vapi', voiceId: 'Zac', name: 'Zac', gender: 'male', accent: 'American', requiresCredential: false },
+    { provider: 'vapi', voiceId: 'Zoe', name: 'Zoe', gender: 'female', accent: 'American', requiresCredential: false },
 
-    // Other providers require additional API keys - shown for reference
-    // ElevenLabs voices (requires ElevenLabs API key)
-    { provider: '11labs', voiceId: 'rachel', name: 'Rachel (requires key)', gender: 'female', accent: 'American' },
-    { provider: '11labs', voiceId: 'domi', name: 'Domi (requires key)', gender: 'female', accent: 'American' },
+    // ============================================
+    // DEEPGRAM VOICES (provider: 'deepgram')
+    // These work immediately with just a Vapi key
+    // Valid voice IDs: asteria, luna, stella, athena, hera, orion, arcas, perseus, angus, orpheus, helios, zeus, etc.
+    // ============================================
+    { provider: 'deepgram', voiceId: 'asteria', name: 'Asteria (Deepgram)', gender: 'female', accent: 'British', requiresCredential: false },
+    { provider: 'deepgram', voiceId: 'luna', name: 'Luna (Deepgram)', gender: 'female', accent: 'American', requiresCredential: false },
+    { provider: 'deepgram', voiceId: 'stella', name: 'Stella (Deepgram)', gender: 'female', accent: 'American', requiresCredential: false },
+    { provider: 'deepgram', voiceId: 'athena', name: 'Athena (Deepgram)', gender: 'female', accent: 'British', requiresCredential: false },
+    { provider: 'deepgram', voiceId: 'hera', name: 'Hera (Deepgram)', gender: 'female', accent: 'American', requiresCredential: false },
+    { provider: 'deepgram', voiceId: 'orion', name: 'Orion (Deepgram)', gender: 'male', accent: 'American', requiresCredential: false },
+    { provider: 'deepgram', voiceId: 'arcas', name: 'Arcas (Deepgram)', gender: 'male', accent: 'American', requiresCredential: false },
+    { provider: 'deepgram', voiceId: 'perseus', name: 'Perseus (Deepgram)', gender: 'male', accent: 'American', requiresCredential: false },
+    { provider: 'deepgram', voiceId: 'angus', name: 'Angus (Deepgram)', gender: 'male', accent: 'Irish', requiresCredential: false },
+    { provider: 'deepgram', voiceId: 'orpheus', name: 'Orpheus (Deepgram)', gender: 'male', accent: 'American', requiresCredential: false },
+    { provider: 'deepgram', voiceId: 'helios', name: 'Helios (Deepgram)', gender: 'male', accent: 'British', requiresCredential: false },
+    { provider: 'deepgram', voiceId: 'zeus', name: 'Zeus (Deepgram)', gender: 'male', accent: 'American', requiresCredential: false },
 
-    // Deepgram voices (requires Deepgram API key)
-    { provider: 'deepgram', voiceId: 'aura-asteria-en', name: 'Asteria (requires key)', gender: 'female', accent: 'British' },
-    { provider: 'deepgram', voiceId: 'aura-luna-en', name: 'Luna (requires key)', gender: 'female', accent: 'American' },
+    // ============================================
+    // OPENAI VOICES (provider: 'openai')
+    // These work immediately with just a Vapi key
+    // Valid voice IDs: alloy, echo, fable, onyx, nova, shimmer
+    // ============================================
+    { provider: 'openai', voiceId: 'alloy', name: 'Alloy (OpenAI)', gender: 'neutral', accent: 'American', requiresCredential: false },
+    { provider: 'openai', voiceId: 'echo', name: 'Echo (OpenAI)', gender: 'male', accent: 'American', requiresCredential: false },
+    { provider: 'openai', voiceId: 'fable', name: 'Fable (OpenAI)', gender: 'male', accent: 'British', requiresCredential: false },
+    { provider: 'openai', voiceId: 'onyx', name: 'Onyx (OpenAI)', gender: 'male', accent: 'American', requiresCredential: false },
+    { provider: 'openai', voiceId: 'nova', name: 'Nova (OpenAI)', gender: 'female', accent: 'American', requiresCredential: false },
+    { provider: 'openai', voiceId: 'shimmer', name: 'Shimmer (OpenAI)', gender: 'female', accent: 'American', requiresCredential: false },
 
-    // OpenAI voices (requires OpenAI API key)
-    { provider: 'openai', voiceId: 'alloy', name: 'Alloy (requires key)', gender: 'neutral', accent: 'American' },
-    { provider: 'openai', voiceId: 'echo', name: 'Echo (requires key)', gender: 'male', accent: 'American' },
-    { provider: 'openai', voiceId: 'nova', name: 'Nova (requires key)', gender: 'female', accent: 'American' },
+    // ============================================
+    // AZURE VOICES (provider: 'azure')
+    // These work immediately with just a Vapi key
+    // Azure has 400+ voices across 140 languages
+    // ============================================
+    { provider: 'azure', voiceId: 'en-US-JennyNeural', name: 'Jenny (Azure)', gender: 'female', accent: 'American', requiresCredential: false },
+    { provider: 'azure', voiceId: 'en-US-GuyNeural', name: 'Guy (Azure)', gender: 'male', accent: 'American', requiresCredential: false },
+    { provider: 'azure', voiceId: 'en-GB-SoniaNeural', name: 'Sonia (Azure)', gender: 'female', accent: 'British', requiresCredential: false },
+    { provider: 'azure', voiceId: 'en-AU-NatashaNeural', name: 'Natasha (Azure)', gender: 'female', accent: 'Australian', requiresCredential: false },
+
+    // ============================================
+    // ELEVENLABS VOICES (provider: '11labs')
+    // WITHOUT credentials: Only 3 voices work (paula, drew, sarah)
+    // WITH credentials: Full library available (rachel, adam, bella, etc.)
+    // Users must add ElevenLabs API key in Vapi Dashboard → Integrations
+    // ============================================
+    { provider: '11labs', voiceId: 'paula', name: 'Paula (11labs - free)', gender: 'female', accent: 'American', requiresCredential: false },
+    { provider: '11labs', voiceId: 'drew', name: 'Drew (11labs - free)', gender: 'male', accent: 'American', requiresCredential: false },
+    { provider: '11labs', voiceId: 'sarah', name: 'Sarah (11labs - free)', gender: 'female', accent: 'American', requiresCredential: false },
+    { provider: '11labs', voiceId: 'rachel', name: 'Rachel (11labs - needs key)', gender: 'female', accent: 'American', requiresCredential: true },
+    { provider: '11labs', voiceId: 'adam', name: 'Adam (11labs - needs key)', gender: 'male', accent: 'American', requiresCredential: true },
+    { provider: '11labs', voiceId: 'bella', name: 'Bella (11labs - needs key)', gender: 'female', accent: 'American', requiresCredential: true },
+
+    // ============================================
+    // CARTESIA VOICES (provider: 'cartesia')
+    // REQUIRES Cartesia API key in Vapi Dashboard
+    // ============================================
+    { provider: 'cartesia', voiceId: 'sonic', name: 'Sonic (Cartesia - needs key)', gender: 'neutral', accent: 'American', requiresCredential: true },
+
+    // ============================================
+    // PLAYHT VOICES (provider: 'playht')
+    // REQUIRES PlayHT API key in Vapi Dashboard
+    // ============================================
+    { provider: 'playht', voiceId: 'larry', name: 'Larry (PlayHT - needs key)', gender: 'male', accent: 'American', requiresCredential: true },
+
+    // ============================================
+    // RIME.AI VOICES (provider: 'rime-ai')
+    // REQUIRES Rime API key in Vapi Dashboard
+    // ============================================
+    { provider: 'rime-ai', voiceId: 'eva', name: 'Eva (Rime - needs key)', gender: 'female', accent: 'American', requiresCredential: true },
+
+    // ============================================
+    // LMNT VOICES (provider: 'lmnt')
+    // REQUIRES LMNT API key in Vapi Dashboard
+    // ============================================
+    { provider: 'lmnt', voiceId: 'lily', name: 'Lily (LMNT - needs key)', gender: 'female', accent: 'American', requiresCredential: true },
+
+    // ============================================
+    // NEETS VOICES (provider: 'neets')
+    // REQUIRES Neets API key in Vapi Dashboard
+    // ============================================
+    { provider: 'neets', voiceId: 'vits-tts', name: 'VITS (Neets - needs key)', gender: 'neutral', accent: 'American', requiresCredential: true },
   ];
 
   res.json({ success: true, data: voiceOptions });

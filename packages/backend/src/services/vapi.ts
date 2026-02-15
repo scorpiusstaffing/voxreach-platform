@@ -130,7 +130,7 @@ export interface CreateAssistantParams {
 }
 
 // Map voice provider names to Vapi API expected format
-// Vapi API expects: 'vapi', '11labs', 'deepgram', 'openai', 'azure', 'playht', 'cartesia'
+// Vapi API accepts: '11labs', 'deepgram', 'openai', 'azure', 'playht', 'cartesia', 'rime-ai', 'lmnt', 'neets', 'vapi'
 // Frontend sends display names like 'ElevenLabs', we need to map to Vapi API names
 const voiceProviderMap: Record<string, string> = {
   // ElevenLabs (Vapi expects '11labs')
@@ -156,6 +156,17 @@ const voiceProviderMap: Record<string, string> = {
   // Cartesia
   'cartesia': 'cartesia',
   'Cartesia': 'cartesia',
+  // Rime.ai
+  'rime-ai': 'rime-ai',
+  'rimeai': 'rime-ai',
+  'RimeAI': 'rime-ai',
+  'Rime': 'rime-ai',
+  // LMNT
+  'lmnt': 'lmnt',
+  'LMNT': 'lmnt',
+  // Neets
+  'neets': 'neets',
+  'Neets': 'neets',
 };
 
 function mapVoiceProvider(provider: string | undefined): string {
@@ -183,16 +194,18 @@ export async function createAssistant(params: CreateAssistantParams) {
 
     // Voice - map provider names to Vapi API format
     // Frontend must provide voiceId appropriate for the selected provider
-    // Only ElevenLabs and OpenAI support voice speed
+    // Voice speed is supported by: 11labs, openai, azure
     voice: (() => {
       const provider = mapVoiceProvider(params.voiceProvider);
+      const voiceId = params.voiceId || 'Elliot'; // Default to Vapi's built-in voice
       const voiceConfig: Record<string, unknown> = {
         provider,
-        voiceId: params.voiceId || 'jennifer', // Default to Vapi's built-in voice
+        voiceId,
       };
-      // Only add speed for providers that support it (11labs = ElevenLabs)
-      const supportsSpeed = provider === '11labs' || provider === 'openai';
-      if (supportsSpeed && params.voiceSpeed !== undefined) {
+      // Voice speed is supported by 11labs (ElevenLabs), openai, and azure
+      // Note: deepgram, cartesia, playht, rime-ai, lmnt, neets do NOT support speed
+      const supportsSpeed = provider === '11labs' || provider === 'openai' || provider === 'azure';
+      if (supportsSpeed && params.voiceSpeed !== undefined && params.voiceSpeed !== 1.0) {
         voiceConfig.speed = params.voiceSpeed;
       }
       if (params.voiceChunkPlan) {

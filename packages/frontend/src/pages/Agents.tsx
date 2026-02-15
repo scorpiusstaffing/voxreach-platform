@@ -329,7 +329,15 @@ function CreateAgentModal({ intent, onClose, onCreated }: { intent: string; onCl
 
   const update = (field: string, value: any) => setForm((f) => ({ ...f, [field]: value }));
   const filteredVoices = voiceOptions.filter((v) => v.provider === form.voiceProvider);
-  const voiceProviders = [{ id: 'vapi', name: 'Vapi (default)' }, { id: '11labs', name: 'ElevenLabs (requires key)' }, { id: 'deepgram', name: 'Deepgram (requires key)' }, { id: 'openai', name: 'OpenAI (requires key)' }];
+  // Voice providers that work without extra credentials: vapi, deepgram, openai, azure
+  // Voice providers that require API keys: 11labs (most voices), cartesia, playht, rime-ai, lmnt, neets
+  const voiceProviders = [
+    { id: 'vapi', name: 'Vapi (built-in)' },
+    { id: 'deepgram', name: 'Deepgram' },
+    { id: 'openai', name: 'OpenAI' },
+    { id: 'azure', name: 'Azure' },
+    { id: '11labs', name: 'ElevenLabs' },
+  ];
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={onClose}>
@@ -489,7 +497,15 @@ function EditAgentModal({ agent, onClose, onUpdated }: { agent: Agent; onClose: 
 
   const update = (field: string, value: any) => setForm((f) => ({ ...f, [field]: value }));
   const filteredVoices = voiceOptions.filter((v) => v.provider === form.voiceProvider);
-  const voiceProviders = [{ id: 'vapi', name: 'Vapi (default)' }, { id: '11labs', name: 'ElevenLabs (requires key)' }, { id: 'deepgram', name: 'Deepgram (requires key)' }, { id: 'openai', name: 'OpenAI (requires key)' }];
+  // Voice providers that work without extra credentials: vapi, deepgram, openai, azure
+  // Voice providers that require API keys: 11labs (most voices), cartesia, playht, rime-ai, lmnt, neets
+  const voiceProviders = [
+    { id: 'vapi', name: 'Vapi (built-in)' },
+    { id: 'deepgram', name: 'Deepgram' },
+    { id: 'openai', name: 'OpenAI' },
+    { id: 'azure', name: 'Azure' },
+    { id: '11labs', name: 'ElevenLabs' },
+  ];
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={onClose}>
