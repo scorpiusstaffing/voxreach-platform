@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './lib/auth';
+import Layout from './components/Layout';
 import Landing from './pages/Landing';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
@@ -16,17 +17,25 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
+function ProtectedLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <ProtectedRoute>
+      <Layout>{children}</Layout>
+    </ProtectedRoute>
+  );
+}
+
 export default function App() {
   return (
     <Routes>
       <Route path="/" element={<Landing />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
-      <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-      <Route path="/dashboard/agents" element={<ProtectedRoute><Agents /></ProtectedRoute>} />
-      <Route path="/dashboard/tools" element={<ProtectedRoute><Tools /></ProtectedRoute>} />
-      <Route path="/dashboard/numbers" element={<ProtectedRoute><PhoneNumbers /></ProtectedRoute>} />
-      <Route path="/dashboard/calls" element={<ProtectedRoute><Calls /></ProtectedRoute>} />
+      <Route path="/dashboard" element={<ProtectedLayout><Dashboard /></ProtectedLayout>} />
+      <Route path="/dashboard/agents" element={<ProtectedLayout><Agents /></ProtectedLayout>} />
+      <Route path="/dashboard/tools" element={<ProtectedLayout><Tools /></ProtectedLayout>} />
+      <Route path="/dashboard/numbers" element={<ProtectedLayout><PhoneNumbers /></ProtectedLayout>} />
+      <Route path="/dashboard/calls" element={<ProtectedLayout><Calls /></ProtectedLayout>} />
     </Routes>
   );
 }
