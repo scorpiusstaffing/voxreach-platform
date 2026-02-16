@@ -133,7 +133,7 @@ export default function Billing() {
   const getPlanColor = (plan: string) => {
     const colors: Record<string, string> = {
       free: 'text-gray-400',
-      starter: 'text-cyan-400',
+      starter: 'text-amber-600',
       growth: 'text-blue-400',
       professional: 'text-purple-400',
       enterprise: 'text-amber-400',
@@ -165,13 +165,13 @@ export default function Billing() {
   const getUrgencyColor = (daysLeft: number) => {
     if (daysLeft <= 3) return 'text-red-400 border-red-500/30 bg-red-500/10';
     if (daysLeft <= 7) return 'text-amber-400 border-amber-500/30 bg-amber-500/10';
-    return 'text-cyan-400 border-cyan-500/30 bg-cyan-500/10';
+    return 'text-amber-600 border-amber-300 bg-amber-50';
   };
 
   if (loading) {
     return (
       <div className="p-8">
-        <div className="text-cyan-400">Loading billing information...</div>
+        <div className="text-amber-600">Loading billing information...</div>
       </div>
     );
   }
@@ -185,7 +185,7 @@ export default function Billing() {
     <div className="p-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-white mb-2">Billing & Usage</h1>
+        <h1 className="text-3xl font-bold text-stone-900 mb-2">Billing & Usage</h1>
         <p className="text-[#94A3B8]">
           Manage your subscription, view invoices, and monitor your AI agents.
         </p>
@@ -200,11 +200,11 @@ export default function Billing() {
                 trialDaysLeft <= 3 ? 'bg-red-500/20' : trialDaysLeft <= 7 ? 'bg-amber-500/20' : 'bg-cyan-500/20'
               }`}>
                 <Clock className={`w-6 h-6 ${
-                  trialDaysLeft <= 3 ? 'text-red-400' : trialDaysLeft <= 7 ? 'text-amber-400' : 'text-cyan-400'
+                  trialDaysLeft <= 3 ? 'text-red-400' : trialDaysLeft <= 7 ? 'text-amber-400' : 'text-amber-600'
                 }`} />
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-white mb-1">
+                <h3 className="text-lg font-semibold text-stone-900 mb-1">
                   {trialDaysLeft === 1 ? 'Your trial ends tomorrow!' : 
                    trialDaysLeft <= 3 ? `Your trial ends in ${trialDaysLeft} days!` :
                    `${trialDaysLeft} days left in your free trial`}
@@ -218,8 +218,8 @@ export default function Billing() {
                   onClick={() => { setUpgradeTrigger('agents'); setShowUpgradeModal(true); }}
                   className={`font-semibold px-6 py-3 rounded-xl transition-all flex items-center gap-2 ${
                     trialDaysLeft <= 3
-                      ? 'bg-red-500 text-white hover:bg-red-400'
-                      : 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white hover:shadow-[0_0_20px_rgba(0,180,216,0.3)]'
+                      ? 'bg-red-500 text-stone-900 hover:bg-red-400'
+                      : 'bg-gradient-to-r from-amber-500 to-amber-600 text-stone-900 hover:shadow-[0_0_20px_rgba(0,180,216,0.3)]'
                   }`}
                 >
                   <Sparkles className="w-4 h-4" />
@@ -230,7 +230,7 @@ export default function Billing() {
             </div>
             <div className="text-right">
               <div className={`text-4xl font-bold ${
-                trialDaysLeft <= 3 ? 'text-red-400' : trialDaysLeft <= 7 ? 'text-amber-400' : 'text-cyan-400'
+                trialDaysLeft <= 3 ? 'text-red-400' : trialDaysLeft <= 7 ? 'text-amber-400' : 'text-amber-600'
               }`}>
                 {trialDaysLeft}
               </div>
@@ -242,20 +242,20 @@ export default function Billing() {
 
       {/* Upgrade Banner for Free Plan (non-trial) */}
       {isFreePlan && !isTrial && (
-        <div className="bg-gradient-to-r from-cyan-500/10 to-blue-500/10 border border-cyan-500/20 rounded-2xl p-6 mb-8">
+        <div className="bg-gradient-to-r from-cyan-500/10 to-blue-500/10 border border-amber-200 rounded-2xl p-6 mb-8">
           <div className="flex items-start justify-between">
             <div className="flex items-start gap-4">
               <div className="w-12 h-12 bg-cyan-500/20 rounded-xl flex items-center justify-center">
-                <Sparkles className="w-6 h-6 text-cyan-400" />
+                <Sparkles className="w-6 h-6 text-amber-600" />
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-white mb-1">Unlock Your Full Potential</h3>
+                <h3 className="text-lg font-semibold text-stone-900 mb-1">Unlock Your Full Potential</h3>
                 <p className="text-[#94A3B8] mb-4">
                   You're currently on the free plan. Upgrade to create more AI agents and unlock premium features.
                 </p>
                 <button
                   onClick={() => { setUpgradeTrigger('agents'); setShowUpgradeModal(true); }}
-                  className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-semibold px-6 py-3 rounded-xl hover:shadow-[0_0_20px_rgba(0,180,216,0.3)] transition-all flex items-center gap-2"
+                  className="bg-gradient-to-r from-amber-500 to-amber-600 text-stone-900 font-semibold px-6 py-3 rounded-xl hover:shadow-[0_0_20px_rgba(0,180,216,0.3)] transition-all flex items-center gap-2"
                 >
                   <Sparkles className="w-4 h-4" />
                   View Plans & Pricing
@@ -271,16 +271,16 @@ export default function Billing() {
         {/* Left Column - Subscription & Usage */}
         <div className="lg:col-span-2 space-y-8">
           {/* Current Plan Card */}
-          <div className="bg-[#0F172A] border border-[#1E293B] rounded-2xl p-6">
+          <div className="bg-[#0F172A] border border-stone-200 rounded-2xl p-6">
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h2 className="text-xl font-semibold text-white mb-1">Current Plan</h2>
+                <h2 className="text-xl font-semibold text-stone-900 mb-1">Current Plan</h2>
                 <div className="flex items-center gap-2">
                   <span className={`text-2xl font-bold ${getPlanColor(subscription?.plan || 'free')}`}>
                     {getPlanName(subscription?.plan || 'free')}
                   </span>
                   {subscription?.plan !== 'free' && (
-                    <span className="text-lg text-white">
+                    <span className="text-lg text-stone-900">
                       ${subscription?.plan === 'starter' ? '49' : subscription?.plan === 'growth' ? '99' : '199'}/month
                     </span>
                   )}
@@ -289,7 +289,7 @@ export default function Billing() {
               {subscription?.plan === 'free' ? (
                 <button
                   onClick={() => { setUpgradeTrigger('agents'); setShowUpgradeModal(true); }}
-                  className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-semibold px-6 py-3 rounded-xl hover:shadow-[0_0_20px_rgba(0,180,216,0.3)] transition-all flex items-center gap-2"
+                  className="bg-gradient-to-r from-amber-500 to-amber-600 text-stone-900 font-semibold px-6 py-3 rounded-xl hover:shadow-[0_0_20px_rgba(0,180,216,0.3)] transition-all flex items-center gap-2"
                 >
                   <Sparkles className="w-4 h-4" />
                   Upgrade Plan
@@ -298,7 +298,7 @@ export default function Billing() {
                 <button
                   onClick={handlePortal}
                   disabled={portalLoading}
-                  className="bg-[#1E293B] text-white font-semibold px-6 py-3 rounded-xl hover:bg-[#2D3748] transition-colors disabled:opacity-50"
+                  className="bg-[#1E293B] text-stone-900 font-semibold px-6 py-3 rounded-xl hover:bg-[#2D3748] transition-colors disabled:opacity-50"
                 >
                   {portalLoading ? 'Loading...' : 'Manage Subscription'}
                 </button>
@@ -306,37 +306,37 @@ export default function Billing() {
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-              <div className="bg-[#0A0E17] rounded-xl p-4">
+              <div className="bg-white rounded-xl p-4">
                 <div className="flex items-center gap-2 mb-2">
-                  <Bot className="w-4 h-4 text-cyan-400" />
+                  <Bot className="w-4 h-4 text-amber-600" />
                   <span className="text-sm text-[#94A3B8]">AI Agents</span>
                 </div>
-                <div className="text-2xl font-bold text-white">
+                <div className="text-2xl font-bold text-stone-900">
                   {usage?.current.agents || 0} / {planLimits.agents === 999 ? '∞' : planLimits.agents}
                 </div>
               </div>
-              <div className="bg-[#0A0E17] rounded-xl p-4">
+              <div className="bg-white rounded-xl p-4">
                 <div className="flex items-center gap-2 mb-2">
-                  <Phone className="w-4 h-4 text-cyan-400" />
+                  <Phone className="w-4 h-4 text-amber-600" />
                   <span className="text-sm text-[#94A3B8]">Phone Numbers</span>
                 </div>
-                <div className="text-2xl font-bold text-white">
+                <div className="text-2xl font-bold text-stone-900">
                   {planLimits.phoneNumbers === 999 ? '∞' : planLimits.phoneNumbers}
                 </div>
               </div>
-              <div className="bg-[#0A0E17] rounded-xl p-4">
+              <div className="bg-white rounded-xl p-4">
                 <div className="flex items-center gap-2 mb-2">
-                  <Calendar className="w-4 h-4 text-cyan-400" />
+                  <Calendar className="w-4 h-4 text-amber-600" />
                   <span className="text-sm text-[#94A3B8]">Calls This Month</span>
                 </div>
-                <div className="text-2xl font-bold text-white">{usage?.current.calls || 0}</div>
+                <div className="text-2xl font-bold text-stone-900">{usage?.current.calls || 0}</div>
               </div>
-              <div className="bg-[#0A0E17] rounded-xl p-4">
+              <div className="bg-white rounded-xl p-4">
                 <div className="flex items-center gap-2 mb-2">
-                  <CreditCard className="w-4 h-4 text-cyan-400" />
+                  <CreditCard className="w-4 h-4 text-amber-600" />
                   <span className="text-sm text-[#94A3B8]">Status</span>
                 </div>
-                <div className="text-2xl font-bold text-white capitalize">
+                <div className="text-2xl font-bold text-stone-900 capitalize">
                   {subscription?.status || 'active'}
                 </div>
               </div>
@@ -354,24 +354,24 @@ export default function Billing() {
 
           {/* Usage Stats */}
           {usage && (
-            <div className="bg-[#0F172A] border border-[#1E293B] rounded-2xl p-6">
-              <h2 className="text-xl font-semibold text-white mb-6">Usage This Month</h2>
+            <div className="bg-[#0F172A] border border-stone-200 rounded-2xl p-6">
+              <h2 className="text-xl font-semibold text-stone-900 mb-6">Usage This Month</h2>
               
               <div className="space-y-6">
                 {/* Agents Usage */}
                 <div>
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
-                      <Bot className="w-4 h-4 text-cyan-400" />
-                      <span className="text-white font-medium">AI Agents</span>
+                      <Bot className="w-4 h-4 text-amber-600" />
+                      <span className="text-stone-900 font-medium">AI Agents</span>
                     </div>
-                    <div className="text-white">
+                    <div className="text-stone-900">
                       {usage.current.agents} / {usage.limits.agents === 999 ? 'Unlimited' : usage.limits.agents}
                     </div>
                   </div>
                   <div className="h-2 bg-[#1E293B] rounded-full overflow-hidden">
                     <div 
-                      className="h-full bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full transition-all duration-300"
+                      className="h-full bg-gradient-to-r from-amber-500 to-amber-600 rounded-full transition-all duration-300"
                       style={{ width: `${Math.min(100, usage.percentageUsed.agents)}%` }}
                     />
                   </div>
@@ -389,7 +389,7 @@ export default function Billing() {
                   {usage.percentageUsed.agents >= 80 && (
                     <button
                       onClick={() => { setUpgradeTrigger('agents'); setShowUpgradeModal(true); }}
-                      className="mt-2 text-sm text-cyan-400 hover:text-cyan-300 font-medium flex items-center gap-1"
+                      className="mt-2 text-sm text-amber-600 hover:text-cyan-300 font-medium flex items-center gap-1"
                     >
                       Upgrade for more agents
                       <ArrowRight className="w-3 h-3" />
@@ -401,10 +401,10 @@ export default function Billing() {
                 <div>
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
-                      <Phone className="w-4 h-4 text-cyan-400" />
-                      <span className="text-white font-medium">Calls</span>
+                      <Phone className="w-4 h-4 text-amber-600" />
+                      <span className="text-stone-900 font-medium">Calls</span>
                     </div>
-                    <div className="text-white">
+                    <div className="text-stone-900">
                       {usage.current.calls} {usage.limits.calls < 99999 && `/ ${usage.limits.calls}`}
                     </div>
                   </div>
@@ -412,7 +412,7 @@ export default function Billing() {
                     <>
                       <div className="h-2 bg-[#1E293B] rounded-full overflow-hidden">
                         <div 
-                          className="h-full bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full transition-all duration-300"
+                          className="h-full bg-gradient-to-r from-amber-500 to-amber-600 rounded-full transition-all duration-300"
                           style={{ width: `${Math.min(100, usage.percentageUsed.calls)}%` }}
                         />
                       </div>
@@ -430,17 +430,17 @@ export default function Billing() {
                 </div>
               </div>
 
-              <div className="mt-6 pt-6 border-t border-[#1E293B]">
+              <div className="mt-6 pt-6 border-t border-stone-200">
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="text-sm text-[#94A3B8]">Year-to-date</div>
-                    <div className="text-white font-semibold">
+                    <div className="text-stone-900 font-semibold">
                       {usage.yearly.calls} calls processed
                     </div>
                   </div>
                   <button
                     onClick={fetchBillingData}
-                    className="text-cyan-400 hover:text-cyan-300 text-sm font-medium"
+                    className="text-amber-600 hover:text-cyan-300 text-sm font-medium"
                   >
                     Refresh
                   </button>
@@ -453,8 +453,8 @@ export default function Billing() {
         {/* Right Column - Invoices & Actions */}
         <div className="space-y-8">
           {/* Billing Actions */}
-          <div className="bg-[#0F172A] border border-[#1E293B] rounded-2xl p-6">
-            <h2 className="text-xl font-semibold text-white mb-6">Billing Actions</h2>
+          <div className="bg-[#0F172A] border border-stone-200 rounded-2xl p-6">
+            <h2 className="text-xl font-semibold text-stone-900 mb-6">Billing Actions</h2>
             <div className="space-y-3">
               <button
                 onClick={handlePortal}
@@ -462,8 +462,8 @@ export default function Billing() {
                 className="w-full flex items-center justify-between p-4 bg-[#1E293B] hover:bg-[#2D3748] rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <div className="flex items-center gap-3">
-                  <CreditCard className="w-5 h-5 text-cyan-400" />
-                  <span className="text-white font-medium">Manage Payment Methods</span>
+                  <CreditCard className="w-5 h-5 text-amber-600" />
+                  <span className="text-stone-900 font-medium">Manage Payment Methods</span>
                 </div>
                 <ArrowUpRight className="w-5 h-5 text-[#94A3B8]" />
               </button>
@@ -473,8 +473,8 @@ export default function Billing() {
                 className="w-full flex items-center justify-between p-4 bg-[#1E293B] hover:bg-[#2D3748] rounded-xl transition-colors"
               >
                 <div className="flex items-center gap-3">
-                  <Sparkles className="w-5 h-5 text-cyan-400" />
-                  <span className="text-white font-medium">View All Plans</span>
+                  <Sparkles className="w-5 h-5 text-amber-600" />
+                  <span className="text-stone-900 font-medium">View All Plans</span>
                 </div>
                 <ArrowUpRight className="w-5 h-5 text-[#94A3B8]" />
               </button>
@@ -484,8 +484,8 @@ export default function Billing() {
                 className="w-full flex items-center justify-between p-4 bg-[#1E293B] hover:bg-[#2D3748] rounded-xl transition-colors"
               >
                 <div className="flex items-center gap-3">
-                  <AlertCircle className="w-5 h-5 text-cyan-400" />
-                  <span className="text-white font-medium">Contact Support</span>
+                  <AlertCircle className="w-5 h-5 text-amber-600" />
+                  <span className="text-stone-900 font-medium">Contact Support</span>
                 </div>
                 <ArrowUpRight className="w-5 h-5 text-[#94A3B8]" />
               </button>
@@ -493,15 +493,15 @@ export default function Billing() {
           </div>
 
           {/* Recent Invoices */}
-          <div className="bg-[#0F172A] border border-[#1E293B] rounded-2xl p-6">
-            <h2 className="text-xl font-semibold text-white mb-6">Recent Invoices</h2>
+          <div className="bg-[#0F172A] border border-stone-200 rounded-2xl p-6">
+            <h2 className="text-xl font-semibold text-stone-900 mb-6">Recent Invoices</h2>
             
             {subscription?.invoices && subscription.invoices.length > 0 ? (
               <div className="space-y-4">
                 {subscription.invoices.slice(0, 3).map((invoice) => (
-                  <div key={invoice.id} className="flex items-center justify-between p-4 bg-[#0A0E17] rounded-xl">
+                  <div key={invoice.id} className="flex items-center justify-between p-4 bg-white rounded-xl">
                     <div>
-                      <div className="text-white font-medium">
+                      <div className="text-stone-900 font-medium">
                         {formatCurrency(invoice.amount, invoice.currency)}
                       </div>
                       <div className="text-sm text-[#94A3B8]">
@@ -532,7 +532,7 @@ export default function Billing() {
                 {subscription.invoices.length > 3 && (
                   <button
                     onClick={handlePortal}
-                    className="w-full text-center text-cyan-400 hover:text-cyan-300 text-sm font-medium py-3"
+                    className="w-full text-center text-amber-600 hover:text-cyan-300 text-sm font-medium py-3"
                   >
                     View all {subscription.invoices.length} invoices
                   </button>
@@ -542,7 +542,7 @@ export default function Billing() {
               <div className="text-center py-8">
                 <CreditCard className="w-12 h-12 text-[#1E293B] mx-auto mb-4" />
                 <div className="text-[#94A3B8]">No invoices yet</div>
-                <p className="text-sm text-[#6B7280] mt-1">
+                <p className="text-sm text-stone-500 mt-1">
                   Invoices will appear here after your first payment
                 </p>
               </div>
@@ -550,24 +550,24 @@ export default function Billing() {
           </div>
 
           {/* Plan Limits */}
-          <div className="bg-[#0F172A] border border-[#1E293B] rounded-2xl p-6">
-            <h2 className="text-xl font-semibold text-white mb-6">Plan Limits</h2>
+          <div className="bg-[#0F172A] border border-stone-200 rounded-2xl p-6">
+            <h2 className="text-xl font-semibold text-stone-900 mb-6">Plan Limits</h2>
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <span className="text-[#94A3B8]">AI Agents</span>
-                <span className="text-white font-medium">
+                <span className="text-stone-900 font-medium">
                   {planLimits.agents === 999 ? 'Unlimited' : planLimits.agents}
                 </span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-[#94A3B8]">Phone Numbers</span>
-                <span className="text-white font-medium">
+                <span className="text-stone-900 font-medium">
                   {planLimits.phoneNumbers === 999 ? 'Unlimited' : planLimits.phoneNumbers}
                 </span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-[#94A3B8]">Monthly Calls</span>
-                <span className="text-white font-medium">
+                <span className="text-stone-900 font-medium">
                   {planLimits.calls >= 99999 ? 'Unlimited' : planLimits.calls}
                 </span>
               </div>
@@ -576,7 +576,7 @@ export default function Billing() {
             {isFreePlan && (
               <button
                 onClick={() => { setUpgradeTrigger('agents'); setShowUpgradeModal(true); }}
-                className="w-full mt-6 bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-semibold py-3 rounded-xl hover:shadow-[0_0_20px_rgba(0,180,216,0.3)] transition-all flex items-center justify-center gap-2"
+                className="w-full mt-6 bg-gradient-to-r from-amber-500 to-amber-600 text-stone-900 font-semibold py-3 rounded-xl hover:shadow-[0_0_20px_rgba(0,180,216,0.3)] transition-all flex items-center justify-center gap-2"
               >
                 <Sparkles className="w-4 h-4" />
                 Upgrade for Higher Limits

@@ -199,14 +199,14 @@ export default function UpgradeModal({
   return (
     <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4" onClick={onClose}>
       <div 
-        className="bg-[#0A0E17] border border-[#1E293B] rounded-3xl w-full max-w-4xl max-h-[90vh] overflow-y-auto"
+        className="bg-white border border-stone-200 rounded-3xl w-full max-w-4xl max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="sticky top-0 bg-[#0A0E17] p-6 border-b border-[#1E293B] flex items-center justify-between z-10">
+        <div className="sticky top-0 bg-white p-6 border-b border-stone-200 flex items-center justify-between z-10">
           <div>
-            <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-              <Sparkles className="w-6 h-6 text-cyan-400" />
+            <h2 className="text-2xl font-bold text-stone-900 flex items-center gap-2">
+              <Sparkles className="w-6 h-6 text-amber-600" />
               Upgrade Your Plan
             </h2>
             {trialDaysLeft !== null && trialDaysLeft > 0 && (
@@ -217,7 +217,7 @@ export default function UpgradeModal({
           </div>
           <button 
             onClick={onClose} 
-            className="p-2 text-[#6B7280] hover:text-white rounded-lg transition-colors"
+            className="p-2 text-stone-500 hover:text-stone-900 rounded-lg transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -228,8 +228,8 @@ export default function UpgradeModal({
           <div className="flex items-start gap-3">
             <AlertCircle className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
             <div>
-              <h3 className="font-semibold text-white">{getLimitMessage()}</h3>
-              <p className="text-sm text-[#9CA3AF] mt-1">
+              <h3 className="font-semibold text-stone-900">{getLimitMessage()}</h3>
+              <p className="text-sm text-stone-500 mt-1">
                 Choose a plan below to continue growing your business.
               </p>
             </div>
@@ -237,9 +237,9 @@ export default function UpgradeModal({
         </div>
 
         {/* Billing Toggle */}
-        <div className="p-6 border-b border-[#1E293B]">
+        <div className="p-6 border-b border-stone-200">
           <div className="flex items-center justify-center gap-4">
-            <span className={`text-sm font-medium ${!isAnnual ? 'text-white' : 'text-[#6B7280]'}`}>
+            <span className={`text-sm font-medium ${!isAnnual ? 'text-stone-900' : 'text-stone-500'}`}>
               Monthly
             </span>
             <button
@@ -254,7 +254,7 @@ export default function UpgradeModal({
                 }`}
               />
             </button>
-            <span className={`text-sm font-medium ${isAnnual ? 'text-white' : 'text-[#6B7280]'}`}>
+            <span className={`text-sm font-medium ${isAnnual ? 'text-stone-900' : 'text-stone-500'}`}>
               Annual
             </span>
             <span className="bg-green-500/10 text-green-400 text-xs font-semibold px-2 py-1 rounded-full">
@@ -272,28 +272,28 @@ export default function UpgradeModal({
                 className={`relative rounded-2xl p-6 ${
                   plan.popular
                     ? 'border-2 border-cyan-500 bg-gradient-to-b from-[#0A0E17] to-[#0F172A]'
-                    : 'border border-[#1E293B] bg-[#0A0E17]'
+                    : 'border border-stone-200 bg-white'
                 }`}
               >
                 {plan.popular && (
                   <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                    <div className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white text-xs font-semibold px-3 py-1 rounded-full">
+                    <div className="bg-gradient-to-r from-amber-500 to-amber-600 text-stone-900 text-xs font-semibold px-3 py-1 rounded-full">
                       Most Popular
                     </div>
                   </div>
                 )}
 
                 <div className="mb-4">
-                  <h3 className="text-xl font-bold text-white mb-1">{plan.name}</h3>
-                  <p className="text-sm text-[#6B7280]">{plan.description}</p>
+                  <h3 className="text-xl font-bold text-stone-900 mb-1">{plan.name}</h3>
+                  <p className="text-sm text-stone-500">{plan.description}</p>
                 </div>
 
                 <div className="mb-6">
                   <div className="flex items-baseline">
-                    <span className="text-4xl font-bold text-white">
+                    <span className="text-4xl font-bold text-stone-900">
                       ${isAnnual ? plan.annualPrice : plan.price}
                     </span>
-                    <span className="text-[#6B7280] ml-2">/month</span>
+                    <span className="text-stone-500 ml-2">/month</span>
                   </div>
                   {isAnnual && (
                     <p className="text-sm text-green-400 mt-1">
@@ -305,7 +305,7 @@ export default function UpgradeModal({
                 <ul className="space-y-3 mb-6">
                   {plan.features.map((feature, idx) => (
                     <li key={idx} className="flex items-start gap-2 text-sm">
-                      <Check className="w-4 h-4 text-cyan-400 flex-shrink-0 mt-0.5" />
+                      <Check className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
                       <span className="text-[#D1D5DB]">{feature}</span>
                     </li>
                   ))}
@@ -316,8 +316,8 @@ export default function UpgradeModal({
                   disabled={checkoutLoading}
                   className={`w-full py-3 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-2 ${
                     plan.popular
-                      ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white hover:shadow-[0_0_20px_rgba(0,180,216,0.3)]'
-                      : 'bg-[#1E293B] text-white hover:bg-[#2D3748]'
+                      ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-stone-900 hover:shadow-[0_0_20px_rgba(0,180,216,0.3)]'
+                      : 'bg-[#1E293B] text-stone-900 hover:bg-[#2D3748]'
                   }`}
                 >
                   {checkoutLoading ? (
@@ -335,10 +335,10 @@ export default function UpgradeModal({
         </div>
 
         {/* Footer */}
-        <div className="p-6 border-t border-[#1E293B] text-center">
-          <p className="text-sm text-[#6B7280]">
+        <div className="p-6 border-t border-stone-200 text-center">
+          <p className="text-sm text-stone-500">
             Need a custom plan?{' '}
-            <a href="mailto:sales@voxreach.io" className="text-cyan-400 hover:text-cyan-300">
+            <a href="mailto:sales@voxreach.io" className="text-amber-600 hover:text-cyan-300">
               Contact our sales team
             </a>
           </p>

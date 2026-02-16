@@ -163,8 +163,8 @@ export default function PhoneNumbers() {
       case 'telnyx': return 'bg-green-50 text-green-700';
       case 'byo-phone-number':
       case 'byo-sip-trunk': return 'bg-orange-50 text-orange-700';
-      case 'vapi': return 'bg-[#21262D] text-[#9CA3AF]';
-      default: return 'bg-[#21262D] text-[#9CA3AF]';
+      case 'vapi': return 'bg-stone-100 text-stone-500';
+      default: return 'bg-stone-100 text-stone-500';
     }
   };
 
@@ -190,14 +190,14 @@ export default function PhoneNumbers() {
 
   return (
     <div className="p-8 max-w-5xl">
-      <Link to="/dashboard" className="flex items-center gap-1 text-sm text-[#6B7280] hover:text-[#9CA3AF] mb-4">
+      <Link to="/dashboard" className="flex items-center gap-1 text-sm text-stone-500 hover:text-stone-500 mb-4">
         <ArrowLeft className="w-4 h-4" /> Dashboard
       </Link>
 
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-semibold text-white">Phone Numbers</h1>
-          <p className="text-sm text-[#6B7280] mt-1">
+          <h1 className="text-2xl font-semibold text-stone-900">Phone Numbers</h1>
+          <p className="text-sm text-stone-500 mt-1">
             {numbers.length} of {getPhoneLimit() === 999 ? 'Unlimited' : getPhoneLimit()} numbers used
           </p>
         </div>
@@ -205,7 +205,7 @@ export default function PhoneNumbers() {
           onClick={handleAddClick}
           className={`flex items-center gap-2 px-5 py-2.5 rounded-lg font-medium transition-all ${
             canAddPhoneNumber()
-              ? 'bg-cyan-500 text-white hover:bg-cyan-400'
+              ? 'bg-cyan-500 text-stone-900 hover:bg-cyan-400'
               : 'bg-amber-500/10 text-amber-400 border border-amber-500/30 hover:bg-amber-500/20'
           }`}
         >
@@ -224,22 +224,22 @@ export default function PhoneNumbers() {
       {loading ? (
         <div className="space-y-4">
           {[1, 2].map((i) => (
-            <div key={i} className="bg-[#161B22] rounded-xl border border-[#21262D] p-6 animate-pulse">
-              <div className="h-5 bg-[#21262D] rounded w-40 mb-2" />
-              <div className="h-4 bg-[#21262D] rounded w-60" />
+            <div key={i} className="bg-white rounded-xl border border-stone-200 p-6 animate-pulse">
+              <div className="h-5 bg-stone-100 rounded w-40 mb-2" />
+              <div className="h-4 bg-stone-100 rounded w-60" />
             </div>
           ))}
         </div>
       ) : numbers.length === 0 ? (
-        <div className="bg-[#161B22] rounded-xl border border-[#21262D] p-12 text-center">
+        <div className="bg-white rounded-xl border border-stone-200 p-12 text-center">
           <Phone className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-white mb-2">No phone numbers yet</h3>
-          <p className="text-[#6B7280] mb-6">Add a phone number from your preferred provider.</p>
+          <h3 className="text-lg font-medium text-stone-900 mb-2">No phone numbers yet</h3>
+          <p className="text-stone-500 mb-6">Add a phone number from your preferred provider.</p>
           <button 
             onClick={handleAddClick}
             className={`px-6 py-2.5 rounded-lg font-medium transition-all ${
               canAddPhoneNumber()
-                ? 'bg-cyan-500 text-white hover:bg-cyan-400'
+                ? 'bg-cyan-500 text-stone-900 hover:bg-cyan-400'
                 : 'bg-amber-500/10 text-amber-400 border border-amber-500/30'
             }`}
           >
@@ -249,13 +249,13 @@ export default function PhoneNumbers() {
       ) : (
         <div className="space-y-4">
           {numbers.map((num) => (
-            <div key={num.id} className="bg-[#161B22] rounded-xl border border-[#21262D] p-6 hover:shadow-sm transition-shadow">
+            <div key={num.id} className="bg-white rounded-xl border border-stone-200 p-6 hover:shadow-sm transition-shadow">
               <div className="flex items-start justify-between">
                 <div>
                   <div className="flex items-center gap-3">
-                    <h3 className="font-semibold text-white font-mono text-lg">{num.number}</h3>
+                    <h3 className="font-semibold text-stone-900 font-mono text-lg">{num.number}</h3>
                     <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
-                      num.isActive ? 'bg-green-50 text-green-700' : 'bg-[#21262D] text-[#6B7280]'
+                      num.isActive ? 'bg-green-50 text-green-700' : 'bg-stone-100 text-stone-500'
                     }`}>
                       {num.isActive ? 'Active' : 'Inactive'}
                     </span>
@@ -264,11 +264,11 @@ export default function PhoneNumbers() {
                     </span>
                   </div>
                   {num.friendlyName && (
-                    <div className="text-sm text-[#6B7280] mt-1">{num.friendlyName}</div>
+                    <div className="text-sm text-stone-500 mt-1">{num.friendlyName}</div>
                   )}
-                  <div className="text-sm text-[#6B7280] mt-1">
+                  <div className="text-sm text-stone-500 mt-1">
                     {num.assignedAgent ? (
-                      <span className="text-cyan-400 font-medium">→ {num.assignedAgent.name}</span>
+                      <span className="text-amber-600 font-medium">→ {num.assignedAgent.name}</span>
                     ) : (
                       <span className="text-yellow-600">No agent assigned</span>
                     )}
@@ -278,14 +278,14 @@ export default function PhoneNumbers() {
                 <div className="flex gap-1.5">
                   <button
                     onClick={() => setEditNumber(num)}
-                    className="p-2 text-[#6B7280] hover:text-[#9CA3AF] hover:bg-[#0A0E17] rounded-lg"
+                    className="p-2 text-stone-500 hover:text-stone-500 hover:bg-white rounded-lg"
                     title="Configure"
                   >
                     <Settings className="w-4 h-4" />
                   </button>
                   <button
                     onClick={() => deleteNumber(num)}
-                    className="p-2 text-[#6B7280] hover:text-red-600 hover:bg-red-50 rounded-lg"
+                    className="p-2 text-stone-500 hover:text-red-600 hover:bg-red-50 rounded-lg"
                     title="Delete"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -463,21 +463,21 @@ function AddNumberModal({
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={onClose}>
-      <div className="bg-[#161B22] rounded-2xl w-full max-w-lg max-h-[85vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
-        <div className="sticky top-0 bg-[#161B22] p-6 border-b border-gray-100 flex items-center justify-between z-10">
+      <div className="bg-white rounded-2xl w-full max-w-lg max-h-[85vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+        <div className="sticky top-0 bg-white p-6 border-b border-gray-100 flex items-center justify-between z-10">
           <div>
-            <h2 className="text-lg font-semibold text-white">
+            <h2 className="text-lg font-semibold text-stone-900">
               {step === 'provider' && 'Add Phone Number'}
               {step === 'credentials' && 'Provider Credentials'}
               {step === 'details' && 'Number Details'}
             </h2>
-            <p className="text-sm text-[#6B7280] mt-0.5">
+            <p className="text-sm text-stone-500 mt-0.5">
               {step === 'provider' && 'Choose your phone number provider'}
               {step === 'credentials' && `${provider?.name} authentication`}
               {step === 'details' && 'Configure your phone number'}
             </p>
           </div>
-          <button onClick={onClose} className="p-2 text-[#6B7280] hover:text-[#9CA3AF]"><X className="w-5 h-5" /></button>
+          <button onClick={onClose} className="p-2 text-stone-500 hover:text-stone-500"><X className="w-5 h-5" /></button>
         </div>
 
         <div className="p-6">
@@ -494,16 +494,16 @@ function AddNumberModal({
                 <button
                   key={p.id}
                   onClick={() => handleProviderSelect(p.id)}
-                  className="w-full flex items-center gap-4 p-4 border border-[#21262D] rounded-xl hover:border-brand-300 hover:bg-cyan-500/10/30 transition-colors text-left"
+                  className="w-full flex items-center gap-4 p-4 border border-stone-200 rounded-xl hover:border-brand-300 hover:bg-amber-50/30 transition-colors text-left"
                 >
-                  <div className="p-3 bg-[#21262D] rounded-lg text-[#9CA3AF]">
+                  <div className="p-3 bg-stone-100 rounded-lg text-stone-500">
                     {p.icon}
                   </div>
                   <div className="flex-1">
-                    <div className="font-medium text-white">{p.name}</div>
-                    <div className="text-sm text-[#6B7280]">{p.description}</div>
+                    <div className="font-medium text-stone-900">{p.name}</div>
+                    <div className="text-sm text-stone-500">{p.description}</div>
                   </div>
-                  <ChevronRight className="w-5 h-5 text-[#6B7280]" />
+                  <ChevronRight className="w-5 h-5 text-stone-500" />
                 </button>
               ))}
             </div>
@@ -513,13 +513,13 @@ function AddNumberModal({
             <div className="space-y-4">
               {filteredCredentials.length > 0 && (
                 <div>
-                  <label className="block text-sm font-medium text-[#E5E7EB] mb-2">
+                  <label className="block text-sm font-medium text-stone-700 mb-2">
                     Use existing credential
                   </label>
                   <select
                     value={selectedCredential}
                     onChange={(e) => setSelectedCredential(e.target.value)}
-                    className="w-full px-4 py-2.5 border border-[#21262D] rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
+                    className="w-full px-4 py-2.5 border border-stone-200 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
                   >
                     <option value="">Create new credential...</option>
                     {filteredCredentials.map((c) => (
@@ -533,7 +533,7 @@ function AddNumberModal({
 
               {(!selectedCredential || filteredCredentials.length === 0) && (
                 <div className="space-y-4">
-                  <div className="flex items-center gap-2 text-sm text-[#9CA3AF]">
+                  <div className="flex items-center gap-2 text-sm text-stone-500">
                     <Key className="w-4 h-4" />
                     <span>Enter your {provider.name} credentials</span>
                   </div>
@@ -541,22 +541,22 @@ function AddNumberModal({
                   {selectedProvider === 'vonage' && (
                     <>
                       <div>
-                        <label className="block text-sm font-medium text-[#E5E7EB] mb-1.5">API Key</label>
+                        <label className="block text-sm font-medium text-stone-700 mb-1.5">API Key</label>
                         <input
                           type="text"
                           value={formData.vonageApiKey}
                           onChange={(e) => setFormData(d => ({ ...d, vonageApiKey: e.target.value }))}
-                          className="w-full px-4 py-2.5 border border-[#21262D] rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
+                          className="w-full px-4 py-2.5 border border-stone-200 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
                           placeholder="Your Vonage API Key"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-[#E5E7EB] mb-1.5">API Secret</label>
+                        <label className="block text-sm font-medium text-stone-700 mb-1.5">API Secret</label>
                         <input
                           type="password"
                           value={formData.vonageApiSecret}
                           onChange={(e) => setFormData(d => ({ ...d, vonageApiSecret: e.target.value }))}
-                          className="w-full px-4 py-2.5 border border-[#21262D] rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
+                          className="w-full px-4 py-2.5 border border-stone-200 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
                           placeholder="Your Vonage API Secret"
                         />
                       </div>
@@ -565,12 +565,12 @@ function AddNumberModal({
 
                   {selectedProvider === 'telnyx' && (
                     <div>
-                      <label className="block text-sm font-medium text-[#E5E7EB] mb-1.5">API Key</label>
+                      <label className="block text-sm font-medium text-stone-700 mb-1.5">API Key</label>
                       <input
                         type="password"
                         value={formData.telnyxApiKey}
                         onChange={(e) => setFormData(d => ({ ...d, telnyxApiKey: e.target.value }))}
-                        className="w-full px-4 py-2.5 border border-[#21262D] rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
+                        className="w-full px-4 py-2.5 border border-stone-200 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
                         placeholder="Your Telnyx API Key"
                       />
                     </div>
@@ -579,44 +579,44 @@ function AddNumberModal({
                   {selectedProvider === 'byo-sip-trunk' && (
                     <>
                       <div>
-                        <label className="block text-sm font-medium text-[#E5E7EB] mb-1.5">Gateway IP Address</label>
+                        <label className="block text-sm font-medium text-stone-700 mb-1.5">Gateway IP Address</label>
                         <input
                           type="text"
                           value={formData.gatewayIp}
                           onChange={(e) => setFormData(d => ({ ...d, gatewayIp: e.target.value }))}
-                          className="w-full px-4 py-2.5 border border-[#21262D] rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
+                          className="w-full px-4 py-2.5 border border-stone-200 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
                           placeholder="e.g., 192.168.1.1 or sip.example.com"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-[#E5E7EB] mb-1.5">Gateway Port (optional)</label>
+                        <label className="block text-sm font-medium text-stone-700 mb-1.5">Gateway Port (optional)</label>
                         <input
                           type="text"
                           value={formData.gatewayPort}
                           onChange={(e) => setFormData(d => ({ ...d, gatewayPort: e.target.value }))}
-                          className="w-full px-4 py-2.5 border border-[#21262D] rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
+                          className="w-full px-4 py-2.5 border border-stone-200 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
                           placeholder="5060"
                         />
                       </div>
-                      <div className="border-t border-[#21262D] pt-4 mt-4">
-                        <div className="text-sm font-medium text-[#E5E7EB] mb-3">Authentication (optional)</div>
+                      <div className="border-t border-stone-200 pt-4 mt-4">
+                        <div className="text-sm font-medium text-stone-700 mb-3">Authentication (optional)</div>
                         <div className="grid grid-cols-2 gap-3">
                           <div>
-                            <label className="block text-xs font-medium text-[#9CA3AF] mb-1.5">Username</label>
+                            <label className="block text-xs font-medium text-stone-500 mb-1.5">Username</label>
                             <input
                               type="text"
                               value={formData.authUsername}
                               onChange={(e) => setFormData(d => ({ ...d, authUsername: e.target.value }))}
-                              className="w-full px-3 py-2 border border-[#21262D] rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
+                              className="w-full px-3 py-2 border border-stone-200 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
                             />
                           </div>
                           <div>
-                            <label className="block text-xs font-medium text-[#9CA3AF] mb-1.5">Password</label>
+                            <label className="block text-xs font-medium text-stone-500 mb-1.5">Password</label>
                             <input
                               type="password"
                               value={formData.authPassword}
                               onChange={(e) => setFormData(d => ({ ...d, authPassword: e.target.value }))}
-                              className="w-full px-3 py-2 border border-[#21262D] rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
+                              className="w-full px-3 py-2 border border-stone-200 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
                             />
                           </div>
                         </div>
@@ -627,7 +627,7 @@ function AddNumberModal({
                   <div className="flex gap-3 pt-4">
                     <button 
                       onClick={() => setStep('provider')} 
-                      className="flex-1 py-2.5 border border-[#21262D] rounded-lg font-medium text-[#E5E7EB] hover:bg-[#0A0E17]"
+                      className="flex-1 py-2.5 border border-stone-200 rounded-lg font-medium text-stone-700 hover:bg-white"
                     >
                       Back
                     </button>
@@ -640,7 +640,7 @@ function AddNumberModal({
                           ? !formData.telnyxApiKey
                           : !formData.gatewayIp
                       )}
-                      className="flex-1 py-2.5 bg-cyan-500 text-white rounded-lg font-medium hover:bg-cyan-400 disabled:opacity-50 flex items-center justify-center gap-2"
+                      className="flex-1 py-2.5 bg-cyan-500 text-stone-900 rounded-lg font-medium hover:bg-cyan-400 disabled:opacity-50 flex items-center justify-center gap-2"
                     >
                       {loading && <Loader2 className="w-4 h-4 animate-spin" />}
                       Continue
@@ -653,13 +653,13 @@ function AddNumberModal({
                 <div className="flex gap-3 pt-4">
                   <button 
                     onClick={() => setStep('provider')} 
-                    className="flex-1 py-2.5 border border-[#21262D] rounded-lg font-medium text-[#E5E7EB] hover:bg-[#0A0E17]"
+                    className="flex-1 py-2.5 border border-stone-200 rounded-lg font-medium text-stone-700 hover:bg-white"
                   >
                     Back
                   </button>
                   <button
                     onClick={() => setStep('details')}
-                    className="flex-1 py-2.5 bg-cyan-500 text-white rounded-lg font-medium hover:bg-cyan-400"
+                    className="flex-1 py-2.5 bg-cyan-500 text-stone-900 rounded-lg font-medium hover:bg-cyan-400"
                   >
                     Continue
                   </button>
@@ -672,7 +672,7 @@ function AddNumberModal({
             <div className="space-y-5">
               {selectedProvider !== 'vapi' && (
                 <div>
-                  <label className="block text-sm font-medium text-[#E5E7EB] mb-1.5">
+                  <label className="block text-sm font-medium text-stone-700 mb-1.5">
                     {selectedProvider === 'byo-sip-trunk' ? 'Phone Number or SIP URI' : 'Phone Number'}
                   </label>
                   <input
@@ -686,10 +686,10 @@ function AddNumberModal({
                         setFormData(d => ({ ...d, number: value, sipUri: '' }));
                       }
                     }}
-                    className="w-full px-4 py-2.5 border border-[#21262D] rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
+                    className="w-full px-4 py-2.5 border border-stone-200 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
                     placeholder={selectedProvider === 'byo-sip-trunk' ? '+1234567890 or sip:user@example.com' : '+1234567890'}
                   />
-                  <p className="text-xs text-[#6B7280] mt-1">
+                  <p className="text-xs text-stone-500 mt-1">
                     {selectedProvider === 'byo-sip-trunk' 
                       ? 'Enter E.164 format number or SIP URI (sip:user@domain.com)'
                       : 'Enter the phone number in E.164 format (e.g., +1234567890)'}
@@ -700,44 +700,44 @@ function AddNumberModal({
               {selectedProvider === 'twilio' && (
                 <>
                   <div>
-                    <label className="block text-sm font-medium text-[#E5E7EB] mb-1.5">Account SID</label>
+                    <label className="block text-sm font-medium text-stone-700 mb-1.5">Account SID</label>
                     <input
                       type="text"
                       value={formData.twilioAccountSid}
                       onChange={(e) => setFormData(d => ({ ...d, twilioAccountSid: e.target.value }))}
-                      className="w-full px-4 py-2.5 border border-[#21262D] rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
+                      className="w-full px-4 py-2.5 border border-stone-200 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
                       placeholder="AC..."
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-[#E5E7EB] mb-1.5">Auth Token</label>
+                    <label className="block text-sm font-medium text-stone-700 mb-1.5">Auth Token</label>
                     <input
                       type="password"
                       value={formData.twilioAuthToken}
                       onChange={(e) => setFormData(d => ({ ...d, twilioAuthToken: e.target.value }))}
-                      className="w-full px-4 py-2.5 border border-[#21262D] rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
+                      className="w-full px-4 py-2.5 border border-stone-200 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
                     />
                   </div>
                 </>
               )}
 
               <div>
-                <label className="block text-sm font-medium text-[#E5E7EB] mb-1.5">Friendly Name (optional)</label>
+                <label className="block text-sm font-medium text-stone-700 mb-1.5">Friendly Name (optional)</label>
                 <input
                   type="text"
                   value={formData.friendlyName}
                   onChange={(e) => setFormData(d => ({ ...d, friendlyName: e.target.value }))}
-                  className="w-full px-4 py-2.5 border border-[#21262D] rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
+                  className="w-full px-4 py-2.5 border border-stone-200 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
                   placeholder="e.g., Main Line, Sales Number"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-[#E5E7EB] mb-1.5">Assign to Agent (optional)</label>
+                <label className="block text-sm font-medium text-stone-700 mb-1.5">Assign to Agent (optional)</label>
                 <select
                   value={formData.assignedAgentId}
                   onChange={(e) => setFormData(d => ({ ...d, assignedAgentId: e.target.value }))}
-                  className="w-full px-4 py-2.5 border border-[#21262D] rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
+                  className="w-full px-4 py-2.5 border border-stone-200 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
                 >
                   <option value="">Assign later</option>
                   {agents.map((a) => (
@@ -755,7 +755,7 @@ function AddNumberModal({
               <div className="flex gap-3 pt-2">
                 <button 
                   onClick={() => selectedProvider === 'vapi' ? setStep('provider') : setStep('credentials')} 
-                  className="flex-1 py-2.5 border border-[#21262D] rounded-lg font-medium text-[#E5E7EB] hover:bg-[#0A0E17]"
+                  className="flex-1 py-2.5 border border-stone-200 rounded-lg font-medium text-stone-700 hover:bg-white"
                 >
                   Back
                 </button>
@@ -768,7 +768,7 @@ function AddNumberModal({
                       ? !formData.number || !formData.twilioAccountSid || !formData.twilioAuthToken
                       : !formData.number && !formData.sipUri
                   )}
-                  className="flex-1 py-2.5 bg-cyan-500 text-white rounded-lg font-medium hover:bg-cyan-400 disabled:opacity-50 flex items-center justify-center gap-2"
+                  className="flex-1 py-2.5 bg-cyan-500 text-stone-900 rounded-lg font-medium hover:bg-cyan-400 disabled:opacity-50 flex items-center justify-center gap-2"
                 >
                   {loading && <Loader2 className="w-4 h-4 animate-spin" />}
                   {selectedProvider === 'vapi' ? 'Get Number' : 'Import Number'}
@@ -810,36 +810,36 @@ function EditNumberModal({ number, agents, onClose, onUpdated }: { number: Phone
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={onClose}>
-      <div className="bg-[#161B22] rounded-2xl w-full max-w-md" onClick={(e) => e.stopPropagation()}>
+      <div className="bg-white rounded-2xl w-full max-w-md" onClick={(e) => e.stopPropagation()}>
         <div className="p-6 border-b border-gray-100 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-white">Configure {number.number}</h2>
-          <button onClick={onClose} className="p-2 text-[#6B7280] hover:text-[#9CA3AF]"><X className="w-5 h-5" /></button>
+          <h2 className="text-lg font-semibold text-stone-900">Configure {number.number}</h2>
+          <button onClick={onClose} className="p-2 text-stone-500 hover:text-stone-500"><X className="w-5 h-5" /></button>
         </div>
         <form onSubmit={handleSubmit} className="p-6 space-y-5">
           {error && <div className="bg-red-50 text-red-700 text-sm rounded-lg px-4 py-3">{error}</div>}
 
           <div>
-            <label className="block text-sm font-medium text-[#E5E7EB] mb-1.5">Friendly Name</label>
+            <label className="block text-sm font-medium text-stone-700 mb-1.5">Friendly Name</label>
             <input 
               type="text" 
               value={friendlyName} 
               onChange={(e) => setFriendlyName(e.target.value)} 
               placeholder="e.g., Main Line" 
-              className="w-full px-4 py-2.5 border border-[#21262D] rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none" 
+              className="w-full px-4 py-2.5 border border-stone-200 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none" 
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[#E5E7EB] mb-1.5">Assigned Agent</label>
+            <label className="block text-sm font-medium text-stone-700 mb-1.5">Assigned Agent</label>
             <select 
               value={agentId} 
               onChange={(e) => setAgentId(e.target.value)} 
-              className="w-full px-4 py-2.5 border border-[#21262D] rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
+              className="w-full px-4 py-2.5 border border-stone-200 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
             >
               <option value="">None</option>
               {agents.map((a) => <option key={a.id} value={a.id}>{a.name}</option>)}
             </select>
-            <p className="text-xs text-[#6B7280] mt-1">Inbound calls to this number will be handled by the assigned agent.</p>
+            <p className="text-xs text-stone-500 mt-1">Inbound calls to this number will be handled by the assigned agent.</p>
           </div>
 
           <div className="flex items-center gap-3">
@@ -848,16 +848,16 @@ function EditNumberModal({ number, agents, onClose, onUpdated }: { number: Phone
               id="isActive"
               checked={isActive}
               onChange={(e) => setIsActive(e.target.checked)}
-              className="w-4 h-4 text-cyan-400 border-[#21262D] rounded focus:ring-cyan-500"
+              className="w-4 h-4 text-amber-600 border-stone-200 rounded focus:ring-cyan-500"
             />
-            <label htmlFor="isActive" className="text-sm font-medium text-[#E5E7EB]">
+            <label htmlFor="isActive" className="text-sm font-medium text-stone-700">
               Number is active
             </label>
           </div>
 
           <div className="flex gap-3 pt-2">
-            <button type="button" onClick={onClose} className="flex-1 py-2.5 border border-[#21262D] rounded-lg font-medium text-[#E5E7EB] hover:bg-[#0A0E17]">Cancel</button>
-            <button type="submit" disabled={loading} className="flex-1 py-2.5 bg-cyan-500 text-white rounded-lg font-medium hover:bg-cyan-400 disabled:opacity-50">
+            <button type="button" onClick={onClose} className="flex-1 py-2.5 border border-stone-200 rounded-lg font-medium text-stone-700 hover:bg-white">Cancel</button>
+            <button type="submit" disabled={loading} className="flex-1 py-2.5 bg-cyan-500 text-stone-900 rounded-lg font-medium hover:bg-cyan-400 disabled:opacity-50">
               {loading ? 'Saving...' : 'Save'}
             </button>
           </div>

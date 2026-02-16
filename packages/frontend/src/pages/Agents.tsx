@@ -143,14 +143,14 @@ export default function Agents() {
 
   return (
     <div className="p-8 max-w-5xl">
-      <Link to="/dashboard" className="flex items-center gap-1 text-sm text-[#6B7280] hover:text-white mb-4 transition-colors">
+      <Link to="/dashboard" className="flex items-center gap-1 text-sm text-stone-500 hover:text-stone-900 mb-4 transition-colors">
         <ArrowLeft className="w-4 h-4" /> Dashboard
       </Link>
 
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-semibold text-white">Agents</h1>
-          <p className="text-sm text-[#6B7280] mt-1">
+          <h1 className="text-2xl font-semibold text-stone-900">Agents</h1>
+          <p className="text-sm text-stone-500 mt-1">
             {agents.length} of {getAgentLimit() === 999 ? 'Unlimited' : getAgentLimit()} agents used
           </p>
         </div>
@@ -158,8 +158,8 @@ export default function Agents() {
           onClick={handleCreateClick}
           className={`flex items-center gap-2 px-5 py-2.5 rounded-lg font-medium transition-all ${
             canCreateAgent()
-              ? 'btn-cyan'
-              : 'bg-amber-500/10 text-amber-400 border border-amber-500/30 hover:bg-amber-500/20'
+              ? 'btn-amber'
+              : 'bg-amber-500/10 text-amber-600 border border-amber-500/30 hover:bg-amber-500/20'
           }`}
         >
           {canCreateAgent() ? (
@@ -177,23 +177,23 @@ export default function Agents() {
       {loading ? (
         <div className="space-y-4">
           {[1, 2].map((i) => (
-            <div key={i} className="bg-[#161B22] rounded-xl border border-[#21262D] p-6 animate-pulse">
-              <div className="h-5 bg-[#21262D] rounded w-40 mb-2" />
-              <div className="h-4 bg-[#21262D] rounded w-60" />
+            <div key={i} className="bg-stone-50 rounded-xl border border-stone-200 p-6 animate-pulse">
+              <div className="h-5 bg-stone-200 rounded w-40 mb-2" />
+              <div className="h-4 bg-stone-200 rounded w-60" />
             </div>
           ))}
         </div>
       ) : agents.length === 0 ? (
-        <div className="bg-[#161B22] rounded-xl border border-[#21262D] p-12 text-center">
-          <Bot className="w-12 h-12 text-[#6B7280] mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-white mb-2">No agents yet</h3>
-          <p className="text-[#9CA3AF] mb-6">Create your first AI voice agent to start making or receiving calls.</p>
+        <div className="bg-stone-50 rounded-xl border border-stone-200 p-12 text-center">
+          <Bot className="w-12 h-12 text-stone-500 mx-auto mb-4" />
+          <h3 className="text-lg font-medium text-stone-900 mb-2">No agents yet</h3>
+          <p className="text-stone-500 mb-6">Create your first AI voice agent to start making or receiving calls.</p>
           <button
             onClick={handleCreateClick}
             className={`px-6 py-2.5 rounded-lg font-medium transition-all ${
               canCreateAgent()
-                ? 'btn-cyan'
-                : 'bg-amber-500/10 text-amber-400 border border-amber-500/30'
+                ? 'btn-amber'
+                : 'bg-amber-500/10 text-amber-600 border border-amber-500/30'
             }`}
           >
             {canCreateAgent() ? 'Create Agent' : 'Upgrade to Create'}
@@ -202,45 +202,45 @@ export default function Agents() {
       ) : (
         <div className="space-y-4">
           {agents.map((agent) => (
-            <div key={agent.id} className="bg-[#161B22] rounded-xl border border-[#21262D] p-6 card-glow">
+            <div key={agent.id} className="bg-white rounded-xl border border-stone-200 p-6 shadow-sm hover:shadow-md transition-shadow">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <div className="flex items-center gap-3">
-                    <h3 className="font-semibold text-white">{agent.name}</h3>
+                    <h3 className="font-semibold text-stone-900">{agent.name}</h3>
                     <button
                       onClick={() => toggleActive(agent)}
                       className={`text-xs font-medium px-2 py-0.5 rounded-full cursor-pointer transition-colors ${
-                        agent.isActive ? 'badge-success-dark' : 'badge-neutral-dark'
+                        agent.isActive ? 'badge-success-light' : 'badge-neutral-light'
                       }`}
                     >
                       {agent.isActive ? 'Active' : 'Inactive'}
                     </button>
-                    <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+                    <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-amber-50 text-amber-600 border border-amber-200">
                       {agent.direction}
                     </span>
                     {agent.tools && agent.tools.length > 0 && (
-                      <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-purple-500/10 text-purple-400 border border-purple-500/20 flex items-center gap-1">
+                      <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-purple-50 text-purple-600 border border-purple-200 flex items-center gap-1">
                         <Wrench className="w-3 h-3" /> {agent.tools.length} tool{agent.tools.length > 1 ? 's' : ''}
                       </span>
                     )}
                   </div>
-                  <div className="flex items-center gap-4 text-sm text-[#9CA3AF] mt-2">
+                  <div className="flex items-center gap-4 text-sm text-stone-500 mt-2">
                     <span className="flex items-center gap-1"><Volume2 className="w-3.5 h-3.5" /> {agent.voiceProvider}/{agent.voiceId}</span>
                     <span className="flex items-center gap-1"><Mic className="w-3.5 h-3.5" /> {agent.language}</span>
                   </div>
                   {agent.phoneNumbers.length > 0 && (
-                    <div className="flex items-center gap-1 text-sm text-[#6B7280] mt-1.5">
+                    <div className="flex items-center gap-1 text-sm text-stone-500 mt-1.5">
                       <Phone className="w-3.5 h-3.5" />
                       {agent.phoneNumbers.map((p) => p.friendlyName || p.number).join(', ')}
                     </div>
                   )}
-                  <p className="text-sm text-[#6B7280] mt-2 line-clamp-2">{agent.systemPrompt.substring(0, 120)}...</p>
+                  <p className="text-sm text-stone-500 mt-2 line-clamp-2">{agent.systemPrompt.substring(0, 120)}...</p>
                 </div>
                 <div className="flex gap-1.5 ml-4">
                   {agent.direction === 'outbound' && (
                     <button
                       onClick={() => setTestCallAgent(agent)}
-                      className="p-2 text-[#6B7280] hover:text-green-400 hover:bg-green-500/10 rounded-lg transition-colors"
+                      className="p-2 text-stone-500 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors"
                       title="Test call"
                     >
                       <Play className="w-4 h-4" />
@@ -248,14 +248,14 @@ export default function Agents() {
                   )}
                   <button
                     onClick={() => setEditAgent(agent)}
-                    className="p-2 text-[#6B7280] hover:text-white hover:bg-[#21262D] rounded-lg transition-colors"
+                    className="p-2 text-stone-500 hover:text-stone-900 hover:bg-stone-100 rounded-lg transition-colors"
                     title="Edit"
                   >
                     <Pencil className="w-4 h-4" />
                   </button>
                   <button
                     onClick={() => deleteAgent(agent.id)}
-                    className="p-2 text-[#6B7280] hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+                    className="p-2 text-stone-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                     title="Delete"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -406,50 +406,50 @@ function CreateAgentModal({ intent, onClose, onCreated }: { intent: string; onCl
   return (
     <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4" onClick={onClose}>
       <div className="modal-dark w-full max-w-2xl max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
-        <div className="sticky top-0 bg-[#0D1117] p-6 border-b border-[#21262D] flex items-center justify-between z-10">
-          <h2 className="text-lg font-semibold text-white">{step === 'template' ? 'Choose a Template' : 'Configure Agent'}</h2>
-          <button onClick={onClose} className="p-2 text-[#6B7280] hover:text-white rounded-lg transition-colors"><X className="w-5 h-5" /></button>
+        <div className="sticky top-0 bg-stone-50 p-6 border-b border-stone-200 flex items-center justify-between z-10">
+          <h2 className="text-lg font-semibold text-stone-900">{step === 'template' ? 'Choose a Template' : 'Configure Agent'}</h2>
+          <button onClick={onClose} className="p-2 text-stone-500 hover:text-stone-900 rounded-lg transition-colors"><X className="w-5 h-5" /></button>
         </div>
         {step === 'template' ? (
           <div className="p-6 space-y-3">
             {templates.filter((t) => t.direction === intent || intent === 'both').map((t) => (
-              <button key={t.id} onClick={() => applyTemplate(t)} className="w-full text-left p-4 border border-[#21262D] rounded-xl hover:border-cyan-500/30 hover:bg-cyan-500/5 transition-all">
-                <div className="flex items-center gap-2 mb-1"><Zap className="w-4 h-4 text-cyan-400" /><span className="font-medium text-white">{t.name}</span><span className="text-xs bg-[#161B22] text-[#9CA3AF] px-2 py-0.5 rounded-full border border-[#21262D]">{t.direction}</span></div>
-                <p className="text-sm text-[#6B7280] line-clamp-2">{t.systemPrompt.substring(0, 150)}...</p>
+              <button key={t.id} onClick={() => applyTemplate(t)} className="w-full text-left p-4 border border-stone-200 rounded-xl hover:border-amber-300 hover:bg-amber-50 transition-all">
+                <div className="flex items-center gap-2 mb-1"><Zap className="w-4 h-4 text-amber-600" /><span className="font-medium text-stone-900">{t.name}</span><span className="text-xs bg-white text-stone-500 px-2 py-0.5 rounded-full border border-stone-200">{t.direction}</span></div>
+                <p className="text-sm text-stone-500 line-clamp-2">{t.systemPrompt.substring(0, 150)}...</p>
               </button>
             ))}
-            <button onClick={() => setStep('configure')} className="w-full text-left p-4 border-2 border-dashed border-[#21262D] rounded-xl hover:border-[#6B7280] transition-colors">
-              <div className="flex items-center gap-2 mb-1"><Plus className="w-4 h-4 text-[#6B7280]" /><span className="font-medium text-[#E5E7EB]">Build from scratch</span></div>
-              <p className="text-sm text-[#6B7280]">Create a custom agent with your own instructions</p>
+            <button onClick={() => setStep('configure')} className="w-full text-left p-4 border-2 border-dashed border-stone-200 rounded-xl hover:border-[#6B7280] transition-colors">
+              <div className="flex items-center gap-2 mb-1"><Plus className="w-4 h-4 text-stone-500" /><span className="font-medium text-stone-700">Build from scratch</span></div>
+              <p className="text-sm text-stone-500">Create a custom agent with your own instructions</p>
             </button>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="p-6 space-y-5">
             {error && <div className="bg-red-500/10 text-red-400 text-sm rounded-lg px-4 py-3 border border-red-500/20">{error}</div>}
             <div>
-              <label className="block text-sm font-medium text-[#E5E7EB] mb-1.5">Agent Name</label>
+              <label className="block text-sm font-medium text-stone-700 mb-1.5">Agent Name</label>
               <input type="text" value={form.name} onChange={(e) => update('name', e.target.value)} placeholder="e.g., Sales Agent" className="w-full px-4 py-2.5 dark-input" required />
             </div>
             <div>
-              <label className="block text-sm font-medium text-[#E5E7EB] mb-1.5">Opening Message</label>
+              <label className="block text-sm font-medium text-stone-700 mb-1.5">Opening Message</label>
               <input type="text" value={form.firstMessage} onChange={(e) => update('firstMessage', e.target.value)} placeholder="Hi, this is Sarah from..." className="w-full px-4 py-2.5 dark-input" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-[#E5E7EB] mb-1.5">Agent Instructions</label>
+              <label className="block text-sm font-medium text-stone-700 mb-1.5">Agent Instructions</label>
               <textarea value={form.systemPrompt} onChange={(e) => update('systemPrompt', e.target.value)} rows={5} className="w-full px-4 py-2.5 dark-input resize-none font-mono text-sm" placeholder="You are a professional sales representative..." required />
             </div>
             
-            <div className="bg-[#161B22] rounded-xl p-4 space-y-4 border border-[#21262D]">
-              <div className="flex items-center gap-2 text-sm font-medium text-[#E5E7EB]"><Volume2 className="w-4 h-4 text-cyan-400" /> Voice</div>
+            <div className="bg-white rounded-xl p-4 space-y-4 border border-stone-200">
+              <div className="flex items-center gap-2 text-sm font-medium text-stone-700"><Volume2 className="w-4 h-4 text-amber-600" /> Voice</div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs text-[#6B7280] mb-1">Provider</label>
+                  <label className="block text-xs text-stone-500 mb-1">Provider</label>
                   <select value={form.voiceProvider} onChange={(e) => { const newProvider = e.target.value; const first = voiceOptions.find((v) => v.provider === newProvider); update('voiceProvider', newProvider); update('voiceId', first?.voiceId || ''); }} className="w-full px-3 py-2 dark-input text-sm">
                     {voiceProviders.map((p) => (<option key={p.id} value={p.id}>{p.name}</option>))}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs text-[#6B7280] mb-1">Voice</label>
+                  <label className="block text-xs text-stone-500 mb-1">Voice</label>
                   <select value={form.voiceId} onChange={(e) => update('voiceId', e.target.value)} className="w-full px-3 py-2 dark-input text-sm">
                     {filteredVoices.map((v) => (<option key={v.voiceId} value={v.voiceId}>{v.name} ({v.gender}, {v.accent})</option>))}
                   </select>
@@ -457,13 +457,13 @@ function CreateAgentModal({ intent, onClose, onCreated }: { intent: string; onCl
               </div>
             </div>
 
-            <div className="bg-[#161B22] rounded-xl p-4 space-y-3 border border-[#21262D]">
-              <div className="flex items-center gap-2 text-sm font-medium text-[#E5E7EB]"><Brain className="w-4 h-4 text-cyan-400" /> AI Model</div>
+            <div className="bg-white rounded-xl p-4 space-y-3 border border-stone-200">
+              <div className="flex items-center gap-2 text-sm font-medium text-stone-700"><Brain className="w-4 h-4 text-amber-600" /> AI Model</div>
               <div className="grid grid-cols-1 gap-2">
                 {modelOptions.map((m) => (
-                  <label key={`${m.provider}/${m.model}`} className={`flex items-center gap-3 p-3 border rounded-lg cursor-pointer transition-colors ${form.modelProvider === m.provider && form.modelName === m.model ? 'border-cyan-500 bg-cyan-500/10' : 'border-[#21262D] hover:border-[#6B7280]'}`}>
+                  <label key={`${m.provider}/${m.model}`} className={`flex items-center gap-3 p-3 border rounded-lg cursor-pointer transition-colors ${form.modelProvider === m.provider && form.modelName === m.model ? 'border-cyan-500 bg-amber-50' : 'border-stone-200 hover:border-[#6B7280]'}`}>
                     <input type="radio" name="model" checked={form.modelProvider === m.provider && form.modelName === m.model} onChange={() => { update('modelProvider', m.provider); update('modelName', m.model); }} className="accent-cyan-500" />
-                    <div><span className="text-sm font-medium text-white">{m.name}</span><span className="text-xs text-[#6B7280] ml-2">{m.description}</span></div>
+                    <div><span className="text-sm font-medium text-stone-900">{m.name}</span><span className="text-xs text-stone-500 ml-2">{m.description}</span></div>
                   </label>
                 ))}
               </div>
@@ -471,7 +471,7 @@ function CreateAgentModal({ intent, onClose, onCreated }: { intent: string; onCl
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-[#E5E7EB] mb-1.5">Language</label>
+                <label className="block text-sm font-medium text-stone-700 mb-1.5">Language</label>
                 <select value={form.language} onChange={(e) => update('language', e.target.value)} className="w-full px-4 py-2.5 dark-input">
                   <option value="en">English</option>
                   <option value="es">Spanish</option>
@@ -480,24 +480,24 @@ function CreateAgentModal({ intent, onClose, onCreated }: { intent: string; onCl
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-[#E5E7EB] mb-1.5">Transfer Number</label>
+                <label className="block text-sm font-medium text-stone-700 mb-1.5">Transfer Number</label>
                 <input type="tel" value={form.transferNumber} onChange={(e) => update('transferNumber', e.target.value)} placeholder="+1234567890" className="w-full px-4 py-2.5 dark-input" />
               </div>
             </div>
 
             {orgTools.length > 0 && (
               <div className="bg-purple-500/5 rounded-xl p-4 space-y-3 border border-purple-500/20">
-                <div className="flex items-center gap-2 text-sm font-medium text-[#E5E7EB]"><Wrench className="w-4 h-4 text-purple-400" /> Tools</div>
+                <div className="flex items-center gap-2 text-sm font-medium text-stone-700"><Wrench className="w-4 h-4 text-purple-400" /> Tools</div>
                 <div className="space-y-2">
                   {orgTools.map((tool) => (
-                    <label key={tool.id} className="flex items-start gap-3 p-3 bg-[#0D1117] border border-purple-500/20 rounded-lg cursor-pointer hover:bg-purple-500/5">
+                    <label key={tool.id} className="flex items-start gap-3 p-3 bg-stone-50 border border-purple-500/20 rounded-lg cursor-pointer hover:bg-purple-500/5">
                       <input type="checkbox" checked={form.toolIds.includes(tool.id)} onChange={(e) => update('toolIds', e.target.checked ? [...form.toolIds, tool.id] : form.toolIds.filter((id) => id !== tool.id))} className="accent-cyan-500 w-4 h-4 mt-0.5" />
                       <div>
                         <div className="flex items-center gap-2">
-                          <span className="text-sm font-medium text-white">{tool.name}</span>
-                          <span className="text-xs bg-[#161B22] text-[#9CA3AF] px-2 py-0.5 rounded-full border border-[#21262D]">{tool.type}</span>
+                          <span className="text-sm font-medium text-stone-900">{tool.name}</span>
+                          <span className="text-xs bg-white text-stone-500 px-2 py-0.5 rounded-full border border-stone-200">{tool.type}</span>
                         </div>
-                        <p className="text-xs text-[#6B7280] mt-0.5">{tool.description}</p>
+                        <p className="text-xs text-stone-500 mt-0.5">{tool.description}</p>
                       </div>
                     </label>
                   ))}
@@ -506,51 +506,51 @@ function CreateAgentModal({ intent, onClose, onCreated }: { intent: string; onCl
             )}
 
             <div className="bg-amber-500/5 rounded-xl p-4 space-y-3 border border-amber-500/20">
-              <div className="flex items-center gap-2 text-sm font-medium text-[#E5E7EB]"><Sparkles className="w-4 h-4 text-amber-400" /> Post-Call Analysis</div>
-              <label className="flex items-center gap-3 cursor-pointer bg-[#0D1117] p-3 rounded-lg border border-[#21262D]">
+              <div className="flex items-center gap-2 text-sm font-medium text-stone-700"><Sparkles className="w-4 h-4 text-amber-400" /> Post-Call Analysis</div>
+              <label className="flex items-center gap-3 cursor-pointer bg-stone-50 p-3 rounded-lg border border-stone-200">
                 <input type="checkbox" checked={form.analysisEnabled} onChange={(e) => update('analysisEnabled', e.target.checked)} className="accent-cyan-500 w-4 h-4" />
-                <span className="text-sm text-[#E5E7EB]">Enable AI analysis after each call</span>
+                <span className="text-sm text-stone-700">Enable AI analysis after each call</span>
               </label>
               {form.analysisEnabled && (
                 <div className="space-y-3 pl-7">
                   <div>
-                    <label className="block text-xs text-[#6B7280] mb-1">Summary Prompt</label>
+                    <label className="block text-xs text-stone-500 mb-1">Summary Prompt</label>
                     <textarea value={form.analysisSummaryPrompt} onChange={(e) => update('analysisSummaryPrompt', e.target.value)} rows={2} placeholder="Summarize the call focusing on..." className="w-full px-3 py-2 dark-input text-sm resize-none" />
                   </div>
                   <div>
-                    <label className="block text-xs text-[#6B7280] mb-1">Success Evaluation</label>
+                    <label className="block text-xs text-stone-500 mb-1">Success Evaluation</label>
                     <textarea value={form.analysisSuccessEvaluation} onChange={(e) => update('analysisSuccessEvaluation', e.target.value)} rows={2} placeholder="The call was successful if..." className="w-full px-3 py-2 dark-input text-sm resize-none" />
                   </div>
                 </div>
               )}
             </div>
 
-            <button type="button" onClick={() => setShowAdvanced(!showAdvanced)} className="flex items-center gap-2 text-sm text-[#6B7280] hover:text-[#E5E7EB] transition-colors">
+            <button type="button" onClick={() => setShowAdvanced(!showAdvanced)} className="flex items-center gap-2 text-sm text-stone-500 hover:text-stone-700 transition-colors">
               <ChevronDown className={`w-4 h-4 transition-transform ${showAdvanced ? 'rotate-180' : ''}`} /> Advanced Settings
             </button>
 
             {showAdvanced && (
-              <div className="space-y-4 pt-2 border-t border-[#21262D]">
+              <div className="space-y-4 pt-2 border-t border-stone-200">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs text-[#6B7280] mb-1">Max Duration (sec)</label>
+                    <label className="block text-xs text-stone-500 mb-1">Max Duration (sec)</label>
                     <input type="number" value={form.maxDurationSeconds} onChange={(e) => update('maxDurationSeconds', parseInt(e.target.value))} className="w-full px-3 py-2 dark-input text-sm" />
                   </div>
                   <div>
-                    <label className="block text-xs text-[#6B7280] mb-1">Silence Timeout (sec)</label>
+                    <label className="block text-xs text-stone-500 mb-1">Silence Timeout (sec)</label>
                     <input type="number" value={form.silenceTimeoutSeconds} onChange={(e) => update('silenceTimeoutSeconds', parseInt(e.target.value))} className="w-full px-3 py-2 dark-input text-sm" />
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs text-[#6B7280] mb-1">Background Sound</label>
+                    <label className="block text-xs text-stone-500 mb-1">Background Sound</label>
                     <select value={form.backgroundSound} onChange={(e) => update('backgroundSound', e.target.value)} className="w-full px-3 py-2 dark-input text-sm">
                       <option value="off">None</option>
                       <option value="office">Office</option>
                     </select>
                   </div>
                   <div>
-                    <label className="block text-xs text-[#6B7280] mb-1">Who Speaks First</label>
+                    <label className="block text-xs text-stone-500 mb-1">Who Speaks First</label>
                     <select value={form.firstMessageMode} onChange={(e) => update('firstMessageMode', e.target.value)} className="w-full px-3 py-2 dark-input text-sm">
                       <option value="assistant-speaks-first">Agent speaks first</option>
                       <option value="assistant-waits-for-user">Wait for customer</option>
@@ -559,23 +559,23 @@ function CreateAgentModal({ intent, onClose, onCreated }: { intent: string; onCl
                 </div>
                 <label className="flex items-center gap-3 cursor-pointer">
                   <input type="checkbox" checked={form.voicemailDetection} onChange={(e) => update('voicemailDetection', e.target.checked)} className="accent-cyan-500 w-4 h-4" />
-                  <span className="text-sm text-[#E5E7EB]">Detect voicemail</span>
+                  <span className="text-sm text-stone-700">Detect voicemail</span>
                 </label>
                 {form.voicemailDetection && (
                   <div>
-                    <label className="block text-xs text-[#6B7280] mb-1">Voicemail Message</label>
+                    <label className="block text-xs text-stone-500 mb-1">Voicemail Message</label>
                     <textarea value={form.voicemailMessage} onChange={(e) => update('voicemailMessage', e.target.value)} rows={2} className="w-full px-3 py-2 dark-input text-sm resize-none" />
                   </div>
                 )}
                 <label className="flex items-center gap-3 cursor-pointer">
                   <input type="checkbox" checked={form.endCallFunctionEnabled} onChange={(e) => update('endCallFunctionEnabled', e.target.checked)} className="accent-cyan-500 w-4 h-4" />
-                  <span className="text-sm text-[#E5E7EB]">Allow AI to end call</span>
+                  <span className="text-sm text-stone-700">Allow AI to end call</span>
                 </label>
               </div>
             )}
 
             <div className="flex gap-3 pt-2">
-              <button type="button" onClick={() => { if (step === 'configure') { setError(''); setStep('template'); } else { onClose(); } }} className="flex-1 py-2.5 border border-[#21262D] rounded-lg font-medium text-[#E5E7EB] hover:bg-[#161B22] transition-colors">
+              <button type="button" onClick={() => { if (step === 'configure') { setError(''); setStep('template'); } else { onClose(); } }} className="flex-1 py-2.5 border border-stone-200 rounded-lg font-medium text-stone-700 hover:bg-white transition-colors">
                 {step === 'configure' ? 'Back' : 'Cancel'}
               </button>
               <button type="submit" disabled={loading} className="flex-1 py-2.5 btn-cyan disabled:opacity-50">
@@ -666,61 +666,61 @@ function EditAgentModal({ agent, onClose, onUpdated }: { agent: Agent; onClose: 
   return (
     <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4" onClick={onClose}>
       <div className="modal-dark w-full max-w-2xl max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
-        <div className="sticky top-0 bg-[#0D1117] p-6 border-b border-[#21262D] flex items-center justify-between z-10">
-          <h2 className="text-lg font-semibold text-white">Edit Agent</h2>
-          <button onClick={onClose} className="p-2 text-[#6B7280] hover:text-white rounded-lg transition-colors"><X className="w-5 h-5" /></button>
+        <div className="sticky top-0 bg-stone-50 p-6 border-b border-stone-200 flex items-center justify-between z-10">
+          <h2 className="text-lg font-semibold text-stone-900">Edit Agent</h2>
+          <button onClick={onClose} className="p-2 text-stone-500 hover:text-stone-900 rounded-lg transition-colors"><X className="w-5 h-5" /></button>
         </div>
         <form onSubmit={handleSubmit} className="p-6 space-y-5">
           {error && <div className="bg-red-500/10 text-red-400 text-sm rounded-lg px-4 py-3 border border-red-500/20">{error}</div>}
-          <div><label className="block text-sm font-medium text-[#E5E7EB] mb-1.5">Agent Name</label><input type="text" value={form.name} onChange={(e) => update('name', e.target.value)} className="w-full px-4 py-2.5 dark-input" required /></div>
-          <div><label className="block text-sm font-medium text-[#E5E7EB] mb-1.5">Opening Message</label><input type="text" value={form.firstMessage} onChange={(e) => update('firstMessage', e.target.value)} className="w-full px-4 py-2.5 dark-input" /></div>
-          <div><label className="block text-sm font-medium text-[#E5E7EB] mb-1.5">Agent Instructions</label><textarea value={form.systemPrompt} onChange={(e) => update('systemPrompt', e.target.value)} rows={5} className="w-full px-4 py-2.5 dark-input resize-none font-mono text-sm" required /></div>
+          <div><label className="block text-sm font-medium text-stone-700 mb-1.5">Agent Name</label><input type="text" value={form.name} onChange={(e) => update('name', e.target.value)} className="w-full px-4 py-2.5 dark-input" required /></div>
+          <div><label className="block text-sm font-medium text-stone-700 mb-1.5">Opening Message</label><input type="text" value={form.firstMessage} onChange={(e) => update('firstMessage', e.target.value)} className="w-full px-4 py-2.5 dark-input" /></div>
+          <div><label className="block text-sm font-medium text-stone-700 mb-1.5">Agent Instructions</label><textarea value={form.systemPrompt} onChange={(e) => update('systemPrompt', e.target.value)} rows={5} className="w-full px-4 py-2.5 dark-input resize-none font-mono text-sm" required /></div>
           
-          <div className="bg-[#161B22] rounded-xl p-4 space-y-4 border border-[#21262D]">
-            <div className="flex items-center gap-2 text-sm font-medium text-[#E5E7EB]"><Volume2 className="w-4 h-4 text-cyan-400" /> Voice</div>
+          <div className="bg-white rounded-xl p-4 space-y-4 border border-stone-200">
+            <div className="flex items-center gap-2 text-sm font-medium text-stone-700"><Volume2 className="w-4 h-4 text-amber-600" /> Voice</div>
             <div className="grid grid-cols-2 gap-3">
-              <div><label className="block text-xs text-[#6B7280] mb-1">Provider</label><select value={form.voiceProvider} onChange={(e) => { const newProvider = e.target.value; const first = voiceOptions.find((v) => v.provider === newProvider); update('voiceProvider', newProvider); update('voiceId', first?.voiceId || ''); }} className="w-full px-3 py-2 dark-input text-sm">{voiceProviders.map((p) => (<option key={p.id} value={p.id}>{p.name}</option>))}</select></div>
-              <div><label className="block text-xs text-[#6B7280] mb-1">Voice</label><select value={form.voiceId} onChange={(e) => update('voiceId', e.target.value)} className="w-full px-3 py-2 dark-input text-sm">{filteredVoices.map((v) => (<option key={v.voiceId} value={v.voiceId}>{v.name} ({v.gender}, {v.accent})</option>))}</select></div>
+              <div><label className="block text-xs text-stone-500 mb-1">Provider</label><select value={form.voiceProvider} onChange={(e) => { const newProvider = e.target.value; const first = voiceOptions.find((v) => v.provider === newProvider); update('voiceProvider', newProvider); update('voiceId', first?.voiceId || ''); }} className="w-full px-3 py-2 dark-input text-sm">{voiceProviders.map((p) => (<option key={p.id} value={p.id}>{p.name}</option>))}</select></div>
+              <div><label className="block text-xs text-stone-500 mb-1">Voice</label><select value={form.voiceId} onChange={(e) => update('voiceId', e.target.value)} className="w-full px-3 py-2 dark-input text-sm">{filteredVoices.map((v) => (<option key={v.voiceId} value={v.voiceId}>{v.name} ({v.gender}, {v.accent})</option>))}</select></div>
             </div>
           </div>
 
-          <div className="bg-[#161B22] rounded-xl p-4 space-y-3 border border-[#21262D]">
-            <div className="flex items-center gap-2 text-sm font-medium text-[#E5E7EB]"><Brain className="w-4 h-4 text-cyan-400" /> AI Model</div>
-            <div className="grid grid-cols-1 gap-2">{modelOptions.map((m) => (<label key={`\${m.provider}/\${m.model}`} className={`flex items-center gap-3 p-3 border rounded-lg cursor-pointer transition-colors \${form.modelProvider === m.provider && form.modelName === m.model ? 'border-cyan-500 bg-cyan-500/10' : 'border-[#21262D] hover:border-[#6B7280]'}`}><input type="radio" name="model" checked={form.modelProvider === m.provider && form.modelName === m.model} onChange={() => { update('modelProvider', m.provider); update('modelName', m.model); }} className="accent-cyan-500" /><div><span className="text-sm font-medium text-white">{m.name}</span><span className="text-xs text-[#6B7280] ml-2">{m.description}</span></div></label>))}</div>
+          <div className="bg-white rounded-xl p-4 space-y-3 border border-stone-200">
+            <div className="flex items-center gap-2 text-sm font-medium text-stone-700"><Brain className="w-4 h-4 text-amber-600" /> AI Model</div>
+            <div className="grid grid-cols-1 gap-2">{modelOptions.map((m) => (<label key={`\${m.provider}/\${m.model}`} className={`flex items-center gap-3 p-3 border rounded-lg cursor-pointer transition-colors \${form.modelProvider === m.provider && form.modelName === m.model ? 'border-cyan-500 bg-amber-50' : 'border-stone-200 hover:border-[#6B7280]'}`}><input type="radio" name="model" checked={form.modelProvider === m.provider && form.modelName === m.model} onChange={() => { update('modelProvider', m.provider); update('modelName', m.model); }} className="accent-cyan-500" /><div><span className="text-sm font-medium text-stone-900">{m.name}</span><span className="text-xs text-stone-500 ml-2">{m.description}</span></div></label>))}</div>
           </div>
 
           {orgTools.length > 0 && (
             <div className="bg-purple-500/5 rounded-xl p-4 space-y-3 border border-purple-500/20">
-              <div className="flex items-center gap-2 text-sm font-medium text-[#E5E7EB]"><Wrench className="w-4 h-4 text-purple-400" /> Tools</div>
-              <div className="space-y-2">{orgTools.map((tool) => (<label key={tool.id} className="flex items-start gap-3 p-3 bg-[#0D1117] border border-purple-500/20 rounded-lg cursor-pointer hover:bg-purple-500/5"><input type="checkbox" checked={form.toolIds.includes(tool.id)} onChange={(e) => update('toolIds', e.target.checked ? [...form.toolIds, tool.id] : form.toolIds.filter((id) => id !== tool.id))} className="accent-cyan-500 w-4 h-4 mt-0.5" /><div><div className="flex items-center gap-2"><span className="text-sm font-medium text-white">{tool.name}</span><span className="text-xs bg-[#161B22] text-[#9CA3AF] px-2 py-0.5 rounded-full border border-[#21262D]">{tool.type}</span></div><p className="text-xs text-[#6B7280] mt-0.5">{tool.description}</p></div></label>))}</div>
+              <div className="flex items-center gap-2 text-sm font-medium text-stone-700"><Wrench className="w-4 h-4 text-purple-400" /> Tools</div>
+              <div className="space-y-2">{orgTools.map((tool) => (<label key={tool.id} className="flex items-start gap-3 p-3 bg-stone-50 border border-purple-500/20 rounded-lg cursor-pointer hover:bg-purple-500/5"><input type="checkbox" checked={form.toolIds.includes(tool.id)} onChange={(e) => update('toolIds', e.target.checked ? [...form.toolIds, tool.id] : form.toolIds.filter((id) => id !== tool.id))} className="accent-cyan-500 w-4 h-4 mt-0.5" /><div><div className="flex items-center gap-2"><span className="text-sm font-medium text-stone-900">{tool.name}</span><span className="text-xs bg-white text-stone-500 px-2 py-0.5 rounded-full border border-stone-200">{tool.type}</span></div><p className="text-xs text-stone-500 mt-0.5">{tool.description}</p></div></label>))}</div>
             </div>
           )}
 
           <div className="bg-amber-500/5 rounded-xl p-4 space-y-3 border border-amber-500/20">
-            <div className="flex items-center gap-2 text-sm font-medium text-[#E5E7EB]"><Sparkles className="w-4 h-4 text-amber-400" /> Post-Call Analysis</div>
-            <label className="flex items-center gap-3 cursor-pointer bg-[#0D1117] p-3 rounded-lg border border-[#21262D]"><input type="checkbox" checked={form.analysisEnabled} onChange={(e) => update('analysisEnabled', e.target.checked)} className="accent-cyan-500 w-4 h-4" /><span className="text-sm text-[#E5E7EB]">Enable AI analysis</span></label>
+            <div className="flex items-center gap-2 text-sm font-medium text-stone-700"><Sparkles className="w-4 h-4 text-amber-400" /> Post-Call Analysis</div>
+            <label className="flex items-center gap-3 cursor-pointer bg-stone-50 p-3 rounded-lg border border-stone-200"><input type="checkbox" checked={form.analysisEnabled} onChange={(e) => update('analysisEnabled', e.target.checked)} className="accent-cyan-500 w-4 h-4" /><span className="text-sm text-stone-700">Enable AI analysis</span></label>
             {form.analysisEnabled && (
               <div className="space-y-3 pl-7">
-                <div><label className="block text-xs text-[#6B7280] mb-1">Summary Prompt</label><textarea value={form.analysisSummaryPrompt} onChange={(e) => update('analysisSummaryPrompt', e.target.value)} rows={2} className="w-full px-3 py-2 dark-input text-sm resize-none" /></div>
-                <div><label className="block text-xs text-[#6B7280] mb-1">Success Evaluation</label><textarea value={form.analysisSuccessEvaluation} onChange={(e) => update('analysisSuccessEvaluation', e.target.value)} rows={2} className="w-full px-3 py-2 dark-input text-sm resize-none" /></div>
+                <div><label className="block text-xs text-stone-500 mb-1">Summary Prompt</label><textarea value={form.analysisSummaryPrompt} onChange={(e) => update('analysisSummaryPrompt', e.target.value)} rows={2} className="w-full px-3 py-2 dark-input text-sm resize-none" /></div>
+                <div><label className="block text-xs text-stone-500 mb-1">Success Evaluation</label><textarea value={form.analysisSuccessEvaluation} onChange={(e) => update('analysisSuccessEvaluation', e.target.value)} rows={2} className="w-full px-3 py-2 dark-input text-sm resize-none" /></div>
               </div>
             )}
           </div>
 
-          <button type="button" onClick={() => setShowAdvanced(!showAdvanced)} className="flex items-center gap-2 text-sm text-[#6B7280] hover:text-[#E5E7EB] transition-colors"><ChevronDown className={`w-4 h-4 transition-transform \${showAdvanced ? 'rotate-180' : ''}`} /> Advanced</button>
+          <button type="button" onClick={() => setShowAdvanced(!showAdvanced)} className="flex items-center gap-2 text-sm text-stone-500 hover:text-stone-700 transition-colors"><ChevronDown className={`w-4 h-4 transition-transform \${showAdvanced ? 'rotate-180' : ''}`} /> Advanced</button>
 
           {showAdvanced && (
-            <div className="space-y-4 pt-2 border-t border-[#21262D]">
+            <div className="space-y-4 pt-2 border-t border-stone-200">
               <div className="grid grid-cols-2 gap-4">
-                <div><label className="block text-xs text-[#6B7280] mb-1">Max Duration</label><input type="number" value={form.maxDurationSeconds} onChange={(e) => update('maxDurationSeconds', parseInt(e.target.value))} className="w-full px-3 py-2 dark-input text-sm" /></div>
-                <div><label className="block text-xs text-[#6B7280] mb-1">Silence Timeout</label><input type="number" value={form.silenceTimeoutSeconds} onChange={(e) => update('silenceTimeoutSeconds', parseInt(e.target.value))} className="w-full px-3 py-2 dark-input text-sm" /></div>
+                <div><label className="block text-xs text-stone-500 mb-1">Max Duration</label><input type="number" value={form.maxDurationSeconds} onChange={(e) => update('maxDurationSeconds', parseInt(e.target.value))} className="w-full px-3 py-2 dark-input text-sm" /></div>
+                <div><label className="block text-xs text-stone-500 mb-1">Silence Timeout</label><input type="number" value={form.silenceTimeoutSeconds} onChange={(e) => update('silenceTimeoutSeconds', parseInt(e.target.value))} className="w-full px-3 py-2 dark-input text-sm" /></div>
               </div>
-              <label className="flex items-center gap-3 cursor-pointer"><input type="checkbox" checked={form.endCallFunctionEnabled} onChange={(e) => update('endCallFunctionEnabled', e.target.checked)} className="accent-cyan-500 w-4 h-4" /><span className="text-sm text-[#E5E7EB]">Allow AI to end call</span></label>
+              <label className="flex items-center gap-3 cursor-pointer"><input type="checkbox" checked={form.endCallFunctionEnabled} onChange={(e) => update('endCallFunctionEnabled', e.target.checked)} className="accent-cyan-500 w-4 h-4" /><span className="text-sm text-stone-700">Allow AI to end call</span></label>
             </div>
           )}
 
           <div className="flex gap-3 pt-2">
-            <button type="button" onClick={onClose} className="flex-1 py-2.5 border border-[#21262D] rounded-lg font-medium text-[#E5E7EB] hover:bg-[#161B22] transition-colors">Cancel</button>
+            <button type="button" onClick={onClose} className="flex-1 py-2.5 border border-stone-200 rounded-lg font-medium text-stone-700 hover:bg-white transition-colors">Cancel</button>
             <button type="submit" disabled={loading} className="flex-1 py-2.5 btn-cyan disabled:opacity-50">{loading ? 'Saving...' : 'Save Changes'}</button>
           </div>
         </form>
@@ -755,9 +755,9 @@ function TestCallModal({ agent, onClose }: { agent: Agent; onClose: () => void }
   return (
     <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4" onClick={onClose}>
       <div className="modal-dark w-full max-w-md" onClick={(e) => e.stopPropagation()}>
-        <div className="p-6 border-b border-[#21262D] flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-white">Test Call — {agent.name}</h2>
-          <button onClick={onClose} className="p-2 text-[#6B7280] hover:text-white transition-colors"><X className="w-5 h-5" /></button>
+        <div className="p-6 border-b border-stone-200 flex items-center justify-between">
+          <h2 className="text-lg font-semibold text-stone-900">Test Call — {agent.name}</h2>
+          <button onClick={onClose} className="p-2 text-stone-500 hover:text-stone-900 transition-colors"><X className="w-5 h-5" /></button>
         </div>
         <div className="p-6 space-y-4">
           {error && <div className="bg-red-500/10 text-red-400 text-sm rounded-lg px-4 py-3 border border-red-500/20">{error}</div>}
@@ -770,17 +770,17 @@ function TestCallModal({ agent, onClose }: { agent: Agent; onClose: () => void }
           ) : (
             <>
               <div>
-                <label className="block text-sm font-medium text-[#E5E7EB] mb-1.5">Phone Number to Call</label>
+                <label className="block text-sm font-medium text-stone-700 mb-1.5">Phone Number to Call</label>
                 <input type="tel" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} placeholder="+1234567890" className="w-full px-4 py-2.5 dark-input" />
-                <p className="text-xs text-[#6B7280] mt-1">Include country code (e.g., +1 for US)</p>
+                <p className="text-xs text-stone-500 mt-1">Include country code (e.g., +1 for US)</p>
               </div>
               <div className="bg-yellow-500/10 rounded-lg p-3 text-sm text-yellow-400 border border-yellow-500/20">⚠️ This will make a real phone call. Make sure you have a phone number provisioned.</div>
             </>
           )}
           <div className="flex gap-3 pt-2">
-            <button onClick={onClose} className="flex-1 py-2.5 border border-[#21262D] rounded-lg font-medium text-[#E5E7EB] hover:bg-[#161B22] transition-colors">{result ? 'Close' : 'Cancel'}</button>
+            <button onClick={onClose} className="flex-1 py-2.5 border border-stone-200 rounded-lg font-medium text-stone-700 hover:bg-white transition-colors">{result ? 'Close' : 'Cancel'}</button>
             {!result && (
-              <button onClick={handleCall} disabled={loading || !phoneNumber} className="flex-1 py-2.5 bg-green-600 hover:bg-green-500 text-white rounded-lg font-medium disabled:opacity-50 flex items-center justify-center gap-2 transition-colors">
+              <button onClick={handleCall} disabled={loading || !phoneNumber} className="flex-1 py-2.5 bg-green-600 hover:bg-green-500 text-stone-900 rounded-lg font-medium disabled:opacity-50 flex items-center justify-center gap-2 transition-colors">
                 <Phone className="w-4 h-4" />{loading ? 'Calling...' : 'Make Call'}
               </button>
             )}
