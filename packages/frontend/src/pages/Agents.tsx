@@ -418,7 +418,7 @@ function CreateAgentModal({ intent, onClose, onCreated }: { intent: string; onCl
                 <p className="text-sm text-stone-500 line-clamp-2">{t.systemPrompt.substring(0, 150)}...</p>
               </button>
             ))}
-            <button onClick={() => setStep('configure')} className="w-full text-left p-4 border-2 border-dashed border-stone-200 rounded-xl hover:border-[#6B7280] transition-colors">
+            <button onClick={() => setStep('configure')} className="w-full text-left p-4 border-2 border-dashed border-stone-200 rounded-xl hover:border-stone-500 transition-colors">
               <div className="flex items-center gap-2 mb-1"><Plus className="w-4 h-4 text-stone-500" /><span className="font-medium text-stone-700">Build from scratch</span></div>
               <p className="text-sm text-stone-500">Create a custom agent with your own instructions</p>
             </button>
@@ -461,8 +461,8 @@ function CreateAgentModal({ intent, onClose, onCreated }: { intent: string; onCl
               <div className="flex items-center gap-2 text-sm font-medium text-stone-700"><Brain className="w-4 h-4 text-amber-600" /> AI Model</div>
               <div className="grid grid-cols-1 gap-2">
                 {modelOptions.map((m) => (
-                  <label key={`${m.provider}/${m.model}`} className={`flex items-center gap-3 p-3 border rounded-lg cursor-pointer transition-colors ${form.modelProvider === m.provider && form.modelName === m.model ? 'border-cyan-500 bg-amber-50' : 'border-stone-200 hover:border-[#6B7280]'}`}>
-                    <input type="radio" name="model" checked={form.modelProvider === m.provider && form.modelName === m.model} onChange={() => { update('modelProvider', m.provider); update('modelName', m.model); }} className="accent-cyan-500" />
+                  <label key={`${m.provider}/${m.model}`} className={`flex items-center gap-3 p-3 border rounded-lg cursor-pointer transition-colors ${form.modelProvider === m.provider && form.modelName === m.model ? 'border-amber-600 bg-amber-50' : 'border-stone-200 hover:border-stone-500'}`}>
+                    <input type="radio" name="model" checked={form.modelProvider === m.provider && form.modelName === m.model} onChange={() => { update('modelProvider', m.provider); update('modelName', m.model); }} className="accent-amber-600" />
                     <div><span className="text-sm font-medium text-stone-900">{m.name}</span><span className="text-xs text-stone-500 ml-2">{m.description}</span></div>
                   </label>
                 ))}
@@ -491,7 +491,7 @@ function CreateAgentModal({ intent, onClose, onCreated }: { intent: string; onCl
                 <div className="space-y-2">
                   {orgTools.map((tool) => (
                     <label key={tool.id} className="flex items-start gap-3 p-3 bg-stone-50 border border-stone-200 rounded-lg cursor-pointer hover:bg-stone-1000/5">
-                      <input type="checkbox" checked={form.toolIds.includes(tool.id)} onChange={(e) => update('toolIds', e.target.checked ? [...form.toolIds, tool.id] : form.toolIds.filter((id) => id !== tool.id))} className="accent-cyan-500 w-4 h-4 mt-0.5" />
+                      <input type="checkbox" checked={form.toolIds.includes(tool.id)} onChange={(e) => update('toolIds', e.target.checked ? [...form.toolIds, tool.id] : form.toolIds.filter((id) => id !== tool.id))} className="accent-amber-600 w-4 h-4 mt-0.5" />
                       <div>
                         <div className="flex items-center gap-2">
                           <span className="text-sm font-medium text-stone-900">{tool.name}</span>
@@ -508,7 +508,7 @@ function CreateAgentModal({ intent, onClose, onCreated }: { intent: string; onCl
             <div className="bg-amber-500/5 rounded-xl p-4 space-y-3 border border-amber-500/20">
               <div className="flex items-center gap-2 text-sm font-medium text-stone-700"><Sparkles className="w-4 h-4 text-amber-400" /> Post-Call Analysis</div>
               <label className="flex items-center gap-3 cursor-pointer bg-stone-50 p-3 rounded-lg border border-stone-200">
-                <input type="checkbox" checked={form.analysisEnabled} onChange={(e) => update('analysisEnabled', e.target.checked)} className="accent-cyan-500 w-4 h-4" />
+                <input type="checkbox" checked={form.analysisEnabled} onChange={(e) => update('analysisEnabled', e.target.checked)} className="accent-amber-600 w-4 h-4" />
                 <span className="text-sm text-stone-700">Enable AI analysis after each call</span>
               </label>
               {form.analysisEnabled && (
@@ -558,7 +558,7 @@ function CreateAgentModal({ intent, onClose, onCreated }: { intent: string; onCl
                   </div>
                 </div>
                 <label className="flex items-center gap-3 cursor-pointer">
-                  <input type="checkbox" checked={form.voicemailDetection} onChange={(e) => update('voicemailDetection', e.target.checked)} className="accent-cyan-500 w-4 h-4" />
+                  <input type="checkbox" checked={form.voicemailDetection} onChange={(e) => update('voicemailDetection', e.target.checked)} className="accent-amber-600 w-4 h-4" />
                   <span className="text-sm text-stone-700">Detect voicemail</span>
                 </label>
                 {form.voicemailDetection && (
@@ -568,7 +568,7 @@ function CreateAgentModal({ intent, onClose, onCreated }: { intent: string; onCl
                   </div>
                 )}
                 <label className="flex items-center gap-3 cursor-pointer">
-                  <input type="checkbox" checked={form.endCallFunctionEnabled} onChange={(e) => update('endCallFunctionEnabled', e.target.checked)} className="accent-cyan-500 w-4 h-4" />
+                  <input type="checkbox" checked={form.endCallFunctionEnabled} onChange={(e) => update('endCallFunctionEnabled', e.target.checked)} className="accent-amber-600 w-4 h-4" />
                   <span className="text-sm text-stone-700">Allow AI to end call</span>
                 </label>
               </div>
@@ -578,7 +578,7 @@ function CreateAgentModal({ intent, onClose, onCreated }: { intent: string; onCl
               <button type="button" onClick={() => { if (step === 'configure') { setError(''); setStep('template'); } else { onClose(); } }} className="flex-1 py-2.5 border border-stone-200 rounded-lg font-medium text-stone-700 hover:bg-white transition-colors">
                 {step === 'configure' ? 'Back' : 'Cancel'}
               </button>
-              <button type="submit" disabled={loading} className="flex-1 py-2.5 btn-cyan disabled:opacity-50">
+              <button type="submit" disabled={loading} className="flex-1 py-2.5 btn-amber disabled:opacity-50">
                 {loading ? 'Creating...' : 'Create Agent'}
               </button>
             </div>
@@ -686,19 +686,19 @@ function EditAgentModal({ agent, onClose, onUpdated }: { agent: Agent; onClose: 
 
           <div className="bg-white rounded-xl p-4 space-y-3 border border-stone-200">
             <div className="flex items-center gap-2 text-sm font-medium text-stone-700"><Brain className="w-4 h-4 text-amber-600" /> AI Model</div>
-            <div className="grid grid-cols-1 gap-2">{modelOptions.map((m) => (<label key={`\${m.provider}/\${m.model}`} className={`flex items-center gap-3 p-3 border rounded-lg cursor-pointer transition-colors \${form.modelProvider === m.provider && form.modelName === m.model ? 'border-cyan-500 bg-amber-50' : 'border-stone-200 hover:border-[#6B7280]'}`}><input type="radio" name="model" checked={form.modelProvider === m.provider && form.modelName === m.model} onChange={() => { update('modelProvider', m.provider); update('modelName', m.model); }} className="accent-cyan-500" /><div><span className="text-sm font-medium text-stone-900">{m.name}</span><span className="text-xs text-stone-500 ml-2">{m.description}</span></div></label>))}</div>
+            <div className="grid grid-cols-1 gap-2">{modelOptions.map((m) => (<label key={`\${m.provider}/\${m.model}`} className={`flex items-center gap-3 p-3 border rounded-lg cursor-pointer transition-colors \${form.modelProvider === m.provider && form.modelName === m.model ? 'border-amber-600 bg-amber-50' : 'border-stone-200 hover:border-stone-500'}`}><input type="radio" name="model" checked={form.modelProvider === m.provider && form.modelName === m.model} onChange={() => { update('modelProvider', m.provider); update('modelName', m.model); }} className="accent-amber-600" /><div><span className="text-sm font-medium text-stone-900">{m.name}</span><span className="text-xs text-stone-500 ml-2">{m.description}</span></div></label>))}</div>
           </div>
 
           {orgTools.length > 0 && (
             <div className="bg-stone-1000/5 rounded-xl p-4 space-y-3 border border-stone-200">
               <div className="flex items-center gap-2 text-sm font-medium text-stone-700"><Wrench className="w-4 h-4 text-purple-400" /> Tools</div>
-              <div className="space-y-2">{orgTools.map((tool) => (<label key={tool.id} className="flex items-start gap-3 p-3 bg-stone-50 border border-stone-200 rounded-lg cursor-pointer hover:bg-stone-1000/5"><input type="checkbox" checked={form.toolIds.includes(tool.id)} onChange={(e) => update('toolIds', e.target.checked ? [...form.toolIds, tool.id] : form.toolIds.filter((id) => id !== tool.id))} className="accent-cyan-500 w-4 h-4 mt-0.5" /><div><div className="flex items-center gap-2"><span className="text-sm font-medium text-stone-900">{tool.name}</span><span className="text-xs bg-white text-stone-500 px-2 py-0.5 rounded-full border border-stone-200">{tool.type}</span></div><p className="text-xs text-stone-500 mt-0.5">{tool.description}</p></div></label>))}</div>
+              <div className="space-y-2">{orgTools.map((tool) => (<label key={tool.id} className="flex items-start gap-3 p-3 bg-stone-50 border border-stone-200 rounded-lg cursor-pointer hover:bg-stone-1000/5"><input type="checkbox" checked={form.toolIds.includes(tool.id)} onChange={(e) => update('toolIds', e.target.checked ? [...form.toolIds, tool.id] : form.toolIds.filter((id) => id !== tool.id))} className="accent-amber-600 w-4 h-4 mt-0.5" /><div><div className="flex items-center gap-2"><span className="text-sm font-medium text-stone-900">{tool.name}</span><span className="text-xs bg-white text-stone-500 px-2 py-0.5 rounded-full border border-stone-200">{tool.type}</span></div><p className="text-xs text-stone-500 mt-0.5">{tool.description}</p></div></label>))}</div>
             </div>
           )}
 
           <div className="bg-amber-500/5 rounded-xl p-4 space-y-3 border border-amber-500/20">
             <div className="flex items-center gap-2 text-sm font-medium text-stone-700"><Sparkles className="w-4 h-4 text-amber-400" /> Post-Call Analysis</div>
-            <label className="flex items-center gap-3 cursor-pointer bg-stone-50 p-3 rounded-lg border border-stone-200"><input type="checkbox" checked={form.analysisEnabled} onChange={(e) => update('analysisEnabled', e.target.checked)} className="accent-cyan-500 w-4 h-4" /><span className="text-sm text-stone-700">Enable AI analysis</span></label>
+            <label className="flex items-center gap-3 cursor-pointer bg-stone-50 p-3 rounded-lg border border-stone-200"><input type="checkbox" checked={form.analysisEnabled} onChange={(e) => update('analysisEnabled', e.target.checked)} className="accent-amber-600 w-4 h-4" /><span className="text-sm text-stone-700">Enable AI analysis</span></label>
             {form.analysisEnabled && (
               <div className="space-y-3 pl-7">
                 <div><label className="block text-xs text-stone-500 mb-1">Summary Prompt</label><textarea value={form.analysisSummaryPrompt} onChange={(e) => update('analysisSummaryPrompt', e.target.value)} rows={2} className="w-full px-3 py-2 dark-input text-sm resize-none" /></div>
@@ -715,13 +715,13 @@ function EditAgentModal({ agent, onClose, onUpdated }: { agent: Agent; onClose: 
                 <div><label className="block text-xs text-stone-500 mb-1">Max Duration</label><input type="number" value={form.maxDurationSeconds} onChange={(e) => update('maxDurationSeconds', parseInt(e.target.value))} className="w-full px-3 py-2 dark-input text-sm" /></div>
                 <div><label className="block text-xs text-stone-500 mb-1">Silence Timeout</label><input type="number" value={form.silenceTimeoutSeconds} onChange={(e) => update('silenceTimeoutSeconds', parseInt(e.target.value))} className="w-full px-3 py-2 dark-input text-sm" /></div>
               </div>
-              <label className="flex items-center gap-3 cursor-pointer"><input type="checkbox" checked={form.endCallFunctionEnabled} onChange={(e) => update('endCallFunctionEnabled', e.target.checked)} className="accent-cyan-500 w-4 h-4" /><span className="text-sm text-stone-700">Allow AI to end call</span></label>
+              <label className="flex items-center gap-3 cursor-pointer"><input type="checkbox" checked={form.endCallFunctionEnabled} onChange={(e) => update('endCallFunctionEnabled', e.target.checked)} className="accent-amber-600 w-4 h-4" /><span className="text-sm text-stone-700">Allow AI to end call</span></label>
             </div>
           )}
 
           <div className="flex gap-3 pt-2">
             <button type="button" onClick={onClose} className="flex-1 py-2.5 border border-stone-200 rounded-lg font-medium text-stone-700 hover:bg-white transition-colors">Cancel</button>
-            <button type="submit" disabled={loading} className="flex-1 py-2.5 btn-cyan disabled:opacity-50">{loading ? 'Saving...' : 'Save Changes'}</button>
+            <button type="submit" disabled={loading} className="flex-1 py-2.5 btn-amber disabled:opacity-50">{loading ? 'Saving...' : 'Save Changes'}</button>
           </div>
         </form>
       </div>

@@ -79,7 +79,7 @@ export default function Campaigns() {
         </div>
         <button
           onClick={() => setShowCreate(true)}
-          className="flex items-center gap-2 bg-cyan-500 text-stone-900 px-5 py-2.5 rounded-lg font-medium hover:bg-cyan-400 transition-colors"
+          className="flex items-center gap-2 bg-amber-600 text-stone-900 px-5 py-2.5 rounded-lg font-medium hover:bg-amber-500 transition-colors"
         >
           <Plus className="w-4 h-4" /> New Campaign
         </button>
@@ -96,12 +96,12 @@ export default function Campaigns() {
         </div>
       ) : campaigns.length === 0 ? (
         <div className="bg-white rounded-xl border border-stone-200 p-12 text-center">
-          <Megaphone className="w-12 h-12 text-[#4B5563] mx-auto mb-4" />
+          <Megaphone className="w-12 h-12 text-stone-600 mx-auto mb-4" />
           <h3 className="text-lg font-medium text-stone-900 mb-2">No campaigns yet</h3>
           <p className="text-stone-500 mb-6">Create your first campaign to start making outbound calls at scale.</p>
           <button
             onClick={() => setShowCreate(true)}
-            className="bg-cyan-500 text-stone-900 px-6 py-2.5 rounded-lg font-medium hover:bg-cyan-400"
+            className="bg-amber-600 text-stone-900 px-6 py-2.5 rounded-lg font-medium hover:bg-amber-500"
           >
             Create Campaign
           </button>
@@ -248,7 +248,7 @@ function CreateCampaignModal({ onClose, onCreated }: { onClose: () => void; onCr
               value={form.name}
               onChange={(e) => update('name', e.target.value)}
               placeholder="e.g., Q1 Sales Outreach"
-              className="w-full px-4 py-2.5 border border-stone-200 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
+              className="w-full px-4 py-2.5 border border-stone-200 rounded-lg focus:ring-2 focus:ring-amber-600 outline-none"
               required
             />
           </div>
@@ -260,7 +260,7 @@ function CreateCampaignModal({ onClose, onCreated }: { onClose: () => void; onCr
               onChange={(e) => update('description', e.target.value)}
               rows={3}
               placeholder="Describe the purpose of this campaign..."
-              className="w-full px-4 py-2.5 border border-stone-200 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none resize-none"
+              className="w-full px-4 py-2.5 border border-stone-200 rounded-lg focus:ring-2 focus:ring-amber-600 outline-none resize-none"
             />
           </div>
 
@@ -269,7 +269,7 @@ function CreateCampaignModal({ onClose, onCreated }: { onClose: () => void; onCr
             <select
               value={form.agentId}
               onChange={(e) => update('agentId', e.target.value)}
-              className="w-full px-4 py-2.5 border border-stone-200 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
+              className="w-full px-4 py-2.5 border border-stone-200 rounded-lg focus:ring-2 focus:ring-amber-600 outline-none"
               required
             >
               <option value="">Choose an agent...</option>
@@ -295,7 +295,7 @@ function CreateCampaignModal({ onClose, onCreated }: { onClose: () => void; onCr
             <button
               type="submit"
               disabled={loading || !form.agentId}
-              className="flex-1 py-2.5 bg-cyan-500 text-stone-900 rounded-lg font-medium hover:bg-cyan-400 disabled:opacity-50"
+              className="flex-1 py-2.5 bg-amber-600 text-stone-900 rounded-lg font-medium hover:bg-amber-500 disabled:opacity-50"
             >
               {loading ? 'Creating...' : 'Create Campaign'}
             </button>

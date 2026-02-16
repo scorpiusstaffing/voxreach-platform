@@ -197,7 +197,7 @@ export default function UpgradeModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4" onClick={onClose}>
+    <div className="fixed inset-0 bg-stone-900/70 flex items-center justify-center z-50 p-4" onClick={onClose}>
       <div 
         className="bg-white border border-stone-200 rounded-3xl w-full max-w-4xl max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
@@ -245,7 +245,7 @@ export default function UpgradeModal({
             <button
               onClick={() => setIsAnnual(!isAnnual)}
               className={`relative w-14 h-7 rounded-full transition-colors ${
-                isAnnual ? 'bg-cyan-500' : 'bg-[#1E293B]'
+                isAnnual ? 'bg-amber-600' : 'bg-stone-800'
               }`}
             >
               <div
@@ -271,7 +271,7 @@ export default function UpgradeModal({
                 key={plan.id}
                 className={`relative rounded-2xl p-6 ${
                   plan.popular
-                    ? 'border-2 border-cyan-500 bg-gradient-to-b from-[#0A0E17] to-[#0F172A]'
+                    ? 'border-2 border-amber-600 bg-gradient-to-b from-stone-50 to-stone-100'
                     : 'border border-stone-200 bg-white'
                 }`}
               >
@@ -306,7 +306,7 @@ export default function UpgradeModal({
                   {plan.features.map((feature, idx) => (
                     <li key={idx} className="flex items-start gap-2 text-sm">
                       <Check className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
-                      <span className="text-[#D1D5DB]">{feature}</span>
+                      <span className="text-stone-600">{feature}</span>
                     </li>
                   ))}
                 </ul>
@@ -317,7 +317,7 @@ export default function UpgradeModal({
                   className={`w-full py-3 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-2 ${
                     plan.popular
                       ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-stone-900 hover:shadow-[0_0_20px_rgba(0,180,216,0.3)]'
-                      : 'bg-[#1E293B] text-stone-900 hover:bg-[#2D3748]'
+                      : 'bg-stone-800 text-stone-900 hover:bg-stone-700'
                   }`}
                 >
                   {checkoutLoading ? (
@@ -338,7 +338,7 @@ export default function UpgradeModal({
         <div className="p-6 border-t border-stone-200 text-center">
           <p className="text-sm text-stone-500">
             Need a custom plan?{' '}
-            <a href="mailto:sales@voxreach.io" className="text-amber-600 hover:text-cyan-300">
+            <a href="mailto:sales@voxreach.io" className="text-amber-600 hover:text-amber-500">
               Contact our sales team
             </a>
           </p>

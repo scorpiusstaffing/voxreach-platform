@@ -205,7 +205,7 @@ export default function PhoneNumbers() {
           onClick={handleAddClick}
           className={`flex items-center gap-2 px-5 py-2.5 rounded-lg font-medium transition-all ${
             canAddPhoneNumber()
-              ? 'bg-cyan-500 text-stone-900 hover:bg-cyan-400'
+              ? 'bg-amber-600 text-stone-900 hover:bg-amber-500'
               : 'bg-amber-500/10 text-amber-400 border border-amber-500/30 hover:bg-amber-500/20'
           }`}
         >
@@ -239,7 +239,7 @@ export default function PhoneNumbers() {
             onClick={handleAddClick}
             className={`px-6 py-2.5 rounded-lg font-medium transition-all ${
               canAddPhoneNumber()
-                ? 'bg-cyan-500 text-stone-900 hover:bg-cyan-400'
+                ? 'bg-amber-600 text-stone-900 hover:bg-amber-500'
                 : 'bg-amber-500/10 text-amber-400 border border-amber-500/30'
             }`}
           >
@@ -519,7 +519,7 @@ function AddNumberModal({
                   <select
                     value={selectedCredential}
                     onChange={(e) => setSelectedCredential(e.target.value)}
-                    className="w-full px-4 py-2.5 border border-stone-200 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
+                    className="w-full px-4 py-2.5 border border-stone-200 rounded-lg focus:ring-2 focus:ring-amber-600 outline-none"
                   >
                     <option value="">Create new credential...</option>
                     {filteredCredentials.map((c) => (
@@ -546,7 +546,7 @@ function AddNumberModal({
                           type="text"
                           value={formData.vonageApiKey}
                           onChange={(e) => setFormData(d => ({ ...d, vonageApiKey: e.target.value }))}
-                          className="w-full px-4 py-2.5 border border-stone-200 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
+                          className="w-full px-4 py-2.5 border border-stone-200 rounded-lg focus:ring-2 focus:ring-amber-600 outline-none"
                           placeholder="Your Vonage API Key"
                         />
                       </div>
@@ -556,7 +556,7 @@ function AddNumberModal({
                           type="password"
                           value={formData.vonageApiSecret}
                           onChange={(e) => setFormData(d => ({ ...d, vonageApiSecret: e.target.value }))}
-                          className="w-full px-4 py-2.5 border border-stone-200 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
+                          className="w-full px-4 py-2.5 border border-stone-200 rounded-lg focus:ring-2 focus:ring-amber-600 outline-none"
                           placeholder="Your Vonage API Secret"
                         />
                       </div>
@@ -570,7 +570,7 @@ function AddNumberModal({
                         type="password"
                         value={formData.telnyxApiKey}
                         onChange={(e) => setFormData(d => ({ ...d, telnyxApiKey: e.target.value }))}
-                        className="w-full px-4 py-2.5 border border-stone-200 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
+                        className="w-full px-4 py-2.5 border border-stone-200 rounded-lg focus:ring-2 focus:ring-amber-600 outline-none"
                         placeholder="Your Telnyx API Key"
                       />
                     </div>
@@ -584,7 +584,7 @@ function AddNumberModal({
                           type="text"
                           value={formData.gatewayIp}
                           onChange={(e) => setFormData(d => ({ ...d, gatewayIp: e.target.value }))}
-                          className="w-full px-4 py-2.5 border border-stone-200 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
+                          className="w-full px-4 py-2.5 border border-stone-200 rounded-lg focus:ring-2 focus:ring-amber-600 outline-none"
                           placeholder="e.g., 192.168.1.1 or sip.example.com"
                         />
                       </div>
@@ -594,7 +594,7 @@ function AddNumberModal({
                           type="text"
                           value={formData.gatewayPort}
                           onChange={(e) => setFormData(d => ({ ...d, gatewayPort: e.target.value }))}
-                          className="w-full px-4 py-2.5 border border-stone-200 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
+                          className="w-full px-4 py-2.5 border border-stone-200 rounded-lg focus:ring-2 focus:ring-amber-600 outline-none"
                           placeholder="5060"
                         />
                       </div>
@@ -607,7 +607,7 @@ function AddNumberModal({
                               type="text"
                               value={formData.authUsername}
                               onChange={(e) => setFormData(d => ({ ...d, authUsername: e.target.value }))}
-                              className="w-full px-3 py-2 border border-stone-200 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
+                              className="w-full px-3 py-2 border border-stone-200 rounded-lg focus:ring-2 focus:ring-amber-600 outline-none"
                             />
                           </div>
                           <div>
@@ -616,7 +616,7 @@ function AddNumberModal({
                               type="password"
                               value={formData.authPassword}
                               onChange={(e) => setFormData(d => ({ ...d, authPassword: e.target.value }))}
-                              className="w-full px-3 py-2 border border-stone-200 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
+                              className="w-full px-3 py-2 border border-stone-200 rounded-lg focus:ring-2 focus:ring-amber-600 outline-none"
                             />
                           </div>
                         </div>
@@ -640,7 +640,7 @@ function AddNumberModal({
                           ? !formData.telnyxApiKey
                           : !formData.gatewayIp
                       )}
-                      className="flex-1 py-2.5 bg-cyan-500 text-stone-900 rounded-lg font-medium hover:bg-cyan-400 disabled:opacity-50 flex items-center justify-center gap-2"
+                      className="flex-1 py-2.5 bg-amber-600 text-stone-900 rounded-lg font-medium hover:bg-amber-500 disabled:opacity-50 flex items-center justify-center gap-2"
                     >
                       {loading && <Loader2 className="w-4 h-4 animate-spin" />}
                       Continue
@@ -659,7 +659,7 @@ function AddNumberModal({
                   </button>
                   <button
                     onClick={() => setStep('details')}
-                    className="flex-1 py-2.5 bg-cyan-500 text-stone-900 rounded-lg font-medium hover:bg-cyan-400"
+                    className="flex-1 py-2.5 bg-amber-600 text-stone-900 rounded-lg font-medium hover:bg-amber-500"
                   >
                     Continue
                   </button>
@@ -686,7 +686,7 @@ function AddNumberModal({
                         setFormData(d => ({ ...d, number: value, sipUri: '' }));
                       }
                     }}
-                    className="w-full px-4 py-2.5 border border-stone-200 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
+                    className="w-full px-4 py-2.5 border border-stone-200 rounded-lg focus:ring-2 focus:ring-amber-600 outline-none"
                     placeholder={selectedProvider === 'byo-sip-trunk' ? '+1234567890 or sip:user@example.com' : '+1234567890'}
                   />
                   <p className="text-xs text-stone-500 mt-1">
@@ -705,7 +705,7 @@ function AddNumberModal({
                       type="text"
                       value={formData.twilioAccountSid}
                       onChange={(e) => setFormData(d => ({ ...d, twilioAccountSid: e.target.value }))}
-                      className="w-full px-4 py-2.5 border border-stone-200 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
+                      className="w-full px-4 py-2.5 border border-stone-200 rounded-lg focus:ring-2 focus:ring-amber-600 outline-none"
                       placeholder="AC..."
                     />
                   </div>
@@ -715,7 +715,7 @@ function AddNumberModal({
                       type="password"
                       value={formData.twilioAuthToken}
                       onChange={(e) => setFormData(d => ({ ...d, twilioAuthToken: e.target.value }))}
-                      className="w-full px-4 py-2.5 border border-stone-200 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
+                      className="w-full px-4 py-2.5 border border-stone-200 rounded-lg focus:ring-2 focus:ring-amber-600 outline-none"
                     />
                   </div>
                 </>
@@ -727,7 +727,7 @@ function AddNumberModal({
                   type="text"
                   value={formData.friendlyName}
                   onChange={(e) => setFormData(d => ({ ...d, friendlyName: e.target.value }))}
-                  className="w-full px-4 py-2.5 border border-stone-200 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
+                  className="w-full px-4 py-2.5 border border-stone-200 rounded-lg focus:ring-2 focus:ring-amber-600 outline-none"
                   placeholder="e.g., Main Line, Sales Number"
                 />
               </div>
@@ -737,7 +737,7 @@ function AddNumberModal({
                 <select
                   value={formData.assignedAgentId}
                   onChange={(e) => setFormData(d => ({ ...d, assignedAgentId: e.target.value }))}
-                  className="w-full px-4 py-2.5 border border-stone-200 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
+                  className="w-full px-4 py-2.5 border border-stone-200 rounded-lg focus:ring-2 focus:ring-amber-600 outline-none"
                 >
                   <option value="">Assign later</option>
                   {agents.map((a) => (
@@ -768,7 +768,7 @@ function AddNumberModal({
                       ? !formData.number || !formData.twilioAccountSid || !formData.twilioAuthToken
                       : !formData.number && !formData.sipUri
                   )}
-                  className="flex-1 py-2.5 bg-cyan-500 text-stone-900 rounded-lg font-medium hover:bg-cyan-400 disabled:opacity-50 flex items-center justify-center gap-2"
+                  className="flex-1 py-2.5 bg-amber-600 text-stone-900 rounded-lg font-medium hover:bg-amber-500 disabled:opacity-50 flex items-center justify-center gap-2"
                 >
                   {loading && <Loader2 className="w-4 h-4 animate-spin" />}
                   {selectedProvider === 'vapi' ? 'Get Number' : 'Import Number'}
@@ -825,7 +825,7 @@ function EditNumberModal({ number, agents, onClose, onUpdated }: { number: Phone
               value={friendlyName} 
               onChange={(e) => setFriendlyName(e.target.value)} 
               placeholder="e.g., Main Line" 
-              className="w-full px-4 py-2.5 border border-stone-200 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none" 
+              className="w-full px-4 py-2.5 border border-stone-200 rounded-lg focus:ring-2 focus:ring-amber-600 outline-none" 
             />
           </div>
 
@@ -834,7 +834,7 @@ function EditNumberModal({ number, agents, onClose, onUpdated }: { number: Phone
             <select 
               value={agentId} 
               onChange={(e) => setAgentId(e.target.value)} 
-              className="w-full px-4 py-2.5 border border-stone-200 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none"
+              className="w-full px-4 py-2.5 border border-stone-200 rounded-lg focus:ring-2 focus:ring-amber-600 outline-none"
             >
               <option value="">None</option>
               {agents.map((a) => <option key={a.id} value={a.id}>{a.name}</option>)}
@@ -848,7 +848,7 @@ function EditNumberModal({ number, agents, onClose, onUpdated }: { number: Phone
               id="isActive"
               checked={isActive}
               onChange={(e) => setIsActive(e.target.checked)}
-              className="w-4 h-4 text-amber-600 border-stone-200 rounded focus:ring-cyan-500"
+              className="w-4 h-4 text-amber-600 border-stone-200 rounded focus:ring-amber-600"
             />
             <label htmlFor="isActive" className="text-sm font-medium text-stone-700">
               Number is active
@@ -857,7 +857,7 @@ function EditNumberModal({ number, agents, onClose, onUpdated }: { number: Phone
 
           <div className="flex gap-3 pt-2">
             <button type="button" onClick={onClose} className="flex-1 py-2.5 border border-stone-200 rounded-lg font-medium text-stone-700 hover:bg-white">Cancel</button>
-            <button type="submit" disabled={loading} className="flex-1 py-2.5 bg-cyan-500 text-stone-900 rounded-lg font-medium hover:bg-cyan-400 disabled:opacity-50">
+            <button type="submit" disabled={loading} className="flex-1 py-2.5 bg-amber-600 text-stone-900 rounded-lg font-medium hover:bg-amber-500 disabled:opacity-50">
               {loading ? 'Saving...' : 'Save'}
             </button>
           </div>

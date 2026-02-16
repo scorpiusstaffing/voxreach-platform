@@ -70,7 +70,7 @@ export default function Tools() {
           </div>
           <button
             onClick={() => setShowCreate(true)}
-            className="flex items-center gap-2 bg-cyan-500 text-stone-900 px-5 py-2.5 rounded-lg font-medium hover:bg-cyan-400 transition-colors"
+            className="flex items-center gap-2 bg-amber-600 text-white px-5 py-2.5 rounded-lg font-medium hover:bg-amber-700 transition-colors"
           >
             <Plus className="w-4 h-4" /> Create Tool
           </button>
@@ -87,12 +87,12 @@ export default function Tools() {
           </div>
         ) : tools.length === 0 ? (
           <div className="bg-white rounded-xl border border-stone-200 p-12 text-center">
-            <Wrench className="w-12 h-12 text-[#4B5563] mx-auto mb-4" />
+            <Wrench className="w-12 h-12 text-stone-500 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-stone-900 mb-2">No tools yet</h3>
             <p className="text-stone-500 mb-6">Create tools that your agents can use during calls, like API calls or transfers.</p>
             <button
               onClick={() => setShowCreate(true)}
-              className="bg-cyan-500 text-stone-900 px-6 py-2.5 rounded-lg font-medium hover:bg-cyan-400"
+              className="bg-amber-600 text-white px-6 py-2.5 rounded-lg font-medium hover:bg-amber-700"
             >
               Create First Tool
             </button>
@@ -396,7 +396,7 @@ function CreateToolModal({ onClose, onCreated }: { onClose: () => void; onCreate
           {/* Action buttons */}
           <div className="flex gap-3 pt-2">
             <button type="button" onClick={onClose} className="flex-1 py-2.5 border border-stone-200 rounded-lg font-medium text-stone-700 hover:bg-white">Cancel</button>
-            <button type="submit" disabled={loading} className="flex-1 py-2.5 bg-cyan-500 text-stone-900 rounded-lg font-medium hover:bg-cyan-400 disabled:opacity-50">{loading ? 'Creating...' : 'Create Tool'}</button>
+            <button type="submit" disabled={loading} className="flex-1 py-2.5 bg-amber-600 text-white rounded-lg font-medium hover:bg-amber-700 disabled:opacity-50">{loading ? 'Creating...' : 'Create Tool'}</button>
           </div>
         </form>
       </div>
@@ -517,7 +517,7 @@ function EditToolModal({ tool, onClose, onUpdated }: { tool: Tool; onClose: () =
 
           <div className="flex gap-3 pt-2">
             <button type="button" onClick={onClose} className="flex-1 py-2.5 border border-stone-200 rounded-lg font-medium text-stone-700 hover:bg-white">Cancel</button>
-            <button type="submit" disabled={loading} className="flex-1 py-2.5 bg-cyan-500 text-stone-900 rounded-lg font-medium hover:bg-cyan-400 disabled:opacity-50">{loading ? 'Saving...' : 'Save Changes'}</button>
+            <button type="submit" disabled={loading} className="flex-1 py-2.5 bg-amber-600 text-white rounded-lg font-medium hover:bg-amber-700 disabled:opacity-50">{loading ? 'Saving...' : 'Save Changes'}</button>
           </div>
         </form>
       </div>

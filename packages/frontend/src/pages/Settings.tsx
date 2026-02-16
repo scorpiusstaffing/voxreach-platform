@@ -169,7 +169,7 @@ function ProfileSettings({ user, saving, setSaving, message, setMessage }: any) 
           <button
             type="submit"
             disabled={saving}
-            className="flex items-center gap-2 bg-cyan-500 text-stone-900 px-5 py-2.5 rounded-lg font-medium hover:bg-cyan-400 disabled:opacity-50"
+            className="flex items-center gap-2 bg-amber-600 text-white px-5 py-2.5 rounded-lg font-medium hover:bg-amber-700 disabled:opacity-50"
           >
             <Save className="w-4 h-4" />
             {saving ? 'Saving...' : 'Save Changes'}
@@ -252,7 +252,7 @@ function OrganizationSettings({ organization, saving, setSaving, message, setMes
           <button
             type="submit"
             disabled={saving}
-            className="flex items-center gap-2 bg-cyan-500 text-stone-900 px-5 py-2.5 rounded-lg font-medium hover:bg-cyan-400 disabled:opacity-50"
+            className="flex items-center gap-2 bg-amber-600 text-white px-5 py-2.5 rounded-lg font-medium hover:bg-amber-700 disabled:opacity-50"
           >
             <Save className="w-4 h-4" />
             {saving ? 'Saving...' : 'Save Changes'}
@@ -367,7 +367,7 @@ function NotificationSettings({ saving, setSaving, message, setMessage }: any) {
           <button
             type="submit"
             disabled={saving}
-            className="flex items-center gap-2 bg-cyan-500 text-stone-900 px-5 py-2.5 rounded-lg font-medium hover:bg-cyan-400 disabled:opacity-50"
+            className="flex items-center gap-2 bg-amber-600 text-white px-5 py-2.5 rounded-lg font-medium hover:bg-amber-700 disabled:opacity-50"
           >
             <Save className="w-4 h-4" />
             {saving ? 'Saving...' : 'Save Changes'}
@@ -458,7 +458,7 @@ function SecuritySettings({ saving, setSaving, message, setMessage }: any) {
           <button
             type="submit"
             disabled={saving || !form.currentPassword || !form.newPassword || !form.confirmPassword}
-            className="flex items-center gap-2 bg-cyan-500 text-stone-900 px-5 py-2.5 rounded-lg font-medium hover:bg-cyan-400 disabled:opacity-50"
+            className="flex items-center gap-2 bg-amber-600 text-white px-5 py-2.5 rounded-lg font-medium hover:bg-amber-700 disabled:opacity-50"
           >
             <Key className="w-4 h-4" />
             {saving ? 'Updating...' : 'Update Password'}
