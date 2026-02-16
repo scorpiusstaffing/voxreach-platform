@@ -49,10 +49,10 @@ export default function Layout({ children }: LayoutProps) {
       {/* Sidebar */}
       <aside className="fixed left-0 top-0 bottom-0 w-64 bg-white border-r border-stone-200 flex flex-col z-10">
         <div className="p-6 border-b border-stone-100">
-          <div className="flex items-center gap-2">
-            <div className="text-xl font-bold text-amber-600 tracking-tight">Voxreach</div>
-          </div>
-          <div className="mt-1 text-xs text-stone-400">{organization.name}</div>
+          <Link to="/dashboard" className="flex items-center gap-2">
+            <img src="/assets/logo.svg" alt="Voxreach" className="h-7 w-auto" />
+          </Link>
+          <div className="mt-2 text-xs text-stone-400">{organization.name}</div>
         </div>
 
         <nav className="flex-1 p-4 space-y-1">
