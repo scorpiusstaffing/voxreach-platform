@@ -175,20 +175,20 @@ export default function Pricing() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0A0E17]">
+    <div className="min-h-screen bg-gradient-to-br from-stone-50 to-stone-100">
       {/* Navigation */}
       <nav className="flex items-center justify-between px-8 py-6 max-w-7xl mx-auto">
-        <div className="text-2xl font-bold text-cyan-400 tracking-tight">Voxreach</div>
+        <div className="text-2xl font-bold text-amber-600 tracking-tight">Voxreach</div>
         <div className="flex gap-6 items-center">
           <button
             onClick={() => navigate('/')}
-            className="text-[#9CA3AF] hover:text-white text-sm font-medium"
+            className="text-stone-500 hover:text-stone-900 text-sm font-medium transition-colors"
           >
             Home
           </button>
           <button
             onClick={() => navigate('/login')}
-            className="text-sm font-medium text-cyan-400 hover:text-cyan-300"
+            className="text-sm font-medium text-amber-600 hover:text-amber-700 transition-colors"
           >
             {user ? 'Dashboard' : 'Log in'}
           </button>
@@ -197,25 +197,25 @@ export default function Pricing() {
 
       {/* Hero Section */}
       <section className="max-w-6xl mx-auto text-center pt-16 pb-12 px-8">
-        <div className="inline-flex items-center gap-2 bg-cyan-500/10 text-cyan-400 text-sm font-medium px-4 py-2 rounded-full mb-6">
+        <div className="inline-flex items-center gap-2 bg-amber-50 text-amber-600 text-sm font-medium px-4 py-2 rounded-full mb-6">
           <Sparkles className="w-4 h-4" />
           14-Day Free Trial — No Credit Card Required
         </div>
-        <h1 className="text-5xl md:text-6xl font-bold text-white leading-tight tracking-tight mb-6">
-          Pricing that <span className="text-cyan-400">scales with you</span>
+        <h1 className="text-5xl md:text-6xl font-bold text-stone-900 leading-tight tracking-tight mb-6">
+          Pricing that <span className="text-gradient">scales with you</span>
         </h1>
-        <p className="text-xl text-[#6B7280] max-w-3xl mx-auto leading-relaxed mb-8">
+        <p className="text-xl text-stone-600 max-w-3xl mx-auto leading-relaxed mb-8">
           Transform your business with AI voice agents. From automated sales calls to 24/7 customer support — 
           all without writing a single line of code.
         </p>
         
         {/* Social Proof */}
         <div className="flex items-center justify-center gap-8 flex-wrap">
-          <div className="flex items-center gap-2 text-sm text-[#9CA3AF]">
-            <Building2 className="w-4 h-4 text-cyan-400" />
+          <div className="flex items-center gap-2 text-sm text-stone-500">
+            <Building2 className="w-4 h-4 text-amber-500" />
             <span>500+ businesses trust Voxreach</span>
           </div>
-          <div className="flex items-center gap-2 text-sm text-[#9CA3AF]">
+          <div className="flex items-center gap-2 text-sm text-stone-500">
             <div className="flex">
               {[...Array(5)].map((_, i) => (
                 <Star key={i} className="w-4 h-4 text-amber-400 fill-amber-400" />
@@ -223,8 +223,8 @@ export default function Pricing() {
             </div>
             <span>4.9/5 rating</span>
           </div>
-          <div className="flex items-center gap-2 text-sm text-[#9CA3AF]">
-            <Shield className="w-4 h-4 text-cyan-400" />
+          <div className="flex items-center gap-2 text-sm text-stone-500">
+            <Shield className="w-4 h-4 text-amber-500" />
             <span>Enterprise-grade security</span>
           </div>
         </div>
@@ -260,13 +260,13 @@ export default function Pricing() {
       {/* Billing Toggle */}
       <div className="max-w-6xl mx-auto px-8 mb-8" id="pricing-plans">
         <div className="flex items-center justify-center gap-4">
-          <span className={`text-sm font-medium ${!isAnnual ? 'text-white' : 'text-[#6B7280]'}`}>
+          <span className={`text-sm font-medium ${!isAnnual ? 'text-stone-900' : 'text-stone-500'}`}>
             Monthly
           </span>
           <button
             onClick={() => setIsAnnual(!isAnnual)}
             className={`relative w-14 h-7 rounded-full transition-colors ${
-              isAnnual ? 'bg-cyan-500' : 'bg-[#1E293B]'
+              isAnnual ? 'bg-amber-500' : 'bg-stone-200'
             }`}
           >
             <div
@@ -275,10 +275,10 @@ export default function Pricing() {
               }`}
             />
           </button>
-          <span className={`text-sm font-medium ${isAnnual ? 'text-white' : 'text-[#6B7280]'}`}>
+          <span className={`text-sm font-medium ${isAnnual ? 'text-stone-900' : 'text-stone-500'}`}>
             Annual
           </span>
-          <span className="bg-green-500/10 text-green-400 text-xs font-semibold px-2 py-1 rounded-full">
+          <span className="bg-green-50 text-green-600 text-xs font-semibold px-2 py-1 rounded-full">
             Save 20%
           </span>
         </div>
@@ -292,8 +292,8 @@ export default function Pricing() {
               key={plan.id}
               className={`relative rounded-3xl p-8 ${
                 plan.popular
-                  ? 'border-2 border-cyan-500 bg-gradient-to-b from-[#0A0E17] to-[#0F172A] shadow-[0_0_40px_rgba(0,180,216,0.15)]'
-                  : 'border border-[#1E293B] bg-[#0A0E17]'
+                  ? 'bg-white border-2 border-amber-200 shadow-xl'
+                  : 'bg-white border border-stone-200'
               }`}
             >
               {plan.popular && (
@@ -305,14 +305,14 @@ export default function Pricing() {
               )}
 
               <div className="mb-8">
-                <h3 className="text-2xl font-bold text-white mb-2">{plan.name}</h3>
-                <p className="text-[#6B7280] mb-6 text-sm">{plan.description}</p>
+                <h3 className="text-2xl font-bold text-stone-900 mb-2">{plan.name}</h3>
+                <p className="text-stone-500 mb-6 text-sm">{plan.description}</p>
                 
                 <div className="flex items-baseline mb-2">
-                  <span className="text-4xl font-bold text-white">
+                  <span className="text-4xl font-bold text-stone-900">
                     ${isAnnual ? plan.annualPrice : plan.price}
                   </span>
-                  <span className="text-[#6B7280] ml-2">/month</span>
+                  <span className="text-stone-500 ml-2">/month</span>
                 </div>
                 {isAnnual && (
                   <p className="text-green-400 text-sm">
@@ -340,8 +340,8 @@ export default function Pricing() {
                 <div className="space-y-3">
                   {plan.features.map((feature, index) => (
                     <div key={index} className="flex items-start gap-3">
-                      <Check className="w-5 h-5 text-cyan-400 flex-shrink-0 mt-0.5" />
-                      <span className="text-[#D1D5DB] text-sm">{feature}</span>
+                      <Check className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
+                      <span className="text-stone-600 text-sm">{feature}</span>
                     </div>
                   ))}
                 </div>
@@ -352,8 +352,8 @@ export default function Pricing() {
                 disabled={checkoutLoading}
                 className={`w-full py-4 rounded-xl font-semibold transition-all duration-200 ${
                   plan.popular
-                    ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white hover:shadow-[0_0_30px_rgba(0,180,216,0.3)]'
-                    : 'bg-[#1E293B] text-white hover:bg-[#2D3748]'
+                    ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-lg hover:shadow-xl'
+                    : 'bg-stone-100 text-stone-900 hover:bg-stone-200'
                 }`}
               >
                 {checkoutLoading ? 'Processing...' : plan.cta}

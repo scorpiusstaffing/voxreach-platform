@@ -53,7 +53,7 @@ export default function Landing() {
             onClick={() => navigate('/signup?intent=outbound')}
             className="group premium-card-hover p-12 text-left"
           >
-            <div className="w-16 h-16 bg-gradient-to-br from-amber-100 to-amber-50 rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-300">
+            <div className="w-16 h-16 bg-stone-100 rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-300">
               <PhoneOutgoing className="w-8 h-8 text-amber-600" />
             </div>
             <h3 className="text-2xl font-semibold text-stone-900 mb-4">I want AI to make calls</h3>
@@ -70,7 +70,7 @@ export default function Landing() {
             onClick={() => navigate('/signup?intent=inbound')}
             className="group premium-card-hover p-12 text-left"
           >
-            <div className="w-16 h-16 bg-gradient-to-br from-amber-100 to-amber-50 rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-300">
+            <div className="w-16 h-16 bg-stone-100 rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-300">
               <Phone className="w-8 h-8 text-amber-600" />
             </div>
             <h3 className="text-2xl font-semibold text-stone-900 mb-4">I want AI to answer calls</h3>
