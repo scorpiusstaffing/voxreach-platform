@@ -5,8 +5,9 @@ import { api } from '../lib/api';
 import { 
   Plus, Phone, ArrowLeft, Trash2, Settings, X, 
   ChevronRight, Server, Globe, PhoneCall, 
-  Key, AlertCircle, Loader2
+  Key, AlertCircle, Loader2, Lock
 } from 'lucide-react';
+import UpgradeModal from '../components/UpgradeModal';
 
 interface PhoneNum {
   id: string;
@@ -31,6 +32,11 @@ interface Credential {
   name: string | null;
   vapiCredentialId: string | null;
   createdAt: string;
+}
+
+interface Subscription {
+  plan: string;
+  limits: { phoneNumbers: number };
 }
 
 type ProviderType = 'vapi' | 'twilio' | 'vonage' | 'telnyx' | 'byo-sip-trunk';
@@ -96,6 +102,8 @@ export default function PhoneNumbers() {
   const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
   const [editNumber, setEditNumber] = useState<PhoneNum | null>(null);
+  const [subscription, setSubscription] = useState<Subscription | null>(null);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
   useEffect(() => {
     if (!authLoading && !user) navigate('/login');
@@ -104,8 +112,18 @@ export default function PhoneNumbers() {
   useEffect(() => {
     if (user) {
       loadData();
+      fetchSubscription();
     }
   }, [user]);
+
+  const fetchSubscription = async () => {
+    try {
+      const response = await api.get('/billing/subscription');
+      setSubscription(response);
+    } catch (error) {
+      console.error('Failed to fetch subscription:', error);
+    }
+  };
 
   const loadData = async () => {
     setLoading(true);
@@ -150,6 +168,24 @@ export default function PhoneNumbers() {
     }
   };
 
+  const canAddPhoneNumber = () => {
+    if (!subscription) return true;
+    const phoneLimit = subscription.limits?.phoneNumbers || 1;
+    return numbers.length < phoneLimit;
+  };
+
+  const handleAddClick = () => {
+    if (canAddPhoneNumber()) {
+      setShowAddModal(true);
+    } else {
+      setShowUpgradeModal(true);
+    }
+  };
+
+  const getPhoneLimit = () => {
+    return subscription?.limits?.phoneNumbers || 1;
+  };
+
   if (authLoading || !user) return null;
 
   return (
@@ -159,12 +195,29 @@ export default function PhoneNumbers() {
       </Link>
 
       <div className="flex items-center justify-between mb-8">
-        <h1 className="text-2xl font-semibold text-white">Phone Numbers</h1>
+        <div>
+          <h1 className="text-2xl font-semibold text-white">Phone Numbers</h1>
+          <p className="text-sm text-[#6B7280] mt-1">
+            {numbers.length} of {getPhoneLimit() === 999 ? 'Unlimited' : getPhoneLimit()} numbers used
+          </p>
+        </div>
         <button
-          onClick={() => setShowAddModal(true)}
-          className="flex items-center gap-2 bg-cyan-500 text-white px-5 py-2.5 rounded-lg font-medium hover:bg-cyan-400"
+          onClick={handleAddClick}
+          className={`flex items-center gap-2 px-5 py-2.5 rounded-lg font-medium transition-all ${
+            canAddPhoneNumber()
+              ? 'bg-cyan-500 text-white hover:bg-cyan-400'
+              : 'bg-amber-500/10 text-amber-400 border border-amber-500/30 hover:bg-amber-500/20'
+          }`}
         >
-          <Plus className="w-4 h-4" /> Add Phone Number
+          {canAddPhoneNumber() ? (
+            <>
+              <Plus className="w-4 h-4" /> Add Phone Number
+            </>
+          ) : (
+            <>
+              <Lock className="w-4 h-4" /> Upgrade for More
+            </>
+          )}
         </button>
       </div>
 
@@ -183,10 +236,14 @@ export default function PhoneNumbers() {
           <h3 className="text-lg font-medium text-white mb-2">No phone numbers yet</h3>
           <p className="text-[#6B7280] mb-6">Add a phone number from your preferred provider.</p>
           <button 
-            onClick={() => setShowAddModal(true)} 
-            className="bg-cyan-500 text-white px-6 py-2.5 rounded-lg font-medium hover:bg-cyan-400"
+            onClick={handleAddClick}
+            className={`px-6 py-2.5 rounded-lg font-medium transition-all ${
+              canAddPhoneNumber()
+                ? 'bg-cyan-500 text-white hover:bg-cyan-400'
+                : 'bg-amber-500/10 text-amber-400 border border-amber-500/30'
+            }`}
           >
-            Add Phone Number
+            {canAddPhoneNumber() ? 'Add Phone Number' : 'Upgrade to Add'}
           </button>
         </div>
       ) : (
@@ -239,6 +296,16 @@ export default function PhoneNumbers() {
           ))}
         </div>
       )}
+
+      {/* Upgrade Modal */}
+      <UpgradeModal
+        isOpen={showUpgradeModal}
+        onClose={() => setShowUpgradeModal(false)}
+        currentPlan={subscription?.plan || 'free'}
+        limitType="phoneNumbers"
+        currentUsage={numbers.length}
+        limit={getPhoneLimit()}
+      />
 
       {showAddModal && (
         <AddNumberModal

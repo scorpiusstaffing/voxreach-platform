@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Check, AlertCircle, CreditCard, Download, Calendar, Users, Phone, Clock, ArrowUpRight, Sparkles } from 'lucide-react';
+import { Check, AlertCircle, CreditCard, Download, Calendar, Users, Phone, Clock, ArrowUpRight, Sparkles, X, ArrowRight, Bot } from 'lucide-react';
 import { api } from '../lib/api';
 import { useAuth } from '../lib/auth';
+import UpgradeModal from '../components/UpgradeModal';
 
 interface Subscription {
   id: string;
@@ -16,7 +17,7 @@ interface Subscription {
   usageRecords: UsageRecord[];
   currentUsage?: {
     calls: number;
-    minutes: number;
+    agents: number;
   };
 }
 
@@ -36,30 +37,27 @@ interface UsageRecord {
   id: string;
   date: string;
   callsCount: number;
-  minutesUsed: number;
 }
 
 interface UsageStats {
   current: {
     calls: number;
-    minutes: number;
+    agents: number;
   };
   yearly: {
     calls: number;
-    minutes: number;
   };
   daily: Array<{
     date: string;
     calls: number;
-    minutes: number;
   }>;
   limits: {
     calls: number;
-    minutes: number;
+    agents: number;
   };
   percentageUsed: {
     calls: number;
-    minutes: number;
+    agents: number;
   };
 }
 
@@ -70,7 +68,8 @@ export default function Billing() {
   const [usage, setUsage] = useState<UsageStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [portalLoading, setPortalLoading] = useState(false);
-  const [upgradeLoading, setUpgradeLoading] = useState(false);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const [upgradeTrigger, setUpgradeTrigger] = useState<'agents' | 'calls'>('agents');
 
   useEffect(() => {
     fetchBillingData();
@@ -104,29 +103,6 @@ export default function Billing() {
     }
   };
 
-  const handleUpgrade = async () => {
-    setUpgradeLoading(true);
-    try {
-      const response = await api.post('/billing/checkout', {
-        priceId: 'price_1T1IcGEz1QlPnm30neXXb7cP', // Starter plan
-        successUrl: `${window.location.origin}/dashboard/billing/success`,
-        cancelUrl: `${window.location.origin}/dashboard/billing`,
-      });
-
-      // Redirect to Stripe Checkout URL (redirectToCheckout is deprecated)
-      if (response.url) {
-        window.location.href = response.url;
-      } else {
-        throw new Error('No checkout URL returned');
-      }
-    } catch (error: any) {
-      console.error('Upgrade error:', error);
-      alert(error.response?.data?.error || 'Failed to start upgrade');
-    } finally {
-      setUpgradeLoading(false);
-    }
-  };
-
   const formatDate = (dateString: string | null) => {
     if (!dateString) return 'N/A';
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -145,8 +121,9 @@ export default function Billing() {
 
   const getPlanName = (plan: string) => {
     const plans: Record<string, string> = {
-      free: 'Free',
+      free: 'Free Trial',
       starter: 'Starter',
+      growth: 'Growth',
       professional: 'Professional',
       enterprise: 'Enterprise',
     };
@@ -157,8 +134,9 @@ export default function Billing() {
     const colors: Record<string, string> = {
       free: 'text-gray-400',
       starter: 'text-cyan-400',
-      professional: 'text-blue-400',
-      enterprise: 'text-purple-400',
+      growth: 'text-blue-400',
+      professional: 'text-purple-400',
+      enterprise: 'text-amber-400',
     };
     return colors[plan] || 'text-gray-400';
   };
@@ -166,12 +144,28 @@ export default function Billing() {
   const getPlanLimits = () => {
     const plan = subscription?.plan || 'free';
     const limits = {
-      free: { agents: 1, calls: 50, minutes: 100, numbers: 1 },
-      starter: { agents: 3, calls: 500, minutes: 1000, numbers: 3 },
-      professional: { agents: 10, calls: 2000, minutes: 5000, numbers: 10 },
-      enterprise: { agents: 100, calls: 10000, minutes: 25000, numbers: 50 },
+      free: { agents: 1, calls: 50, phoneNumbers: 1 },
+      starter: { agents: 1, calls: 500, phoneNumbers: 1 },
+      growth: { agents: 5, calls: 2000, phoneNumbers: 5 },
+      professional: { agents: 999, calls: 99999, phoneNumbers: 999 },
+      enterprise: { agents: 999, calls: 99999, phoneNumbers: 999 },
     };
     return limits[plan as keyof typeof limits] || limits.free;
+  };
+
+  const getTrialDaysLeft = () => {
+    if (!subscription?.trialEndsAt) return null;
+    const trialEnd = new Date(subscription.trialEndsAt);
+    const now = new Date();
+    const diffTime = trialEnd.getTime() - now.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays > 0 ? diffDays : 0;
+  };
+
+  const getUrgencyColor = (daysLeft: number) => {
+    if (daysLeft <= 3) return 'text-red-400 border-red-500/30 bg-red-500/10';
+    if (daysLeft <= 7) return 'text-amber-400 border-amber-500/30 bg-amber-500/10';
+    return 'text-cyan-400 border-cyan-500/30 bg-cyan-500/10';
   };
 
   if (loading) {
@@ -184,7 +178,8 @@ export default function Billing() {
 
   const planLimits = getPlanLimits();
   const isFreePlan = subscription?.plan === 'free';
-  const isTrial = subscription?.trialEndsAt && new Date(subscription.trialEndsAt) > new Date();
+  const trialDaysLeft = getTrialDaysLeft();
+  const isTrial = trialDaysLeft !== null && trialDaysLeft > 0;
 
   return (
     <div className="p-8">
@@ -192,12 +187,61 @@ export default function Billing() {
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-white mb-2">Billing & Usage</h1>
         <p className="text-[#94A3B8]">
-          Manage your subscription, view invoices, and monitor usage.
+          Manage your subscription, view invoices, and monitor your AI agents.
         </p>
       </div>
 
-      {/* Upgrade Banner for Free Plan */}
-      {isFreePlan && (
+      {/* Trial Countdown Banner */}
+      {isTrial && (
+        <div className={`rounded-2xl p-6 mb-8 border ${getUrgencyColor(trialDaysLeft)}`}>
+          <div className="flex items-start justify-between">
+            <div className="flex items-start gap-4">
+              <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
+                trialDaysLeft <= 3 ? 'bg-red-500/20' : trialDaysLeft <= 7 ? 'bg-amber-500/20' : 'bg-cyan-500/20'
+              }`}>
+                <Clock className={`w-6 h-6 ${
+                  trialDaysLeft <= 3 ? 'text-red-400' : trialDaysLeft <= 7 ? 'text-amber-400' : 'text-cyan-400'
+                }`} />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-white mb-1">
+                  {trialDaysLeft === 1 ? 'Your trial ends tomorrow!' : 
+                   trialDaysLeft <= 3 ? `Your trial ends in ${trialDaysLeft} days!` :
+                   `${trialDaysLeft} days left in your free trial`}
+                </h3>
+                <p className="text-[#94A3B8] mb-4">
+                  {trialDaysLeft <= 3 
+                    ? "Don't lose access to your AI agents. Upgrade now to keep everything running."
+                    : "Upgrade anytime to continue using all features after your trial ends."}
+                </p>
+                <button
+                  onClick={() => { setUpgradeTrigger('agents'); setShowUpgradeModal(true); }}
+                  className={`font-semibold px-6 py-3 rounded-xl transition-all flex items-center gap-2 ${
+                    trialDaysLeft <= 3
+                      ? 'bg-red-500 text-white hover:bg-red-400'
+                      : 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white hover:shadow-[0_0_20px_rgba(0,180,216,0.3)]'
+                  }`}
+                >
+                  <Sparkles className="w-4 h-4" />
+                  Upgrade Now
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+            <div className="text-right">
+              <div className={`text-4xl font-bold ${
+                trialDaysLeft <= 3 ? 'text-red-400' : trialDaysLeft <= 7 ? 'text-amber-400' : 'text-cyan-400'
+              }`}>
+                {trialDaysLeft}
+              </div>
+              <div className="text-sm text-[#94A3B8]">days left</div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Upgrade Banner for Free Plan (non-trial) */}
+      {isFreePlan && !isTrial && (
         <div className="bg-gradient-to-r from-cyan-500/10 to-blue-500/10 border border-cyan-500/20 rounded-2xl p-6 mb-8">
           <div className="flex items-start justify-between">
             <div className="flex items-start gap-4">
@@ -205,32 +249,19 @@ export default function Billing() {
                 <Sparkles className="w-6 h-6 text-cyan-400" />
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-white mb-1">Unlock Full Potential</h3>
+                <h3 className="text-lg font-semibold text-white mb-1">Unlock Your Full Potential</h3>
                 <p className="text-[#94A3B8] mb-4">
-                  Upgrade to access more agents, higher call limits, and premium features.
+                  You're currently on the free plan. Upgrade to create more AI agents and unlock premium features.
                 </p>
                 <button
-                  onClick={() => navigate('/pricing')}
-                  className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-semibold px-6 py-3 rounded-xl hover:shadow-[0_0_20px_rgba(0,180,216,0.3)] transition-all"
+                  onClick={() => { setUpgradeTrigger('agents'); setShowUpgradeModal(true); }}
+                  className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-semibold px-6 py-3 rounded-xl hover:shadow-[0_0_20px_rgba(0,180,216,0.3)] transition-all flex items-center gap-2"
                 >
+                  <Sparkles className="w-4 h-4" />
                   View Plans & Pricing
+                  <ArrowRight className="w-4 h-4" />
                 </button>
               </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Trial Warning */}
-      {isTrial && subscription?.trialEndsAt && (
-        <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-2xl p-6 mb-8">
-          <div className="flex items-start gap-3">
-            <AlertCircle className="w-5 h-5 text-yellow-400 flex-shrink-0 mt-0.5" />
-            <div>
-              <h3 className="text-lg font-semibold text-white mb-1">Trial Ending Soon</h3>
-              <p className="text-[#94A3B8]">
-                Your free trial ends on {formatDate(subscription.trialEndsAt)}. Upgrade to keep your access.
-              </p>
             </div>
           </div>
         </div>
@@ -250,16 +281,17 @@ export default function Billing() {
                   </span>
                   {subscription?.plan !== 'free' && (
                     <span className="text-lg text-white">
-                      ${subscription?.plan === 'starter' ? '99' : '199'}/month
+                      ${subscription?.plan === 'starter' ? '49' : subscription?.plan === 'growth' ? '99' : '199'}/month
                     </span>
                   )}
                 </div>
               </div>
               {subscription?.plan === 'free' ? (
                 <button
-                  onClick={() => navigate('/pricing')}
-                  className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-semibold px-6 py-3 rounded-xl hover:shadow-[0_0_20px_rgba(0,180,216,0.3)] transition-all"
+                  onClick={() => { setUpgradeTrigger('agents'); setShowUpgradeModal(true); }}
+                  className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-semibold px-6 py-3 rounded-xl hover:shadow-[0_0_20px_rgba(0,180,216,0.3)] transition-all flex items-center gap-2"
                 >
+                  <Sparkles className="w-4 h-4" />
                   Upgrade Plan
                 </button>
               ) : (
@@ -276,24 +308,28 @@ export default function Billing() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
               <div className="bg-[#0A0E17] rounded-xl p-4">
                 <div className="flex items-center gap-2 mb-2">
-                  <Users className="w-4 h-4 text-cyan-400" />
-                  <span className="text-sm text-[#94A3B8]">Agents</span>
+                  <Bot className="w-4 h-4 text-cyan-400" />
+                  <span className="text-sm text-[#94A3B8]">AI Agents</span>
                 </div>
-                <div className="text-2xl font-bold text-white">{planLimits.agents}</div>
+                <div className="text-2xl font-bold text-white">
+                  {usage?.current.agents || 0} / {planLimits.agents === 999 ? '∞' : planLimits.agents}
+                </div>
               </div>
               <div className="bg-[#0A0E17] rounded-xl p-4">
                 <div className="flex items-center gap-2 mb-2">
                   <Phone className="w-4 h-4 text-cyan-400" />
-                  <span className="text-sm text-[#94A3B8]">Calls/Month</span>
+                  <span className="text-sm text-[#94A3B8]">Phone Numbers</span>
                 </div>
-                <div className="text-2xl font-bold text-white">{planLimits.calls}</div>
+                <div className="text-2xl font-bold text-white">
+                  {planLimits.phoneNumbers === 999 ? '∞' : planLimits.phoneNumbers}
+                </div>
               </div>
               <div className="bg-[#0A0E17] rounded-xl p-4">
                 <div className="flex items-center gap-2 mb-2">
-                  <Clock className="w-4 h-4 text-cyan-400" />
-                  <span className="text-sm text-[#94A3B8]">Minutes/Month</span>
+                  <Calendar className="w-4 h-4 text-cyan-400" />
+                  <span className="text-sm text-[#94A3B8]">Calls This Month</span>
                 </div>
-                <div className="text-2xl font-bold text-white">{planLimits.minutes}</div>
+                <div className="text-2xl font-bold text-white">{usage?.current.calls || 0}</div>
               </div>
               <div className="bg-[#0A0E17] rounded-xl p-4">
                 <div className="flex items-center gap-2 mb-2">
@@ -322,6 +358,45 @@ export default function Billing() {
               <h2 className="text-xl font-semibold text-white mb-6">Usage This Month</h2>
               
               <div className="space-y-6">
+                {/* Agents Usage */}
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <Bot className="w-4 h-4 text-cyan-400" />
+                      <span className="text-white font-medium">AI Agents</span>
+                    </div>
+                    <div className="text-white">
+                      {usage.current.agents} / {usage.limits.agents === 999 ? 'Unlimited' : usage.limits.agents}
+                    </div>
+                  </div>
+                  <div className="h-2 bg-[#1E293B] rounded-full overflow-hidden">
+                    <div 
+                      className="h-full bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full transition-all duration-300"
+                      style={{ width: `${Math.min(100, usage.percentageUsed.agents)}%` }}
+                    />
+                  </div>
+                  <div className="text-sm text-[#94A3B8] mt-1">
+                    {usage.percentageUsed.agents >= 80 ? (
+                      <span className="text-yellow-400">
+                        {usage.percentageUsed.agents >= 100 
+                          ? 'Limit reached! Upgrade to add more agents.' 
+                          : 'Approaching limit — consider upgrading'}
+                      </span>
+                    ) : (
+                      `${usage.percentageUsed.agents}% of limit used`
+                    )}
+                  </div>
+                  {usage.percentageUsed.agents >= 80 && (
+                    <button
+                      onClick={() => { setUpgradeTrigger('agents'); setShowUpgradeModal(true); }}
+                      className="mt-2 text-sm text-cyan-400 hover:text-cyan-300 font-medium flex items-center gap-1"
+                    >
+                      Upgrade for more agents
+                      <ArrowRight className="w-3 h-3" />
+                    </button>
+                  )}
+                </div>
+
                 {/* Calls Usage */}
                 <div>
                   <div className="flex items-center justify-between mb-2">
@@ -330,52 +405,28 @@ export default function Billing() {
                       <span className="text-white font-medium">Calls</span>
                     </div>
                     <div className="text-white">
-                      {usage.current.calls} / {usage.limits.calls}
+                      {usage.current.calls} {usage.limits.calls < 99999 && `/ ${usage.limits.calls}`}
                     </div>
                   </div>
-                  <div className="h-2 bg-[#1E293B] rounded-full overflow-hidden">
-                    <div 
-                      className="h-full bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full transition-all duration-300"
-                      style={{ width: `${Math.min(100, usage.percentageUsed.calls)}%` }}
-                    />
-                  </div>
-                  <div className="text-sm text-[#94A3B8] mt-1">
-                    {usage.percentageUsed.calls >= 80 ? (
-                      <span className="text-yellow-400">
-                        {usage.percentageUsed.calls >= 100 ? 'Limit reached!' : 'Approaching limit'}
-                      </span>
-                    ) : (
-                      `${usage.percentageUsed.calls}% of monthly limit`
-                    )}
-                  </div>
-                </div>
-
-                {/* Minutes Usage */}
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-2">
-                      <Clock className="w-4 h-4 text-cyan-400" />
-                      <span className="text-white font-medium">Minutes</span>
-                    </div>
-                    <div className="text-white">
-                      {usage.current.minutes} / {usage.limits.minutes}
-                    </div>
-                  </div>
-                  <div className="h-2 bg-[#1E293B] rounded-full overflow-hidden">
-                    <div 
-                      className="h-full bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full transition-all duration-300"
-                      style={{ width: `${Math.min(100, usage.percentageUsed.minutes)}%` }}
-                    />
-                  </div>
-                  <div className="text-sm text-[#94A3B8] mt-1">
-                    {usage.percentageUsed.minutes >= 80 ? (
-                      <span className="text-yellow-400">
-                        {usage.percentageUsed.minutes >= 100 ? 'Limit reached!' : 'Approaching limit'}
-                      </span>
-                    ) : (
-                      `${usage.percentageUsed.minutes}% of monthly limit`
-                    )}
-                  </div>
+                  {usage.limits.calls < 99999 && (
+                    <>
+                      <div className="h-2 bg-[#1E293B] rounded-full overflow-hidden">
+                        <div 
+                          className="h-full bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full transition-all duration-300"
+                          style={{ width: `${Math.min(100, usage.percentageUsed.calls)}%` }}
+                        />
+                      </div>
+                      <div className="text-sm text-[#94A3B8] mt-1">
+                        {usage.percentageUsed.calls >= 80 ? (
+                          <span className="text-yellow-400">
+                            Approaching monthly call limit
+                          </span>
+                        ) : (
+                          `${usage.percentageUsed.calls}% of monthly limit`
+                        )}
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
 
@@ -384,7 +435,7 @@ export default function Billing() {
                   <div>
                     <div className="text-sm text-[#94A3B8]">Year-to-date</div>
                     <div className="text-white font-semibold">
-                      {usage.yearly.calls} calls • {usage.yearly.minutes} minutes
+                      {usage.yearly.calls} calls processed
                     </div>
                   </div>
                   <button
@@ -418,7 +469,7 @@ export default function Billing() {
               </button>
 
               <button
-                onClick={() => navigate('/pricing')}
+                onClick={() => { setUpgradeTrigger('agents'); setShowUpgradeModal(true); }}
                 className="w-full flex items-center justify-between p-4 bg-[#1E293B] hover:bg-[#2D3748] rounded-xl transition-colors"
               >
                 <div className="flex items-center gap-3">
@@ -491,6 +542,9 @@ export default function Billing() {
               <div className="text-center py-8">
                 <CreditCard className="w-12 h-12 text-[#1E293B] mx-auto mb-4" />
                 <div className="text-[#94A3B8]">No invoices yet</div>
+                <p className="text-sm text-[#6B7280] mt-1">
+                  Invoices will appear here after your first payment
+                </p>
               </div>
             )}
           </div>
@@ -501,33 +555,46 @@ export default function Billing() {
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <span className="text-[#94A3B8]">AI Agents</span>
-                <span className="text-white font-medium">{planLimits.agents}</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-[#94A3B8]">Monthly Calls</span>
-                <span className="text-white font-medium">{planLimits.calls}</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-[#94A3B8]">Monthly Minutes</span>
-                <span className="text-white font-medium">{planLimits.minutes}</span>
+                <span className="text-white font-medium">
+                  {planLimits.agents === 999 ? 'Unlimited' : planLimits.agents}
+                </span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-[#94A3B8]">Phone Numbers</span>
-                <span className="text-white font-medium">{planLimits.numbers}</span>
+                <span className="text-white font-medium">
+                  {planLimits.phoneNumbers === 999 ? 'Unlimited' : planLimits.phoneNumbers}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-[#94A3B8]">Monthly Calls</span>
+                <span className="text-white font-medium">
+                  {planLimits.calls >= 99999 ? 'Unlimited' : planLimits.calls}
+                </span>
               </div>
             </div>
             
             {isFreePlan && (
               <button
-                onClick={() => navigate('/pricing')}
-                className="w-full mt-6 bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-semibold py-3 rounded-xl hover:shadow-[0_0_20px_rgba(0,180,216,0.3)] transition-all"
+                onClick={() => { setUpgradeTrigger('agents'); setShowUpgradeModal(true); }}
+                className="w-full mt-6 bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-semibold py-3 rounded-xl hover:shadow-[0_0_20px_rgba(0,180,216,0.3)] transition-all flex items-center justify-center gap-2"
               >
+                <Sparkles className="w-4 h-4" />
                 Upgrade for Higher Limits
               </button>
             )}
           </div>
         </div>
       </div>
+
+      {/* Upgrade Modal */}
+      <UpgradeModal
+        isOpen={showUpgradeModal}
+        onClose={() => setShowUpgradeModal(false)}
+        currentPlan={subscription?.plan || 'free'}
+        limitType={upgradeTrigger}
+        currentUsage={upgradeTrigger === 'agents' ? usage?.current.agents : usage?.current.calls}
+        limit={upgradeTrigger === 'agents' ? planLimits.agents : planLimits.calls}
+      />
     </div>
   );
 }

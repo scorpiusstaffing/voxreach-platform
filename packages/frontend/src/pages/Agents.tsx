@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../lib/auth';
 import { api } from '../lib/api';
-import { Plus, Bot, Pencil, Trash2, ArrowLeft, Phone, Play, Zap, ChevronDown, X, Volume2, Brain, Mic, Wrench, Sparkles } from 'lucide-react';
+import { Plus, Bot, Pencil, Trash2, ArrowLeft, Phone, Play, Zap, ChevronDown, X, Volume2, Brain, Mic, Wrench, Sparkles, Lock } from 'lucide-react';
+import UpgradeModal from '../components/UpgradeModal';
 
 interface Agent {
   id: string;
@@ -58,6 +59,11 @@ interface Tool {
   description: string;
 }
 
+interface Subscription {
+  plan: string;
+  limits: { agents: number };
+}
+
 export default function Agents() {
   const { user, organization, loading: authLoading } = useAuth();
   const navigate = useNavigate();
@@ -66,6 +72,8 @@ export default function Agents() {
   const [showCreate, setShowCreate] = useState(false);
   const [editAgent, setEditAgent] = useState<Agent | null>(null);
   const [testCallAgent, setTestCallAgent] = useState<Agent | null>(null);
+  const [subscription, setSubscription] = useState<Subscription | null>(null);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
   useEffect(() => {
     if (!authLoading && !user) navigate('/login');
@@ -73,7 +81,17 @@ export default function Agents() {
 
   useEffect(() => {
     loadAgents();
+    fetchSubscription();
   }, [user]);
+
+  const fetchSubscription = async () => {
+    try {
+      const response = await api.get('/billing/subscription');
+      setSubscription(response);
+    } catch (error) {
+      console.error('Failed to fetch subscription:', error);
+    }
+  };
 
   const loadAgents = () => {
     if (user) {
@@ -103,6 +121,24 @@ export default function Agents() {
     }
   };
 
+  const canCreateAgent = () => {
+    if (!subscription) return true; // Allow if subscription not loaded yet
+    const agentLimit = subscription.limits?.agents || 1;
+    return agents.length < agentLimit;
+  };
+
+  const handleCreateClick = () => {
+    if (canCreateAgent()) {
+      setShowCreate(true);
+    } else {
+      setShowUpgradeModal(true);
+    }
+  };
+
+  const getAgentLimit = () => {
+    return subscription?.limits?.agents || 1;
+  };
+
   if (authLoading || !user) return null;
 
   return (
@@ -112,12 +148,29 @@ export default function Agents() {
       </Link>
 
       <div className="flex items-center justify-between mb-8">
-        <h1 className="text-2xl font-semibold text-white">Agents</h1>
+        <div>
+          <h1 className="text-2xl font-semibold text-white">Agents</h1>
+          <p className="text-sm text-[#6B7280] mt-1">
+            {agents.length} of {getAgentLimit() === 999 ? 'Unlimited' : getAgentLimit()} agents used
+          </p>
+        </div>
         <button
-          onClick={() => setShowCreate(true)}
-          className="flex items-center gap-2 btn-cyan px-5 py-2.5"
+          onClick={handleCreateClick}
+          className={`flex items-center gap-2 px-5 py-2.5 rounded-lg font-medium transition-all ${
+            canCreateAgent()
+              ? 'btn-cyan'
+              : 'bg-amber-500/10 text-amber-400 border border-amber-500/30 hover:bg-amber-500/20'
+          }`}
         >
-          <Plus className="w-4 h-4" /> Create Agent
+          {canCreateAgent() ? (
+            <>
+              <Plus className="w-4 h-4" /> Create Agent
+            </>
+          ) : (
+            <>
+              <Lock className="w-4 h-4" /> Upgrade to Add More
+            </>
+          )}
         </button>
       </div>
 
@@ -136,10 +189,14 @@ export default function Agents() {
           <h3 className="text-lg font-medium text-white mb-2">No agents yet</h3>
           <p className="text-[#9CA3AF] mb-6">Create your first AI voice agent to start making or receiving calls.</p>
           <button
-            onClick={() => setShowCreate(true)}
-            className="btn-cyan px-6 py-2.5"
+            onClick={handleCreateClick}
+            className={`px-6 py-2.5 rounded-lg font-medium transition-all ${
+              canCreateAgent()
+                ? 'btn-cyan'
+                : 'bg-amber-500/10 text-amber-400 border border-amber-500/30'
+            }`}
           >
-            Create Agent
+            {canCreateAgent() ? 'Create Agent' : 'Upgrade to Create'}
           </button>
         </div>
       ) : (
@@ -209,6 +266,16 @@ export default function Agents() {
           ))}
         </div>
       )}
+
+      {/* Upgrade Modal */}
+      <UpgradeModal
+        isOpen={showUpgradeModal}
+        onClose={() => setShowUpgradeModal(false)}
+        currentPlan={subscription?.plan || 'free'}
+        limitType="agents"
+        currentUsage={agents.length}
+        limit={getAgentLimit()}
+      />
 
       {showCreate && (
         <CreateAgentModal

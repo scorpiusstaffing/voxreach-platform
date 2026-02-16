@@ -16,72 +16,87 @@ router.get('/plans', authenticate, async (req: AuthRequest, res: Response) => {
   try {
     const plans = [
       {
-        id: 'free',
-        name: 'Free',
-        price: 0,
-        priceId: null,
-        description: 'Perfect for trying out VoxReach',
+        id: 'starter',
+        name: 'Starter',
+        price: 49,
+        priceId: process.env.STRIPE_STARTER_MONTHLY_PRICE_ID || 'price_starter_monthly',
+        annualPriceId: process.env.STRIPE_STARTER_ANNUAL_PRICE_ID || 'price_starter_annual',
+        description: 'Perfect for solo entrepreneurs and small businesses',
         features: [
-          '1 AI Agent',
-          '50 calls/month',
-          'Basic call analytics',
-          'Email support',
-          '14-day free trial',
+          '1 AI Agent with custom personality',
+          'Custom conversation scripts & prompts',
+          'Basic call analytics & recordings',
+          'Email support (24hr response)',
+          '1 phone number included',
+          'Calendar integration (Google/Outlook)',
+          'Call transcription',
+          'Standard voice quality',
         ],
         limits: {
           agents: 1,
-          callsPerMonth: 50,
-          minutesPerMonth: 100,
+          callsPerMonth: 0, // Feature-based, not usage-based
+          minutesPerMonth: 0,
           phoneNumbers: 1,
         },
         cta: 'Start Free Trial',
       },
       {
-        id: 'starter',
-        name: 'Starter',
+        id: 'growth',
+        name: 'Growth',
         price: 99,
-        priceId: process.env.STRIPE_STARTER_PRICE_ID || 'price_starter_placeholder',
-        description: 'For growing businesses',
+        priceId: process.env.STRIPE_GROWTH_MONTHLY_PRICE_ID || 'price_growth_monthly',
+        annualPriceId: process.env.STRIPE_GROWTH_ANNUAL_PRICE_ID || 'price_growth_annual',
+        description: 'For scaling teams that need powerful automation',
         features: [
-          '3 AI Agents',
-          '500 calls/month',
-          'Advanced analytics',
-          'Priority support',
-          'Calendar integration',
-          'Basic CRM features',
+          '5 AI Agents with unique personalities',
+          'Advanced script customization & A/B testing',
+          'Real-time analytics dashboard',
+          'Priority support (4hr response)',
+          '5 phone numbers included',
+          'Calendar + CRM integration',
+          'AI call analysis & sentiment tracking',
+          'Team collaboration & role management',
+          'Custom workflows & triggers',
+          'Premium voices',
+          'Voicemail detection & handling',
         ],
         limits: {
-          agents: 3,
-          callsPerMonth: 500,
-          minutesPerMonth: 1000,
-          phoneNumbers: 3,
+          agents: 5,
+          callsPerMonth: 0,
+          minutesPerMonth: 0,
+          phoneNumbers: 5,
         },
-        cta: 'Get Started',
+        cta: 'Start Free Trial',
         popular: true,
       },
       {
         id: 'professional',
         name: 'Professional',
         price: 199,
-        priceId: process.env.STRIPE_PROFESSIONAL_PRICE_ID || 'price_professional_placeholder',
-        description: 'For scaling teams',
+        priceId: process.env.STRIPE_PROFESSIONAL_MONTHLY_PRICE_ID || 'price_professional_monthly',
+        annualPriceId: process.env.STRIPE_PROFESSIONAL_ANNUAL_PRICE_ID || 'price_professional_annual',
+        description: 'Enterprise-grade automation for businesses',
         features: [
-          '10 AI Agents',
-          '2000 calls/month',
-          'Advanced analytics & reporting',
-          '24/7 priority support',
-          'Full CRM integration',
-          'Team collaboration',
-          'Custom workflows',
-          'API access',
+          'Unlimited AI Agents',
+          'White-label & custom branding',
+          'Advanced analytics, reporting & exports',
+          '24/7 dedicated support with SLA',
+          '20 phone numbers included',
+          'Full API access & webhooks',
+          'Custom integrations (Zapier, Make, etc.)',
+          'Dedicated account manager',
+          'SSO & advanced security',
+          'Custom AI model fine-tuning',
+          'On-premise deployment option',
+          'SLA guarantee (99.9% uptime)',
         ],
         limits: {
-          agents: 10,
-          callsPerMonth: 2000,
-          minutesPerMonth: 5000,
-          phoneNumbers: 10,
+          agents: 999, // Unlimited
+          callsPerMonth: 0,
+          minutesPerMonth: 0,
+          phoneNumbers: 20,
         },
-        cta: 'Go Professional',
+        cta: 'Start Free Trial',
       },
     ];
 
@@ -122,6 +137,11 @@ router.get('/subscription', authenticate, async (req: AuthRequest, res: Response
         cancelAtPeriodEnd: false,
         invoices: [],
         usageRecords: [],
+        limits: {
+          agents: 1,
+          phoneNumbers: 1,
+          calls: 50,
+        },
       });
     }
 
@@ -138,16 +158,26 @@ router.get('/subscription', authenticate, async (req: AuthRequest, res: Response
       },
       _sum: {
         callsCount: true,
-        minutesUsed: true,
       },
     });
+
+    // Get plan limits
+    const planLimits: Record<string, { agents: number; phoneNumbers: number; calls: number }> = {
+      free: { agents: 1, phoneNumbers: 1, calls: 50 },
+      starter: { agents: 1, phoneNumbers: 1, calls: 500 },
+      growth: { agents: 5, phoneNumbers: 5, calls: 2000 },
+      professional: { agents: 999, phoneNumbers: 999, calls: 99999 },
+      enterprise: { agents: 999, phoneNumbers: 999, calls: 99999 },
+    };
+
+    const limits = planLimits[subscription.plan] || planLimits.free;
 
     res.json({
       ...subscription,
       currentUsage: {
         calls: currentUsage._sum.callsCount || 0,
-        minutes: currentUsage._sum.minutesUsed || 0,
       },
+      limits,
     });
   } catch (error) {
     console.error('Error fetching subscription:', error);
@@ -263,7 +293,6 @@ router.get('/usage', authenticate, async (req: AuthRequest, res: Response) => {
       },
       _sum: {
         callsCount: true,
-        minutesUsed: true,
       },
     });
 
@@ -277,7 +306,6 @@ router.get('/usage', authenticate, async (req: AuthRequest, res: Response) => {
       },
       _sum: {
         callsCount: true,
-        minutesUsed: true,
       },
     });
 
@@ -297,11 +325,18 @@ router.get('/usage', authenticate, async (req: AuthRequest, res: Response) => {
       where: { organizationId },
     });
 
+    // Get current agent count
+    const agentCount = await prisma.agent.count({
+      where: { organizationId },
+    });
+
     const plan = subscription?.plan || 'free';
     const plans = {
-      free: { calls: 50, minutes: 100 },
-      starter: { calls: 500, minutes: 1000 },
-      professional: { calls: 2000, minutes: 5000 },
+      free: { agents: 1, calls: 50 },
+      starter: { agents: 1, calls: 500 },
+      growth: { agents: 5, calls: 2000 },
+      professional: { agents: 999, calls: 99999 },
+      enterprise: { agents: 999, calls: 99999 },
     };
 
     const limits = plans[plan as keyof typeof plans] || plans.free;
@@ -309,21 +344,19 @@ router.get('/usage', authenticate, async (req: AuthRequest, res: Response) => {
     res.json({
       current: {
         calls: monthlyUsage._sum.callsCount || 0,
-        minutes: monthlyUsage._sum.minutesUsed || 0,
+        agents: agentCount,
       },
       yearly: {
         calls: yearlyUsage._sum.callsCount || 0,
-        minutes: yearlyUsage._sum.minutesUsed || 0,
       },
       daily: dailyUsage.map(record => ({
         date: record.date,
         calls: record.callsCount,
-        minutes: record.minutesUsed,
       })),
       limits,
       percentageUsed: {
-        calls: Math.min(100, Math.round(((monthlyUsage._sum.callsCount || 0) / limits.calls) * 100)),
-        minutes: Math.min(100, Math.round(((monthlyUsage._sum.minutesUsed || 0) / limits.minutes) * 100)),
+        calls: limits.calls >= 99999 ? 0 : Math.min(100, Math.round(((monthlyUsage._sum.callsCount || 0) / limits.calls) * 100)),
+        agents: Math.min(100, Math.round((agentCount / limits.agents) * 100)),
       },
     });
   } catch (error) {

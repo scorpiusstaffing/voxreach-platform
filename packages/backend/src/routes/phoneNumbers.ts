@@ -70,6 +70,37 @@ router.post('/', async (req: AuthRequest, res: Response) => {
       }
     }
 
+    // Check phone number limit based on subscription plan
+    const subscription = await prisma.subscription.findUnique({
+      where: { organizationId: req.organizationId },
+    });
+
+    const plan = subscription?.plan || 'starter';
+    const planLimits = {
+      starter: { phoneNumbers: 1 },
+      growth: { phoneNumbers: 5 },
+      professional: { phoneNumbers: 20 },
+    };
+
+    const limit = planLimits[plan as keyof typeof planLimits] || planLimits.starter;
+
+    // Count current phone numbers
+    const phoneNumberCount = await prisma.phoneNumber.count({
+      where: { organizationId: req.organizationId },
+    });
+
+    if (phoneNumberCount >= limit.phoneNumbers) {
+      return res.status(403).json({
+        success: false,
+        error: 'Phone number limit reached',
+        message: `You have reached the limit of ${limit.phoneNumbers} phone number${limit.phoneNumbers !== 1 ? 's' : ''} on your ${plan} plan.`,
+        currentCount: phoneNumberCount,
+        limit: limit.phoneNumbers,
+        plan,
+        upgradeRequired: true,
+      });
+    }
+
     // Get the agent's Vapi assistant ID if assigning
     let vapiAssistantId: string | undefined;
     if (assignedAgentId) {

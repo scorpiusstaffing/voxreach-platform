@@ -257,6 +257,37 @@ router.post('/', async (req: AuthRequest, res: Response) => {
       return res.status(400).json({ success: false, error: 'name, direction, and systemPrompt are required' });
     }
 
+    // Check agent limit based on subscription plan
+    const subscription = await prisma.subscription.findUnique({
+      where: { organizationId: req.organizationId },
+    });
+
+    const plan = subscription?.plan || 'starter';
+    const planLimits = {
+      starter: { agents: 1 },
+      growth: { agents: 5 },
+      professional: { agents: 999 }, // Unlimited
+    };
+
+    const limit = planLimits[plan as keyof typeof planLimits] || planLimits.starter;
+
+    // Count current agents
+    const agentCount = await prisma.agent.count({
+      where: { organizationId: req.organizationId },
+    });
+
+    if (agentCount >= limit.agents) {
+      return res.status(403).json({
+        success: false,
+        error: 'Agent limit reached',
+        message: `You have reached the limit of ${limit.agents} AI agent${limit.agents !== 1 ? 's' : ''} on your ${plan} plan.`,
+        currentCount: agentCount,
+        limit: limit.agents,
+        plan,
+        upgradeRequired: true,
+      });
+    }
+
     // Build webhook URL for this org
     const webhookUrl = config.webhookUrl || `https://backend-production-fc92.up.railway.app/api/webhooks/vapi`;
 
