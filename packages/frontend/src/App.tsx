@@ -14,6 +14,7 @@ import Campaigns from './pages/Campaigns';
 import Billing from './pages/Billing';
 import Settings from './pages/Settings';
 import CalendarSettings from './pages/CalendarSettings';
+import Meetings from './pages/Meetings';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
@@ -47,6 +48,7 @@ export default function App() {
       <Route path="/dashboard/campaigns" element={<ProtectedLayout><Campaigns /></ProtectedLayout>} />
       <Route path="/dashboard/billing" element={<ProtectedLayout><Billing /></ProtectedLayout>} />
       <Route path="/dashboard/calendar" element={<ProtectedLayout><CalendarSettings /></ProtectedLayout>} />
+      <Route path="/dashboard/meetings" element={<ProtectedLayout><Meetings /></ProtectedLayout>} />
       <Route path="/dashboard/settings" element={<ProtectedLayout><Settings /></ProtectedLayout>} />
     </Routes>
   );

@@ -2,7 +2,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../lib/auth';
 import { 
   Phone, Users, PhoneCall, BarChart3, LogOut, Settings, 
-  PhoneOutgoing, Wrench, CreditCard, Calendar
+  PhoneOutgoing, Wrench, CreditCard, Calendar, CalendarDays
 } from 'lucide-react';
 
 interface LayoutProps {
@@ -105,6 +105,12 @@ export default function Layout({ children }: LayoutProps) {
             label="Calendar" 
             href="/dashboard/calendar" 
             active={pathname === '/dashboard/calendar'} 
+          />
+          <NavItem 
+            icon={<CalendarDays className="w-5 h-5" />} 
+            label="Meetings" 
+            href="/dashboard/meetings" 
+            active={pathname === '/dashboard/meetings'} 
           />
           <NavItem 
             icon={<Settings className="w-5 h-5" />} 
