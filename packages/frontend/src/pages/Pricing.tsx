@@ -168,8 +168,8 @@ export default function Pricing() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0A0E17] flex items-center justify-center">
-        <div className="text-cyan-400">Loading plans...</div>
+      <div className="min-h-screen bg-gradient-to-br from-stone-50 to-stone-100 flex items-center justify-center">
+        <div className="text-amber-600">Loading plans...</div>
       </div>
     );
   }
@@ -233,26 +233,26 @@ export default function Pricing() {
       {/* Value Propositions */}
       <div className="max-w-6xl mx-auto px-8 mb-16">
         <div className="grid md:grid-cols-3 gap-6">
-          <div className="bg-[#0F172A] border border-[#1E293B] rounded-2xl p-6">
-            <div className="w-12 h-12 bg-cyan-500/10 rounded-xl flex items-center justify-center mb-4">
-              <Zap className="w-6 h-6 text-cyan-400" />
+          <div className="bg-white border border-stone-200 rounded-2xl p-6 shadow-sm">
+            <div className="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center mb-4">
+              <Zap className="w-6 h-6 text-amber-600" />
             </div>
-            <h3 className="text-lg font-semibold text-white mb-2">Launch in Minutes</h3>
-            <p className="text-[#6B7280]">Create AI agents with custom scripts and deploy instantly. No coding required.</p>
+            <h3 className="text-lg font-semibold text-stone-900 mb-2">Launch in Minutes</h3>
+            <p className="text-stone-500">Create AI agents with custom scripts and deploy instantly. No coding required.</p>
           </div>
-          <div className="bg-[#0F172A] border border-[#1E293B] rounded-2xl p-6">
-            <div className="w-12 h-12 bg-cyan-500/10 rounded-xl flex items-center justify-center mb-4">
-              <HeadphonesIcon className="w-6 h-6 text-cyan-400" />
+          <div className="bg-white border border-stone-200 rounded-2xl p-6 shadow-sm">
+            <div className="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center mb-4">
+              <HeadphonesIcon className="w-6 h-6 text-amber-600" />
             </div>
-            <h3 className="text-lg font-semibold text-white mb-2">Human-Like Conversations</h3>
-            <p className="text-[#6B7280]">Advanced AI models that understand context, handle objections, and book appointments naturally.</p>
+            <h3 className="text-lg font-semibold text-stone-900 mb-2">Human-Like Conversations</h3>
+            <p className="text-stone-500">Advanced AI models that understand context, handle objections, and book appointments naturally.</p>
           </div>
-          <div className="bg-[#0F172A] border border-[#1E293B] rounded-2xl p-6">
-            <div className="w-12 h-12 bg-cyan-500/10 rounded-xl flex items-center justify-center mb-4">
-              <BarChart className="w-6 h-6 text-cyan-400" />
+          <div className="bg-white border border-stone-200 rounded-2xl p-6 shadow-sm">
+            <div className="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center mb-4">
+              <BarChart className="w-6 h-6 text-amber-600" />
             </div>
-            <h3 className="text-lg font-semibold text-white mb-2">Actionable Insights</h3>
-            <p className="text-[#6B7280]">Get detailed call analysis, sentiment tracking, and conversion metrics to optimize performance.</p>
+            <h3 className="text-lg font-semibold text-stone-900 mb-2">Actionable Insights</h3>
+            <p className="text-stone-500">Get detailed call analysis, sentiment tracking, and conversion metrics to optimize performance.</p>
           </div>
         </div>
       </div>
@@ -298,7 +298,7 @@ export default function Pricing() {
             >
               {plan.popular && (
                 <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                  <div className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white text-sm font-semibold px-4 py-1.5 rounded-full">
+                  <div className="bg-gradient-to-r from-amber-500 to-amber-600 text-white text-sm font-semibold px-4 py-1.5 rounded-full">
                     Most Popular
                   </div>
                 </div>
@@ -315,7 +315,7 @@ export default function Pricing() {
                   <span className="text-stone-500 ml-2">/month</span>
                 </div>
                 {isAnnual && (
-                  <p className="text-green-400 text-sm">
+                  <p className="text-green-600 text-sm">
                     Save ${(plan.price - plan.annualPrice) * 12}/year
                   </p>
                 )}
@@ -323,17 +323,17 @@ export default function Pricing() {
 
               <div className="mb-8">
                 <div className="grid grid-cols-2 gap-4 mb-6">
-                  <div className="bg-[#0F172A] rounded-xl p-4">
-                    <div className="text-2xl font-bold text-white mb-1">
+                  <div className="bg-stone-50 rounded-xl p-4">
+                    <div className="text-2xl font-bold text-stone-900 mb-1">
                       {plan.limits.agents === 999 ? '∞' : plan.limits.agents}
                     </div>
-                    <div className="text-sm text-[#6B7280]">AI Agents</div>
+                    <div className="text-sm text-stone-500">AI Agents</div>
                   </div>
-                  <div className="bg-[#0F172A] rounded-xl p-4">
-                    <div className="text-2xl font-bold text-white mb-1">
+                  <div className="bg-stone-50 rounded-xl p-4">
+                    <div className="text-2xl font-bold text-stone-900 mb-1">
                       {plan.limits.phoneNumbers === 999 ? '∞' : plan.limits.phoneNumbers}
                     </div>
-                    <div className="text-sm text-[#6B7280]">Phone Numbers</div>
+                    <div className="text-sm text-stone-500">Phone Numbers</div>
                   </div>
                 </div>
 
@@ -363,14 +363,14 @@ export default function Pricing() {
         </div>
 
         {/* Enterprise CTA */}
-        <div className="mt-16 bg-gradient-to-r from-[#0F172A] to-[#1E293B] border border-[#334155] rounded-3xl p-10 text-center">
+        <div className="mt-16 bg-gradient-to-r from-stone-900 to-stone-800 border border-stone-700 rounded-3xl p-10 text-center">
           <h3 className="text-3xl font-bold text-white mb-4">Need a Custom Solution?</h3>
-          <p className="text-xl text-[#94A3B8] max-w-2xl mx-auto mb-8">
+          <p className="text-xl text-stone-400 max-w-2xl mx-auto mb-8">
             Large teams, unique requirements, or custom integrations? Let's build something perfect for your business.
           </p>
           <button
             onClick={() => window.open('mailto:sales@voxreach.io')}
-            className="inline-flex items-center gap-2 bg-white text-[#0A0E17] font-semibold px-8 py-4 rounded-xl hover:bg-gray-100 transition-colors"
+            className="inline-flex items-center gap-2 bg-white text-stone-900 font-semibold px-8 py-4 rounded-xl hover:bg-stone-100 transition-colors"
           >
             Contact Sales
             <ArrowRight className="w-5 h-5" />
@@ -380,13 +380,13 @@ export default function Pricing() {
 
       {/* Feature Comparison */}
       <section className="max-w-6xl mx-auto px-8 pb-32">
-        <h2 className="text-3xl font-bold text-white text-center mb-12">Compare All Features</h2>
-        <div className="bg-[#0F172A] border border-[#1E293B] rounded-2xl overflow-hidden">
-          <div className="grid grid-cols-4 gap-4 p-6 border-b border-[#1E293B] bg-[#161B22]">
-            <div className="text-[#9CA3AF] font-medium">Feature</div>
-            <div className="text-center text-white font-semibold">Starter</div>
-            <div className="text-center text-cyan-400 font-semibold">Growth</div>
-            <div className="text-center text-white font-semibold">Professional</div>
+        <h2 className="text-3xl font-bold text-stone-900 text-center mb-12">Compare All Features</h2>
+        <div className="bg-white border border-stone-200 rounded-2xl overflow-hidden shadow-sm">
+          <div className="grid grid-cols-4 gap-4 p-6 border-b border-stone-200 bg-stone-50">
+            <div className="text-stone-500 font-medium">Feature</div>
+            <div className="text-center text-stone-900 font-semibold">Starter</div>
+            <div className="text-center text-amber-600 font-semibold">Growth</div>
+            <div className="text-center text-stone-900 font-semibold">Professional</div>
           </div>
           
           {[
@@ -401,16 +401,16 @@ export default function Pricing() {
             { name: 'White-label', starter: false, growth: false, pro: true },
             { name: 'SSO & Security', starter: false, growth: false, pro: true },
           ].map((row, idx) => (
-            <div key={idx} className="grid grid-cols-4 gap-4 p-4 border-b border-[#1E293B] last:border-0">
-              <div className="text-[#D1D5DB]">{row.name}</div>
-              <div className="text-center text-[#9CA3AF]">
-                {typeof row.starter === 'boolean' ? (row.starter ? <Check className="w-5 h-5 text-cyan-400 mx-auto" /> : '—') : row.starter}
+            <div key={idx} className="grid grid-cols-4 gap-4 p-4 border-b border-stone-100 last:border-0">
+              <div className="text-stone-600">{row.name}</div>
+              <div className="text-center text-stone-500">
+                {typeof row.starter === 'boolean' ? (row.starter ? <Check className="w-5 h-5 text-amber-500 mx-auto" /> : '—') : row.starter}
               </div>
-              <div className="text-center text-white">
-                {typeof row.growth === 'boolean' ? (row.growth ? <Check className="w-5 h-5 text-cyan-400 mx-auto" /> : '—') : row.growth}
+              <div className="text-center text-stone-900">
+                {typeof row.growth === 'boolean' ? (row.growth ? <Check className="w-5 h-5 text-amber-500 mx-auto" /> : '—') : row.growth}
               </div>
-              <div className="text-center text-[#9CA3AF]">
-                {typeof row.pro === 'boolean' ? (row.pro ? <Check className="w-5 h-5 text-cyan-400 mx-auto" /> : '—') : row.pro}
+              <div className="text-center text-stone-500">
+                {typeof row.pro === 'boolean' ? (row.pro ? <Check className="w-5 h-5 text-amber-500 mx-auto" /> : '—') : row.pro}
               </div>
             </div>
           ))}
@@ -419,59 +419,59 @@ export default function Pricing() {
 
       {/* FAQ Section */}
       <section className="max-w-4xl mx-auto px-8 pb-32">
-        <h2 className="text-3xl font-bold text-white text-center mb-12">Frequently Asked Questions</h2>
+        <h2 className="text-3xl font-bold text-stone-900 text-center mb-12">Frequently Asked Questions</h2>
         <div className="grid md:grid-cols-2 gap-8">
           <div className="space-y-6">
             <div>
-              <h3 className="text-lg font-semibold text-white mb-2">Can I switch plans later?</h3>
-              <p className="text-[#94A3B8]">Yes! You can upgrade or downgrade at any time. Changes take effect immediately, and we'll prorate any differences.</p>
+              <h3 className="text-lg font-semibold text-stone-900 mb-2">Can I switch plans later?</h3>
+              <p className="text-stone-500">Yes! You can upgrade or downgrade at any time. Changes take effect immediately, and we'll prorate any differences.</p>
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-white mb-2">Is there a long-term contract?</h3>
-              <p className="text-[#94A3B8]">No contracts. All plans are month-to-month or annual. Cancel anytime with no penalties.</p>
+              <h3 className="text-lg font-semibold text-stone-900 mb-2">Is there a long-term contract?</h3>
+              <p className="text-stone-500">No contracts. All plans are month-to-month or annual. Cancel anytime with no penalties.</p>
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-white mb-2">What payment methods do you accept?</h3>
-              <p className="text-[#94A3B8]">All major credit cards via Stripe. We also support ACH for annual Professional plans.</p>
+              <h3 className="text-lg font-semibold text-stone-900 mb-2">What payment methods do you accept?</h3>
+              <p className="text-stone-500">All major credit cards via Stripe. We also support ACH for annual Professional plans.</p>
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-white mb-2">Do you offer refunds?</h3>
-              <p className="text-[#94A3B8]">Yes, we offer a 30-day money-back guarantee on all paid plans. No questions asked.</p>
+              <h3 className="text-lg font-semibold text-stone-900 mb-2">Do you offer refunds?</h3>
+              <p className="text-stone-500">Yes, we offer a 30-day money-back guarantee on all paid plans. No questions asked.</p>
             </div>
           </div>
           <div className="space-y-6">
             <div>
-              <h3 className="text-lg font-semibold text-white mb-2">Can I try before I buy?</h3>
-              <p className="text-[#94A3B8]">Absolutely! Every plan includes a 14-day free trial with full features. No credit card required.</p>
+              <h3 className="text-lg font-semibold text-stone-900 mb-2">Can I try before I buy?</h3>
+              <p className="text-stone-500">Absolutely! Every plan includes a 14-day free trial with full features. No credit card required.</p>
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-white mb-2">What counts as an AI agent?</h3>
-              <p className="text-[#94A3B8]">Each AI agent is a unique voice assistant with its own personality, script, and phone number assignments.</p>
+              <h3 className="text-lg font-semibold text-stone-900 mb-2">What counts as an AI agent?</h3>
+              <p className="text-stone-500">Each AI agent is a unique voice assistant with its own personality, script, and phone number assignments.</p>
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-white mb-2">Do I pay per call or per minute?</h3>
-              <p className="text-[#94A3B8]">No! Our pricing is feature-based, not usage-based. Make unlimited calls on any plan.</p>
+              <h3 className="text-lg font-semibold text-stone-900 mb-2">Do I pay per call or per minute?</h3>
+              <p className="text-stone-500">No! Our pricing is feature-based, not usage-based. Make unlimited calls on any plan.</p>
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-white mb-2">Need help deciding?</h3>
-              <p className="text-[#94A3B8]">Contact our team at support@voxreach.io or book a demo with our sales team.</p>
+              <h3 className="text-lg font-semibold text-stone-900 mb-2">Need help deciding?</h3>
+              <p className="text-stone-500">Contact our team at support@voxreach.io or book a demo with our sales team.</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* Footer CTA */}
-      <div className="border-t border-[#1E293B] py-12">
+      <div className="border-t border-stone-200 py-12">
         <div className="max-w-4xl mx-auto text-center px-8">
-          <h3 className="text-2xl font-bold text-white mb-4">Ready to transform your business?</h3>
-          <p className="text-[#94A3B8] mb-8">Join 500+ businesses using Voxreach for AI voice automation.</p>
+          <h3 className="text-2xl font-bold text-stone-900 mb-4">Ready to transform your business?</h3>
+          <p className="text-stone-500 mb-8">Join 500+ businesses using Voxreach for AI voice automation.</p>
           <button
             onClick={() => handleCheckout('growth')}
-            className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-semibold px-8 py-4 rounded-xl hover:shadow-[0_0_30px_rgba(0,180,216,0.3)] transition-all"
+            className="bg-gradient-to-r from-amber-500 to-amber-600 text-white font-semibold px-8 py-4 rounded-xl hover:shadow-lg transition-all"
           >
             Start Your 14-Day Free Trial
           </button>
-          <p className="text-sm text-[#6B7280] mt-4">No credit card required · Cancel anytime</p>
+          <p className="text-sm text-stone-400 mt-4">No credit card required · Cancel anytime</p>
         </div>
       </div>
     </div>
