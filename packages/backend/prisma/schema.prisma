@@ -30,9 +30,7 @@ model Organization {
   id                   String   @id @default(uuid())
   name                 String
   intent               String   // inbound, outbound
-  plan                 String   @default("free") // free, starter, professional, enterprise
-  stripeCustomerId     String?  @unique
-  stripeSubscriptionId String?
+  subscription         Subscription?
   users                User[]
   agents               Agent[]
   phoneNumbers         PhoneNumber[]
@@ -41,6 +39,7 @@ model Organization {
   leads                Lead[]
   tools                Tool[]
   credentials          Credential[]
+  usageRecords         UsageRecord[]
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
 }
@@ -219,4 +218,73 @@ model Lead {
   @@index([campaignId])
   @@index([organizationId])
   @@index([status])
+}
+
+// ==========================================
+// Billing Models
+// ==========================================
+
+model Subscription {
+  id                    String   @id @default(uuid())
+  organizationId        String   @unique
+  organization          Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  stripeCustomerId      String   @unique
+  stripeSubscriptionId  String   @unique
+  plan                  String   @default("free") // free, starter, professional
+  status                String   @default("active") // active, trialing, past_due, canceled, unpaid
+  currentPeriodStart    DateTime
+  currentPeriodEnd      DateTime
+  trialEndsAt           DateTime?
+  cancelAtPeriodEnd     Boolean  @default(false)
+  invoices              Invoice[]
+  usageRecords          UsageRecord[]
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  @@index([organizationId])
+  @@index([stripeCustomerId])
+  @@index([stripeSubscriptionId])
+  @@index([status])
+  @@index([currentPeriodEnd])
+}
+
+model Invoice {
+  id                String   @id @default(uuid())
+  subscriptionId    String
+  subscription      Subscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+  stripeInvoiceId   String   @unique
+  amount            Int      // in cents
+  currency          String   @default("usd")
+  status            String   @default("draft") // draft, open, paid, void, uncollectible
+  pdfUrl            String?
+  hostedInvoiceUrl  String?
+  invoicePdf        String?
+  periodStart       DateTime?
+  periodEnd         DateTime?
+  paidAt            DateTime?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([subscriptionId])
+  @@index([stripeInvoiceId])
+  @@index([status])
+  @@index([paidAt])
+}
+
+model UsageRecord {
+  id              String   @id @default(uuid())
+  organizationId  String
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  subscriptionId  String?
+  subscription    Subscription? @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
+  date            DateTime @default(now())
+  callsCount      Int      @default(0)
+  minutesUsed     Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@unique([organizationId, date])
+  @@index([organizationId])
+  @@index([subscriptionId])
+  @@index([date])
 }

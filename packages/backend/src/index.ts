@@ -18,6 +18,7 @@ import webhookRoutes from './routes/webhooks';
 import dashboardRoutes from './routes/dashboard';
 import toolRoutes from './routes/tools';
 import fileRoutes from './routes/files';
+import billingRoutes from './routes/billing';
 
 const app = express();
 
@@ -50,6 +51,7 @@ app.use('/api/webhooks', webhookRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/tools', toolRoutes);
 app.use('/api/files', fileRoutes);
+app.use('/api/billing', billingRoutes);
 
 // 404 handler
 app.use((_req, res) => {
