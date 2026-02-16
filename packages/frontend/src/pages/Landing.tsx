@@ -13,7 +13,7 @@ export default function Landing() {
       
       {/* Nav */}
       <nav className="flex items-center justify-between px-8 py-6 max-w-7xl mx-auto relative z-10">
-        <img src="/assets/logo.svg" alt="Voxreach" className="h-8 w-auto" />
+        <img src="/assets/logo-large.svg" alt="Voxreach" className="h-10 w-auto" />
         <div className="flex gap-8 items-center">
           <button
             onClick={() => navigate('/pricing')}

@@ -50,7 +50,7 @@ export default function Layout({ children }: LayoutProps) {
       <aside className="fixed left-0 top-0 bottom-0 w-64 bg-white border-r border-stone-200 flex flex-col z-10">
         <div className="p-6 border-b border-stone-100">
           <Link to="/dashboard" className="flex items-center gap-2">
-            <img src="/assets/logo.svg" alt="Voxreach" className="h-7 w-auto" />
+            <img src="/assets/logo.svg" alt="Voxreach" className="h-8 w-auto" />
           </Link>
           <div className="mt-2 text-xs text-stone-400">{organization.name}</div>
         </div>

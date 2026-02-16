@@ -178,7 +178,7 @@ export default function Pricing() {
     <div className="min-h-screen bg-gradient-to-br from-stone-50 to-stone-100">
       {/* Navigation */}
       <nav className="flex items-center justify-between px-8 py-6 max-w-7xl mx-auto">
-        <div className="text-2xl font-bold text-amber-600 tracking-tight">Voxreach</div>
+        <img src="/assets/logo-large.svg" alt="Voxreach" className="h-10 w-auto" />
         <div className="flex gap-6 items-center">
           <button
             onClick={() => navigate('/')}
