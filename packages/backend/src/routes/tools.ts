@@ -82,7 +82,6 @@ router.post('/', async (req: AuthRequest, res: Response) => {
           async: async ?? false,
           server: {
             url: apiEndpoint,
-            headers: apiHeaders || {},
           },
         });
       } else if (mappedType === 'transfer') {
@@ -190,10 +189,9 @@ router.patch('/:id', async (req: AuthRequest, res: Response) => {
         if (name) vapiUpdate.name = name;
         if (description) vapiUpdate.description = description;
         if (parameters) vapiUpdate.parameters = parameters;
-        if (apiEndpoint || apiMethod || apiHeaders) {
+        if (apiEndpoint) {
           vapiUpdate.server = {
             url: apiEndpoint || tool.apiEndpoint,
-            headers: apiHeaders || tool.apiHeaders || {},
           };
         }
         if (transferNumber || transferMessage) {

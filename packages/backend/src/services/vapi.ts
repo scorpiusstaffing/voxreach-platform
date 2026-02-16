@@ -506,7 +506,10 @@ export async function createTool(params: CreateToolParams) {
   };
 
   if (params.server) {
-    body.server = params.server;
+    // Vapi API only accepts url and method in server object
+    body.server = {
+      url: params.server.url,
+    };
   }
 
   if (params.transferConfig) {
