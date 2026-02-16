@@ -13,6 +13,7 @@ import Calls from './pages/Calls';
 import Campaigns from './pages/Campaigns';
 import Billing from './pages/Billing';
 import Settings from './pages/Settings';
+import CalendarSettings from './pages/CalendarSettings';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
@@ -24,7 +25,7 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 function ProtectedLayout({ children }: { children: React.ReactNode }) {
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-[#0A0E17]">
+      <div className="min-h-screen bg-gradient-to-br from-stone-50 to-stone-100">
         <Layout>{children}</Layout>
       </div>
     </ProtectedRoute>
@@ -45,6 +46,7 @@ export default function App() {
       <Route path="/dashboard/calls" element={<ProtectedLayout><Calls /></ProtectedLayout>} />
       <Route path="/dashboard/campaigns" element={<ProtectedLayout><Campaigns /></ProtectedLayout>} />
       <Route path="/dashboard/billing" element={<ProtectedLayout><Billing /></ProtectedLayout>} />
+      <Route path="/dashboard/calendar" element={<ProtectedLayout><CalendarSettings /></ProtectedLayout>} />
       <Route path="/dashboard/settings" element={<ProtectedLayout><Settings /></ProtectedLayout>} />
     </Routes>
   );

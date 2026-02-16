@@ -19,6 +19,7 @@ import dashboardRoutes from './routes/dashboard';
 import toolRoutes from './routes/tools';
 import fileRoutes from './routes/files';
 import billingRoutes from './routes/billing';
+import calendarRoutes from './routes/calendar';
 
 const app = express();
 
@@ -52,6 +53,7 @@ app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/tools', toolRoutes);
 app.use('/api/files', fileRoutes);
 app.use('/api/billing', billingRoutes);
+app.use('/api/calendar', calendarRoutes);
 
 // 404 handler
 app.use((_req, res) => {

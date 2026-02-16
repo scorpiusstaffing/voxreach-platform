@@ -290,10 +290,10 @@ export default function Pricing() {
           {plans.map((plan) => (
             <div
               key={plan.id}
-              className={`relative rounded-3xl p-8 ${
+              className={`relative rounded-3xl p-8 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 ${
                 plan.popular
-                  ? 'bg-white border-2 border-amber-200 shadow-xl'
-                  : 'bg-white border border-stone-200'
+                  ? 'bg-white border-2 border-amber-200 shadow-xl hover:border-amber-300'
+                  : 'bg-white border border-stone-200 hover:border-amber-200 hover:shadow-xl'
               }`}
             >
               {plan.popular && (
