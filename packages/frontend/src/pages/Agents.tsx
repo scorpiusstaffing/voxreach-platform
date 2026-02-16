@@ -158,7 +158,7 @@ export default function Agents() {
           onClick={handleCreateClick}
           className={`flex items-center gap-2 px-5 py-2.5 rounded-lg font-medium transition-all ${
             canCreateAgent()
-              ? 'btn-amber'
+              ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-lg hover:shadow-xl'
               : 'bg-amber-500/10 text-amber-600 border border-amber-500/30 hover:bg-amber-500/20'
           }`}
         >
@@ -192,7 +192,7 @@ export default function Agents() {
             onClick={handleCreateClick}
             className={`px-6 py-2.5 rounded-lg font-medium transition-all ${
               canCreateAgent()
-                ? 'btn-amber'
+                ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-lg hover:shadow-xl'
                 : 'bg-amber-500/10 text-amber-600 border border-amber-500/30'
             }`}
           >
@@ -405,8 +405,8 @@ function CreateAgentModal({ intent, onClose, onCreated }: { intent: string; onCl
 
   return (
     <div className="fixed inset-0 bg-stone-900/70 flex items-center justify-center z-50 p-4" onClick={onClose}>
-      <div className="modal-dark w-full max-w-2xl max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
-        <div className="sticky top-0 bg-stone-50 p-6 border-b border-stone-200 flex items-center justify-between z-10">
+      <div className="bg-white border border-stone-200 rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+        <div className="sticky top-0 bg-white p-6 border-b border-stone-200 flex items-center justify-between z-10">
           <h2 className="text-lg font-semibold text-stone-900">{step === 'template' ? 'Choose a Template' : 'Configure Agent'}</h2>
           <button onClick={onClose} className="p-2 text-stone-500 hover:text-stone-900 rounded-lg transition-colors"><X className="w-5 h-5" /></button>
         </div>
@@ -428,15 +428,15 @@ function CreateAgentModal({ intent, onClose, onCreated }: { intent: string; onCl
             {error && <div className="bg-red-500/10 text-red-400 text-sm rounded-lg px-4 py-3 border border-red-500/20">{error}</div>}
             <div>
               <label className="block text-sm font-medium text-stone-700 mb-1.5">Agent Name</label>
-              <input type="text" value={form.name} onChange={(e) => update('name', e.target.value)} placeholder="e.g., Sales Agent" className="w-full px-4 py-2.5 dark-input" required />
+              <input type="text" value={form.name} onChange={(e) => update('name', e.target.value)} placeholder="e.g., Sales Agent" className="w-full px-4 py-2.5 border border-stone-200 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none" required />
             </div>
             <div>
               <label className="block text-sm font-medium text-stone-700 mb-1.5">Opening Message</label>
-              <input type="text" value={form.firstMessage} onChange={(e) => update('firstMessage', e.target.value)} placeholder="Hi, this is Sarah from..." className="w-full px-4 py-2.5 dark-input" />
+              <input type="text" value={form.firstMessage} onChange={(e) => update('firstMessage', e.target.value)} placeholder="Hi, this is Sarah from..." className="w-full px-4 py-2.5 border border-stone-200 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none" />
             </div>
             <div>
               <label className="block text-sm font-medium text-stone-700 mb-1.5">Agent Instructions</label>
-              <textarea value={form.systemPrompt} onChange={(e) => update('systemPrompt', e.target.value)} rows={5} className="w-full px-4 py-2.5 dark-input resize-none font-mono text-sm" placeholder="You are a professional sales representative..." required />
+              <textarea value={form.systemPrompt} onChange={(e) => update('systemPrompt', e.target.value)} rows={5} className="w-full px-4 py-2.5 border border-stone-200 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none resize-none font-mono text-sm" placeholder="You are a professional sales representative..." required />
             </div>
             
             <div className="bg-white rounded-xl p-4 space-y-4 border border-stone-200">
@@ -444,13 +444,13 @@ function CreateAgentModal({ intent, onClose, onCreated }: { intent: string; onCl
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs text-stone-500 mb-1">Provider</label>
-                  <select value={form.voiceProvider} onChange={(e) => { const newProvider = e.target.value; const first = voiceOptions.find((v) => v.provider === newProvider); update('voiceProvider', newProvider); update('voiceId', first?.voiceId || ''); }} className="w-full px-3 py-2 dark-input text-sm">
+                  <select value={form.voiceProvider} onChange={(e) => { const newProvider = e.target.value; const first = voiceOptions.find((v) => v.provider === newProvider); update('voiceProvider', newProvider); update('voiceId', first?.voiceId || ''); }} className="w-full px-3 py-2 border border-stone-200 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none text-sm">
                     {voiceProviders.map((p) => (<option key={p.id} value={p.id}>{p.name}</option>))}
                   </select>
                 </div>
                 <div>
                   <label className="block text-xs text-stone-500 mb-1">Voice</label>
-                  <select value={form.voiceId} onChange={(e) => update('voiceId', e.target.value)} className="w-full px-3 py-2 dark-input text-sm">
+                  <select value={form.voiceId} onChange={(e) => update('voiceId', e.target.value)} className="w-full px-3 py-2 border border-stone-200 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none text-sm">
                     {filteredVoices.map((v) => (<option key={v.voiceId} value={v.voiceId}>{v.name} ({v.gender}, {v.accent})</option>))}
                   </select>
                 </div>
@@ -472,7 +472,7 @@ function CreateAgentModal({ intent, onClose, onCreated }: { intent: string; onCl
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-stone-700 mb-1.5">Language</label>
-                <select value={form.language} onChange={(e) => update('language', e.target.value)} className="w-full px-4 py-2.5 dark-input">
+                <select value={form.language} onChange={(e) => update('language', e.target.value)} className="w-full px-4 py-2.5 border border-stone-200 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none">
                   <option value="en">English</option>
                   <option value="es">Spanish</option>
                   <option value="fr">French</option>
@@ -481,7 +481,7 @@ function CreateAgentModal({ intent, onClose, onCreated }: { intent: string; onCl
               </div>
               <div>
                 <label className="block text-sm font-medium text-stone-700 mb-1.5">Transfer Number</label>
-                <input type="tel" value={form.transferNumber} onChange={(e) => update('transferNumber', e.target.value)} placeholder="+1234567890" className="w-full px-4 py-2.5 dark-input" />
+                <input type="tel" value={form.transferNumber} onChange={(e) => update('transferNumber', e.target.value)} placeholder="+1234567890" className="w-full px-4 py-2.5 border border-stone-200 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none" />
               </div>
             </div>
 
@@ -515,11 +515,11 @@ function CreateAgentModal({ intent, onClose, onCreated }: { intent: string; onCl
                 <div className="space-y-3 pl-7">
                   <div>
                     <label className="block text-xs text-stone-500 mb-1">Summary Prompt</label>
-                    <textarea value={form.analysisSummaryPrompt} onChange={(e) => update('analysisSummaryPrompt', e.target.value)} rows={2} placeholder="Summarize the call focusing on..." className="w-full px-3 py-2 dark-input text-sm resize-none" />
+                    <textarea value={form.analysisSummaryPrompt} onChange={(e) => update('analysisSummaryPrompt', e.target.value)} rows={2} placeholder="Summarize the call focusing on..." className="w-full px-3 py-2 border border-stone-200 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none text-sm resize-none" />
                   </div>
                   <div>
                     <label className="block text-xs text-stone-500 mb-1">Success Evaluation</label>
-                    <textarea value={form.analysisSuccessEvaluation} onChange={(e) => update('analysisSuccessEvaluation', e.target.value)} rows={2} placeholder="The call was successful if..." className="w-full px-3 py-2 dark-input text-sm resize-none" />
+                    <textarea value={form.analysisSuccessEvaluation} onChange={(e) => update('analysisSuccessEvaluation', e.target.value)} rows={2} placeholder="The call was successful if..." className="w-full px-3 py-2 border border-stone-200 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none text-sm resize-none" />
                   </div>
                 </div>
               )}
@@ -534,24 +534,24 @@ function CreateAgentModal({ intent, onClose, onCreated }: { intent: string; onCl
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs text-stone-500 mb-1">Max Duration (sec)</label>
-                    <input type="number" value={form.maxDurationSeconds} onChange={(e) => update('maxDurationSeconds', parseInt(e.target.value))} className="w-full px-3 py-2 dark-input text-sm" />
+                    <input type="number" value={form.maxDurationSeconds} onChange={(e) => update('maxDurationSeconds', parseInt(e.target.value))} className="w-full px-3 py-2 border border-stone-200 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none text-sm" />
                   </div>
                   <div>
                     <label className="block text-xs text-stone-500 mb-1">Silence Timeout (sec)</label>
-                    <input type="number" value={form.silenceTimeoutSeconds} onChange={(e) => update('silenceTimeoutSeconds', parseInt(e.target.value))} className="w-full px-3 py-2 dark-input text-sm" />
+                    <input type="number" value={form.silenceTimeoutSeconds} onChange={(e) => update('silenceTimeoutSeconds', parseInt(e.target.value))} className="w-full px-3 py-2 border border-stone-200 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none text-sm" />
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs text-stone-500 mb-1">Background Sound</label>
-                    <select value={form.backgroundSound} onChange={(e) => update('backgroundSound', e.target.value)} className="w-full px-3 py-2 dark-input text-sm">
+                    <select value={form.backgroundSound} onChange={(e) => update('backgroundSound', e.target.value)} className="w-full px-3 py-2 border border-stone-200 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none text-sm">
                       <option value="off">None</option>
                       <option value="office">Office</option>
                     </select>
                   </div>
                   <div>
                     <label className="block text-xs text-stone-500 mb-1">Who Speaks First</label>
-                    <select value={form.firstMessageMode} onChange={(e) => update('firstMessageMode', e.target.value)} className="w-full px-3 py-2 dark-input text-sm">
+                    <select value={form.firstMessageMode} onChange={(e) => update('firstMessageMode', e.target.value)} className="w-full px-3 py-2 border border-stone-200 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none text-sm">
                       <option value="assistant-speaks-first">Agent speaks first</option>
                       <option value="assistant-waits-for-user">Wait for customer</option>
                     </select>
@@ -564,7 +564,7 @@ function CreateAgentModal({ intent, onClose, onCreated }: { intent: string; onCl
                 {form.voicemailDetection && (
                   <div>
                     <label className="block text-xs text-stone-500 mb-1">Voicemail Message</label>
-                    <textarea value={form.voicemailMessage} onChange={(e) => update('voicemailMessage', e.target.value)} rows={2} className="w-full px-3 py-2 dark-input text-sm resize-none" />
+                    <textarea value={form.voicemailMessage} onChange={(e) => update('voicemailMessage', e.target.value)} rows={2} className="w-full px-3 py-2 border border-stone-200 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none text-sm resize-none" />
                   </div>
                 )}
                 <label className="flex items-center gap-3 cursor-pointer">
@@ -578,7 +578,7 @@ function CreateAgentModal({ intent, onClose, onCreated }: { intent: string; onCl
               <button type="button" onClick={() => { if (step === 'configure') { setError(''); setStep('template'); } else { onClose(); } }} className="flex-1 py-2.5 border border-stone-200 rounded-lg font-medium text-stone-700 hover:bg-white transition-colors">
                 {step === 'configure' ? 'Back' : 'Cancel'}
               </button>
-              <button type="submit" disabled={loading} className="flex-1 py-2.5 btn-amber disabled:opacity-50">
+              <button type="submit" disabled={loading} className="flex-1 py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-lg font-medium disabled:opacity-50">
                 {loading ? 'Creating...' : 'Create Agent'}
               </button>
             </div>
@@ -665,22 +665,22 @@ function EditAgentModal({ agent, onClose, onUpdated }: { agent: Agent; onClose: 
 
   return (
     <div className="fixed inset-0 bg-stone-900/70 flex items-center justify-center z-50 p-4" onClick={onClose}>
-      <div className="modal-dark w-full max-w-2xl max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
-        <div className="sticky top-0 bg-stone-50 p-6 border-b border-stone-200 flex items-center justify-between z-10">
+      <div className="bg-white border border-stone-200 rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+        <div className="sticky top-0 bg-white p-6 border-b border-stone-200 flex items-center justify-between z-10">
           <h2 className="text-lg font-semibold text-stone-900">Edit Agent</h2>
           <button onClick={onClose} className="p-2 text-stone-500 hover:text-stone-900 rounded-lg transition-colors"><X className="w-5 h-5" /></button>
         </div>
         <form onSubmit={handleSubmit} className="p-6 space-y-5">
           {error && <div className="bg-red-500/10 text-red-400 text-sm rounded-lg px-4 py-3 border border-red-500/20">{error}</div>}
-          <div><label className="block text-sm font-medium text-stone-700 mb-1.5">Agent Name</label><input type="text" value={form.name} onChange={(e) => update('name', e.target.value)} className="w-full px-4 py-2.5 dark-input" required /></div>
-          <div><label className="block text-sm font-medium text-stone-700 mb-1.5">Opening Message</label><input type="text" value={form.firstMessage} onChange={(e) => update('firstMessage', e.target.value)} className="w-full px-4 py-2.5 dark-input" /></div>
-          <div><label className="block text-sm font-medium text-stone-700 mb-1.5">Agent Instructions</label><textarea value={form.systemPrompt} onChange={(e) => update('systemPrompt', e.target.value)} rows={5} className="w-full px-4 py-2.5 dark-input resize-none font-mono text-sm" required /></div>
+          <div><label className="block text-sm font-medium text-stone-700 mb-1.5">Agent Name</label><input type="text" value={form.name} onChange={(e) => update('name', e.target.value)} className="w-full px-4 py-2.5 border border-stone-200 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none" required /></div>
+          <div><label className="block text-sm font-medium text-stone-700 mb-1.5">Opening Message</label><input type="text" value={form.firstMessage} onChange={(e) => update('firstMessage', e.target.value)} className="w-full px-4 py-2.5 border border-stone-200 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none" /></div>
+          <div><label className="block text-sm font-medium text-stone-700 mb-1.5">Agent Instructions</label><textarea value={form.systemPrompt} onChange={(e) => update('systemPrompt', e.target.value)} rows={5} className="w-full px-4 py-2.5 border border-stone-200 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none resize-none font-mono text-sm" required /></div>
           
           <div className="bg-white rounded-xl p-4 space-y-4 border border-stone-200">
             <div className="flex items-center gap-2 text-sm font-medium text-stone-700"><Volume2 className="w-4 h-4 text-amber-600" /> Voice</div>
             <div className="grid grid-cols-2 gap-3">
-              <div><label className="block text-xs text-stone-500 mb-1">Provider</label><select value={form.voiceProvider} onChange={(e) => { const newProvider = e.target.value; const first = voiceOptions.find((v) => v.provider === newProvider); update('voiceProvider', newProvider); update('voiceId', first?.voiceId || ''); }} className="w-full px-3 py-2 dark-input text-sm">{voiceProviders.map((p) => (<option key={p.id} value={p.id}>{p.name}</option>))}</select></div>
-              <div><label className="block text-xs text-stone-500 mb-1">Voice</label><select value={form.voiceId} onChange={(e) => update('voiceId', e.target.value)} className="w-full px-3 py-2 dark-input text-sm">{filteredVoices.map((v) => (<option key={v.voiceId} value={v.voiceId}>{v.name} ({v.gender}, {v.accent})</option>))}</select></div>
+              <div><label className="block text-xs text-stone-500 mb-1">Provider</label><select value={form.voiceProvider} onChange={(e) => { const newProvider = e.target.value; const first = voiceOptions.find((v) => v.provider === newProvider); update('voiceProvider', newProvider); update('voiceId', first?.voiceId || ''); }} className="w-full px-3 py-2 border border-stone-200 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none text-sm">{voiceProviders.map((p) => (<option key={p.id} value={p.id}>{p.name}</option>))}</select></div>
+              <div><label className="block text-xs text-stone-500 mb-1">Voice</label><select value={form.voiceId} onChange={(e) => update('voiceId', e.target.value)} className="w-full px-3 py-2 border border-stone-200 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none text-sm">{filteredVoices.map((v) => (<option key={v.voiceId} value={v.voiceId}>{v.name} ({v.gender}, {v.accent})</option>))}</select></div>
             </div>
           </div>
 
@@ -701,8 +701,8 @@ function EditAgentModal({ agent, onClose, onUpdated }: { agent: Agent; onClose: 
             <label className="flex items-center gap-3 cursor-pointer bg-stone-50 p-3 rounded-lg border border-stone-200"><input type="checkbox" checked={form.analysisEnabled} onChange={(e) => update('analysisEnabled', e.target.checked)} className="accent-amber-600 w-4 h-4" /><span className="text-sm text-stone-700">Enable AI analysis</span></label>
             {form.analysisEnabled && (
               <div className="space-y-3 pl-7">
-                <div><label className="block text-xs text-stone-500 mb-1">Summary Prompt</label><textarea value={form.analysisSummaryPrompt} onChange={(e) => update('analysisSummaryPrompt', e.target.value)} rows={2} className="w-full px-3 py-2 dark-input text-sm resize-none" /></div>
-                <div><label className="block text-xs text-stone-500 mb-1">Success Evaluation</label><textarea value={form.analysisSuccessEvaluation} onChange={(e) => update('analysisSuccessEvaluation', e.target.value)} rows={2} className="w-full px-3 py-2 dark-input text-sm resize-none" /></div>
+                <div><label className="block text-xs text-stone-500 mb-1">Summary Prompt</label><textarea value={form.analysisSummaryPrompt} onChange={(e) => update('analysisSummaryPrompt', e.target.value)} rows={2} className="w-full px-3 py-2 border border-stone-200 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none text-sm resize-none" /></div>
+                <div><label className="block text-xs text-stone-500 mb-1">Success Evaluation</label><textarea value={form.analysisSuccessEvaluation} onChange={(e) => update('analysisSuccessEvaluation', e.target.value)} rows={2} className="w-full px-3 py-2 border border-stone-200 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none text-sm resize-none" /></div>
               </div>
             )}
           </div>
@@ -712,8 +712,8 @@ function EditAgentModal({ agent, onClose, onUpdated }: { agent: Agent; onClose: 
           {showAdvanced && (
             <div className="space-y-4 pt-2 border-t border-stone-200">
               <div className="grid grid-cols-2 gap-4">
-                <div><label className="block text-xs text-stone-500 mb-1">Max Duration</label><input type="number" value={form.maxDurationSeconds} onChange={(e) => update('maxDurationSeconds', parseInt(e.target.value))} className="w-full px-3 py-2 dark-input text-sm" /></div>
-                <div><label className="block text-xs text-stone-500 mb-1">Silence Timeout</label><input type="number" value={form.silenceTimeoutSeconds} onChange={(e) => update('silenceTimeoutSeconds', parseInt(e.target.value))} className="w-full px-3 py-2 dark-input text-sm" /></div>
+                <div><label className="block text-xs text-stone-500 mb-1">Max Duration</label><input type="number" value={form.maxDurationSeconds} onChange={(e) => update('maxDurationSeconds', parseInt(e.target.value))} className="w-full px-3 py-2 border border-stone-200 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none text-sm" /></div>
+                <div><label className="block text-xs text-stone-500 mb-1">Silence Timeout</label><input type="number" value={form.silenceTimeoutSeconds} onChange={(e) => update('silenceTimeoutSeconds', parseInt(e.target.value))} className="w-full px-3 py-2 border border-stone-200 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none text-sm" /></div>
               </div>
               <label className="flex items-center gap-3 cursor-pointer"><input type="checkbox" checked={form.endCallFunctionEnabled} onChange={(e) => update('endCallFunctionEnabled', e.target.checked)} className="accent-amber-600 w-4 h-4" /><span className="text-sm text-stone-700">Allow AI to end call</span></label>
             </div>
@@ -721,7 +721,7 @@ function EditAgentModal({ agent, onClose, onUpdated }: { agent: Agent; onClose: 
 
           <div className="flex gap-3 pt-2">
             <button type="button" onClick={onClose} className="flex-1 py-2.5 border border-stone-200 rounded-lg font-medium text-stone-700 hover:bg-white transition-colors">Cancel</button>
-            <button type="submit" disabled={loading} className="flex-1 py-2.5 btn-amber disabled:opacity-50">{loading ? 'Saving...' : 'Save Changes'}</button>
+            <button type="submit" disabled={loading} className="flex-1 py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-lg font-medium disabled:opacity-50">{loading ? 'Saving...' : 'Save Changes'}</button>
           </div>
         </form>
       </div>
@@ -754,7 +754,7 @@ function TestCallModal({ agent, onClose }: { agent: Agent; onClose: () => void }
 
   return (
     <div className="fixed inset-0 bg-stone-900/70 flex items-center justify-center z-50 p-4" onClick={onClose}>
-      <div className="modal-dark w-full max-w-md" onClick={(e) => e.stopPropagation()}>
+      <div className="bg-white border border-stone-200 rounded-3xl w-full max-w-md" onClick={(e) => e.stopPropagation()}>
         <div className="p-6 border-b border-stone-200 flex items-center justify-between">
           <h2 className="text-lg font-semibold text-stone-900">Test Call — {agent.name}</h2>
           <button onClick={onClose} className="p-2 text-stone-500 hover:text-stone-900 transition-colors"><X className="w-5 h-5" /></button>
@@ -771,7 +771,7 @@ function TestCallModal({ agent, onClose }: { agent: Agent; onClose: () => void }
             <>
               <div>
                 <label className="block text-sm font-medium text-stone-700 mb-1.5">Phone Number to Call</label>
-                <input type="tel" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} placeholder="+1234567890" className="w-full px-4 py-2.5 dark-input" />
+                <input type="tel" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} placeholder="+1234567890" className="w-full px-4 py-2.5 border border-stone-200 rounded-lg focus:ring-2 focus:ring-cyan-500 outline-none" />
                 <p className="text-xs text-stone-500 mt-1">Include country code (e.g., +1 for US)</p>
               </div>
               <div className="bg-yellow-500/10 rounded-lg p-3 text-sm text-yellow-400 border border-yellow-500/20">⚠️ This will make a real phone call. Make sure you have a phone number provisioned.</div>
