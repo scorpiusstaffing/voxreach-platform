@@ -93,7 +93,13 @@ router.post('/login', async (req: Request, res: Response) => {
 
     const user = await prisma.user.findUnique({
       where: { email },
-      include: { organization: true },
+      include: { 
+        organization: {
+          include: {
+            subscription: true
+          }
+        } 
+      },
     });
 
     if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
@@ -114,7 +120,7 @@ router.post('/login', async (req: Request, res: Response) => {
           id: user.organization.id,
           name: user.organization.name,
           intent: user.organization.intent,
-          plan: user.organization.plan,
+          plan: user.organization.subscription?.plan || 'free',
         },
         token,
       },
@@ -136,7 +142,13 @@ router.get('/me', async (req: Request, res: Response) => {
     const decoded = jwt.verify(header.slice(7), config.jwtSecret) as { userId: string };
     const user = await prisma.user.findUnique({
       where: { id: decoded.userId },
-      include: { organization: true },
+      include: { 
+        organization: {
+          include: {
+            subscription: true
+          }
+        } 
+      },
     });
 
     if (!user) return res.status(401).json({ success: false, error: 'User not found' });
@@ -149,7 +161,7 @@ router.get('/me', async (req: Request, res: Response) => {
           id: user.organization.id,
           name: user.organization.name,
           intent: user.organization.intent,
-          plan: user.organization.plan,
+          plan: user.organization.subscription?.plan || 'free',
         },
       },
     });
@@ -172,7 +184,8 @@ router.put('/organization', authenticate, async (req: AuthRequest, res: Response
     const updateData: Record<string, unknown> = {};
     if (name !== undefined) updateData.name = name;
     if (intent !== undefined) updateData.intent = intent;
-    if (plan !== undefined) updateData.plan = plan;
+    // Note: plan is managed via Stripe subscriptions, not direct updates
+    // if (plan !== undefined) updateData.plan = plan;
     if (vapiKey !== undefined) updateData.vapiKey = vapiKey;
     if (stripeCustomerId !== undefined) updateData.stripeCustomerId = stripeCustomerId;
 
@@ -188,7 +201,7 @@ router.put('/organization', authenticate, async (req: AuthRequest, res: Response
         id: updatedOrg.id,
         name: updatedOrg.name,
         intent: updatedOrg.intent,
-        plan: updatedOrg.plan,
+        plan: "free", // TODO: Get from subscription
       },
     });
   } catch (err) {
@@ -211,7 +224,8 @@ router.patch('/organization', authenticate, async (req: AuthRequest, res: Respon
     const updateData: Record<string, unknown> = {};
     if (name !== undefined) updateData.name = name;
     if (intent !== undefined) updateData.intent = intent;
-    if (plan !== undefined) updateData.plan = plan;
+    // Note: plan is managed via Stripe subscriptions, not direct updates
+    // if (plan !== undefined) updateData.plan = plan;
     if (vapiKey !== undefined) updateData.vapiKey = vapiKey;
     if (stripeCustomerId !== undefined) updateData.stripeCustomerId = stripeCustomerId;
 
@@ -227,7 +241,7 @@ router.patch('/organization', authenticate, async (req: AuthRequest, res: Respon
         id: updatedOrg.id,
         name: updatedOrg.name,
         intent: updatedOrg.intent,
-        plan: updatedOrg.plan,
+        plan: "free", // TODO: Get from subscription
       },
     });
   } catch (err) {
@@ -250,7 +264,8 @@ router.patch('/organization', authenticate, async (req: AuthRequest, res: Respon
     const updateData: Record<string, unknown> = {};
     if (name !== undefined) updateData.name = name;
     if (intent !== undefined) updateData.intent = intent;
-    if (plan !== undefined) updateData.plan = plan;
+    // Note: plan is managed via Stripe subscriptions, not direct updates
+    // if (plan !== undefined) updateData.plan = plan;
     if (vapiKey !== undefined) updateData.vapiKey = vapiKey;
     if (stripeCustomerId !== undefined) updateData.stripeCustomerId = stripeCustomerId;
 
@@ -266,7 +281,7 @@ router.patch('/organization', authenticate, async (req: AuthRequest, res: Respon
         id: updatedOrg.id,
         name: updatedOrg.name,
         intent: updatedOrg.intent,
-        plan: updatedOrg.plan,
+        plan: "free", // TODO: Get from subscription
       },
     });
   } catch (err) {

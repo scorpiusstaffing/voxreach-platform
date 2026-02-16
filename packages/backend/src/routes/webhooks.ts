@@ -7,7 +7,7 @@ const router = Router();
 
 // Initialize Stripe
 const stripe = new Stripe(config.stripeSecretKey, {
-  apiVersion: '2024-12-18.acacia',
+  apiVersion: '2023-10-16',
 });
 
 // POST /api/webhooks/vapi — handle Vapi call events
@@ -247,7 +247,7 @@ router.post('/stripe', async (req: Request, res: Response) => {
   let event: Stripe.Event;
 
   try {
-    event = stripe.webhooks.constructEvent(
+    event = (stripe.webhooks.constructEvent as any)(
       req.body,
       sig,
       config.stripeWebhookSecret
@@ -442,7 +442,7 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
   }
 
   // Get subscription details from Stripe
-  const stripeSubscription = await stripe.subscriptions.retrieve(stripeSubscriptionId);
+  const stripeSubscription = await (stripe.subscriptions.retrieve as any)(stripeSubscriptionId);
   const plan = mapStripePriceToPlan(stripeSubscription.items.data[0]?.price.id);
   const status = stripeSubscription.status;
   const currentPeriodStart = new Date(stripeSubscription.current_period_start * 1000);

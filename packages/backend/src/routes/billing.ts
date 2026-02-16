@@ -2,17 +2,17 @@ import { Router, Request, Response } from 'express';
 import Stripe from 'stripe';
 import { prisma } from '../db';
 import { config } from '../config';
-import { authenticate } from '../middleware/auth';
+import { authenticate, AuthRequest } from '../middleware/auth';
 
 const router = Router();
 
 // Initialize Stripe
 const stripe = new Stripe(config.stripeSecretKey, {
-  apiVersion: '2024-12-18.acacia',
+  apiVersion: '2023-10-16',
 });
 
 // GET /api/billing/plans - Get available plans
-router.get('/plans', authenticate, async (req: Request, res: Response) => {
+router.get('/plans', authenticate, async (req: AuthRequest, res: Response) => {
   try {
     const plans = [
       {
@@ -93,9 +93,9 @@ router.get('/plans', authenticate, async (req: Request, res: Response) => {
 });
 
 // GET /api/billing/subscription - Get current subscription
-router.get('/subscription', authenticate, async (req: Request, res: Response) => {
+router.get('/subscription', authenticate, async (req: AuthRequest, res: Response) => {
   try {
-    const organizationId = req.user.organizationId;
+    const organizationId = req.organizationId;
 
     const subscription = await prisma.subscription.findUnique({
       where: { organizationId },
@@ -156,11 +156,16 @@ router.get('/subscription', authenticate, async (req: Request, res: Response) =>
 });
 
 // POST /api/billing/checkout - Create checkout session
-router.post('/checkout', authenticate, async (req: Request, res: Response) => {
+router.post('/checkout', authenticate, async (req: AuthRequest, res: Response) => {
   try {
     const { priceId, successUrl, cancelUrl } = req.body;
-    const organizationId = req.user.organizationId;
-    const userEmail = req.user.email;
+    const organizationId = req.organizationId;
+    // Need to get user email from database since it's not in the token
+    const user = await prisma.user.findUnique({
+      where: { id: req.userId },
+      select: { email: true }
+    });
+    const userEmail = user?.email;
 
     if (!priceId) {
       return res.status(400).json({ error: 'Price ID is required' });
@@ -176,8 +181,8 @@ router.post('/checkout', authenticate, async (req: Request, res: Response) => {
       stripeCustomerId = existingSubscription.stripeCustomerId;
     } else {
       // Create new Stripe customer
-      const customer = await stripe.customers.create({
-        email: userEmail,
+      const customer = await (stripe.customers.create as any)({
+        email: userEmail || null, // Handle undefined case
         metadata: {
           organizationId,
         },
@@ -186,7 +191,7 @@ router.post('/checkout', authenticate, async (req: Request, res: Response) => {
     }
 
     // Create checkout session
-    const session = await stripe.checkout.sessions.create({
+    const session = await (stripe.checkout.sessions.create as any)({
       customer: stripeCustomerId,
       line_items: [
         {
@@ -216,9 +221,9 @@ router.post('/checkout', authenticate, async (req: Request, res: Response) => {
 });
 
 // POST /api/billing/portal - Create billing portal session
-router.post('/portal', authenticate, async (req: Request, res: Response) => {
+router.post('/portal', authenticate, async (req: AuthRequest, res: Response) => {
   try {
-    const organizationId = req.user.organizationId;
+    const organizationId = req.organizationId;
 
     const subscription = await prisma.subscription.findUnique({
       where: { organizationId },
@@ -228,7 +233,7 @@ router.post('/portal', authenticate, async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'No active subscription found' });
     }
 
-    const session = await stripe.billingPortal.sessions.create({
+    const session = await (stripe.billingPortal.sessions.create as any)({
       customer: subscription.stripeCustomerId,
       return_url: `${config.frontendUrl}/dashboard/billing`,
     });
@@ -241,9 +246,9 @@ router.post('/portal', authenticate, async (req: Request, res: Response) => {
 });
 
 // GET /api/billing/usage - Get current usage
-router.get('/usage', authenticate, async (req: Request, res: Response) => {
+router.get('/usage', authenticate, async (req: AuthRequest, res: Response) => {
   try {
-    const organizationId = req.user.organizationId;
+    const organizationId = req.organizationId;
     const now = new Date();
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
     const startOfYear = new Date(now.getFullYear(), 0, 1);
