@@ -1,12 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Check, Sparkles, Zap, Shield, Users, BarChart, Calendar, Workflow, Globe, Clock, Mail, MessageSquare } from 'lucide-react';
+import { Check, Sparkles, Zap, Shield, Users, BarChart, Calendar, Workflow, Globe, Clock, Mail, MessageSquare, ArrowRight } from 'lucide-react';
 import { api } from '../lib/api';
 import { useAuth } from '../lib/auth';
-import { loadStripe } from '@stripe/stripe-js';
-
-// Initialize Stripe
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || 'pk_test_51T0f6xEz1QlPnm30OjODrrqdDWP8g9x18VfD3c92YGU364RW3QC5RziO71MuaGjzZDod4bS6TAjanK56AtRDMxAY001rF82nqy');
 
 interface Plan {
   id: string;
@@ -142,16 +138,11 @@ export default function Pricing() {
         cancelUrl: `${window.location.origin}/pricing`,
       });
 
-      const stripe = await stripePromise;
-      if (!stripe) throw new Error('Stripe failed to load');
-
-      const { error } = await stripe.redirectToCheckout({
-        sessionId: response.sessionId,
-      });
-
-      if (error) {
-        console.error('Stripe checkout error:', error);
-        alert('Checkout failed: ' + error.message);
+      // Redirect to Stripe Checkout URL (redirectToCheckout is deprecated)
+      if (response.url) {
+        window.location.href = response.url;
+      } else {
+        throw new Error('No checkout URL returned');
       }
     } catch (error: any) {
       console.error('Checkout error:', error);

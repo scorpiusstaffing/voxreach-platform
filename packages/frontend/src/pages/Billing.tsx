@@ -3,9 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { Check, AlertCircle, CreditCard, Download, Calendar, Users, Phone, Clock, ArrowUpRight, Sparkles } from 'lucide-react';
 import { api } from '../lib/api';
 import { useAuth } from '../lib/auth';
-import { loadStripe } from '@stripe/stripe-js';
-
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 interface Subscription {
   id: string;
@@ -116,16 +113,11 @@ export default function Billing() {
         cancelUrl: `${window.location.origin}/dashboard/billing`,
       });
 
-      const stripe = await stripePromise;
-      if (!stripe) throw new Error('Stripe failed to load');
-
-      const { error } = await stripe.redirectToCheckout({
-        sessionId: response.sessionId,
-      });
-
-      if (error) {
-        console.error('Stripe checkout error:', error);
-        alert('Checkout failed: ' + error.message);
+      // Redirect to Stripe Checkout URL (redirectToCheckout is deprecated)
+      if (response.url) {
+        window.location.href = response.url;
+      } else {
+        throw new Error('No checkout URL returned');
       }
     } catch (error: any) {
       console.error('Upgrade error:', error);
