@@ -1,0 +1,13 @@
+[build]
+builder = "nixpacks"
+buildCommand = "npm run build"
+
+[deploy]
+startCommand = "npm start"
+
+[variables]
+STRIPE_SECRET_KEY = "{{.STRIPE_SECRET_KEY}}"
+STRIPE_PUBLISHABLE_KEY = "{{.STRIPE_PUBLISHABLE_KEY}}"
+STRIPE_WEBHOOK_SECRET = "{{.STRIPE_WEBHOOK_SECRET}}"
+STRIPE_STARTER_PRICE_ID = "{{.STRIPE_STARTER_PRICE_ID}}"
+STRIPE_PROFESSIONAL_PRICE_ID = "{{.STRIPE_PROFESSIONAL_PRICE_ID}}"
