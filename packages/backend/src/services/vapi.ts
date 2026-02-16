@@ -482,7 +482,6 @@ export interface CreateToolParams {
   // For function tools
   server?: {
     url: string;
-    method?: string;
     headers?: Record<string, string>;
     body?: Record<string, unknown>;
   };

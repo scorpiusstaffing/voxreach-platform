@@ -82,7 +82,6 @@ router.post('/', async (req: AuthRequest, res: Response) => {
           async: async ?? false,
           server: {
             url: apiEndpoint,
-            method: apiMethod || 'POST',
             headers: apiHeaders || {},
           },
         });
@@ -194,7 +193,6 @@ router.patch('/:id', async (req: AuthRequest, res: Response) => {
         if (apiEndpoint || apiMethod || apiHeaders) {
           vapiUpdate.server = {
             url: apiEndpoint || tool.apiEndpoint,
-            method: apiMethod || tool.apiMethod || 'POST',
             headers: apiHeaders || tool.apiHeaders || {},
           };
         }
