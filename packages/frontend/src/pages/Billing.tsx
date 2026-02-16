@@ -242,7 +242,7 @@ export default function Billing() {
 
       {/* Upgrade Banner for Free Plan (non-trial) */}
       {isFreePlan && !isTrial && (
-        <div className="bg-gradient-to-r from-cyan-500/10 to-blue-500/10 border border-amber-200 rounded-2xl p-6 mb-8">
+        <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-2xl p-6 mb-8">
           <div className="flex items-start justify-between">
             <div className="flex items-start gap-4">
               <div className="w-12 h-12 bg-cyan-500/20 rounded-xl flex items-center justify-center">

@@ -118,7 +118,7 @@ export default function Campaigns() {
                       campaign.status === 'running' ? 'bg-green-50 text-green-700' :
                       campaign.status === 'paused' ? 'bg-yellow-50 text-yellow-700' :
                       campaign.status === 'completed' ? 'bg-stone-100 text-stone-500' :
-                      'bg-blue-50 text-blue-700'
+                      'bg-stone-100 text-amber-700'
                     }`}>
                       {campaign.status}
                     </span>
@@ -226,7 +226,7 @@ function CreateCampaignModal({ onClose, onCreated }: { onClose: () => void; onCr
   const update = (field: string, value: string) => setForm((f) => ({ ...f, [field]: value }));
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={onClose}>
+    <div className="fixed inset-0 bg-stone-900/50 flex items-center justify-center z-50 p-4" onClick={onClose}>
       <div className="bg-white rounded-2xl w-full max-w-xl" onClick={(e) => e.stopPropagation()}>
         <div className="p-6 border-b border-stone-200 flex items-center justify-between">
           <h2 className="text-lg font-semibold text-stone-900">Create Campaign</h2>

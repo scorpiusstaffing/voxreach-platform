@@ -219,7 +219,7 @@ export default function Agents() {
                       {agent.direction}
                     </span>
                     {agent.tools && agent.tools.length > 0 && (
-                      <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-purple-50 text-purple-600 border border-purple-200 flex items-center gap-1">
+                      <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-stone-100 text-amber-600 border border-purple-200 flex items-center gap-1">
                         <Wrench className="w-3 h-3" /> {agent.tools.length} tool{agent.tools.length > 1 ? 's' : ''}
                       </span>
                     )}
@@ -404,7 +404,7 @@ function CreateAgentModal({ intent, onClose, onCreated }: { intent: string; onCl
   ];
 
   return (
-    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4" onClick={onClose}>
+    <div className="fixed inset-0 bg-stone-900/70 flex items-center justify-center z-50 p-4" onClick={onClose}>
       <div className="modal-dark w-full max-w-2xl max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
         <div className="sticky top-0 bg-stone-50 p-6 border-b border-stone-200 flex items-center justify-between z-10">
           <h2 className="text-lg font-semibold text-stone-900">{step === 'template' ? 'Choose a Template' : 'Configure Agent'}</h2>
@@ -486,11 +486,11 @@ function CreateAgentModal({ intent, onClose, onCreated }: { intent: string; onCl
             </div>
 
             {orgTools.length > 0 && (
-              <div className="bg-purple-500/5 rounded-xl p-4 space-y-3 border border-purple-500/20">
+              <div className="bg-stone-1000/5 rounded-xl p-4 space-y-3 border border-stone-200">
                 <div className="flex items-center gap-2 text-sm font-medium text-stone-700"><Wrench className="w-4 h-4 text-purple-400" /> Tools</div>
                 <div className="space-y-2">
                   {orgTools.map((tool) => (
-                    <label key={tool.id} className="flex items-start gap-3 p-3 bg-stone-50 border border-purple-500/20 rounded-lg cursor-pointer hover:bg-purple-500/5">
+                    <label key={tool.id} className="flex items-start gap-3 p-3 bg-stone-50 border border-stone-200 rounded-lg cursor-pointer hover:bg-stone-1000/5">
                       <input type="checkbox" checked={form.toolIds.includes(tool.id)} onChange={(e) => update('toolIds', e.target.checked ? [...form.toolIds, tool.id] : form.toolIds.filter((id) => id !== tool.id))} className="accent-cyan-500 w-4 h-4 mt-0.5" />
                       <div>
                         <div className="flex items-center gap-2">
@@ -664,7 +664,7 @@ function EditAgentModal({ agent, onClose, onUpdated }: { agent: Agent; onClose: 
   ];
 
   return (
-    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4" onClick={onClose}>
+    <div className="fixed inset-0 bg-stone-900/70 flex items-center justify-center z-50 p-4" onClick={onClose}>
       <div className="modal-dark w-full max-w-2xl max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
         <div className="sticky top-0 bg-stone-50 p-6 border-b border-stone-200 flex items-center justify-between z-10">
           <h2 className="text-lg font-semibold text-stone-900">Edit Agent</h2>
@@ -690,9 +690,9 @@ function EditAgentModal({ agent, onClose, onUpdated }: { agent: Agent; onClose: 
           </div>
 
           {orgTools.length > 0 && (
-            <div className="bg-purple-500/5 rounded-xl p-4 space-y-3 border border-purple-500/20">
+            <div className="bg-stone-1000/5 rounded-xl p-4 space-y-3 border border-stone-200">
               <div className="flex items-center gap-2 text-sm font-medium text-stone-700"><Wrench className="w-4 h-4 text-purple-400" /> Tools</div>
-              <div className="space-y-2">{orgTools.map((tool) => (<label key={tool.id} className="flex items-start gap-3 p-3 bg-stone-50 border border-purple-500/20 rounded-lg cursor-pointer hover:bg-purple-500/5"><input type="checkbox" checked={form.toolIds.includes(tool.id)} onChange={(e) => update('toolIds', e.target.checked ? [...form.toolIds, tool.id] : form.toolIds.filter((id) => id !== tool.id))} className="accent-cyan-500 w-4 h-4 mt-0.5" /><div><div className="flex items-center gap-2"><span className="text-sm font-medium text-stone-900">{tool.name}</span><span className="text-xs bg-white text-stone-500 px-2 py-0.5 rounded-full border border-stone-200">{tool.type}</span></div><p className="text-xs text-stone-500 mt-0.5">{tool.description}</p></div></label>))}</div>
+              <div className="space-y-2">{orgTools.map((tool) => (<label key={tool.id} className="flex items-start gap-3 p-3 bg-stone-50 border border-stone-200 rounded-lg cursor-pointer hover:bg-stone-1000/5"><input type="checkbox" checked={form.toolIds.includes(tool.id)} onChange={(e) => update('toolIds', e.target.checked ? [...form.toolIds, tool.id] : form.toolIds.filter((id) => id !== tool.id))} className="accent-cyan-500 w-4 h-4 mt-0.5" /><div><div className="flex items-center gap-2"><span className="text-sm font-medium text-stone-900">{tool.name}</span><span className="text-xs bg-white text-stone-500 px-2 py-0.5 rounded-full border border-stone-200">{tool.type}</span></div><p className="text-xs text-stone-500 mt-0.5">{tool.description}</p></div></label>))}</div>
             </div>
           )}
 
@@ -753,7 +753,7 @@ function TestCallModal({ agent, onClose }: { agent: Agent; onClose: () => void }
   };
 
   return (
-    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4" onClick={onClose}>
+    <div className="fixed inset-0 bg-stone-900/70 flex items-center justify-center z-50 p-4" onClick={onClose}>
       <div className="modal-dark w-full max-w-md" onClick={(e) => e.stopPropagation()}>
         <div className="p-6 border-b border-stone-200 flex items-center justify-between">
           <h2 className="text-lg font-semibold text-stone-900">Test Call — {agent.name}</h2>

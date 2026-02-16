@@ -158,7 +158,7 @@ export default function PhoneNumbers() {
 
   const getProviderBadgeColor = (provider: string) => {
     switch (provider) {
-      case 'twilio': return 'bg-blue-50 text-blue-700';
+      case 'twilio': return 'bg-stone-100 text-amber-700';
       case 'vonage': return 'bg-purple-50 text-purple-700';
       case 'telnyx': return 'bg-green-50 text-green-700';
       case 'byo-phone-number':
@@ -462,7 +462,7 @@ function AddNumberModal({
   const filteredCredentials = credentials.filter(c => c.provider === selectedProvider);
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={onClose}>
+    <div className="fixed inset-0 bg-stone-900/50 flex items-center justify-center z-50 p-4" onClick={onClose}>
       <div className="bg-white rounded-2xl w-full max-w-lg max-h-[85vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
         <div className="sticky top-0 bg-white p-6 border-b border-gray-100 flex items-center justify-between z-10">
           <div>
@@ -747,7 +747,7 @@ function AddNumberModal({
               </div>
 
               {selectedProvider === 'vapi' && (
-                <div className="bg-blue-50 rounded-lg p-4 text-sm text-blue-700">
+                <div className="bg-stone-100 rounded-lg p-4 text-sm text-amber-700">
                   This provisions a free US number through Vapi for testing purposes.
                 </div>
               )}
@@ -809,7 +809,7 @@ function EditNumberModal({ number, agents, onClose, onUpdated }: { number: Phone
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={onClose}>
+    <div className="fixed inset-0 bg-stone-900/50 flex items-center justify-center z-50 p-4" onClick={onClose}>
       <div className="bg-white rounded-2xl w-full max-w-md" onClick={(e) => e.stopPropagation()}>
         <div className="p-6 border-b border-gray-100 flex items-center justify-between">
           <h2 className="text-lg font-semibold text-stone-900">Configure {number.number}</h2>

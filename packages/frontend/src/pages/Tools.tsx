@@ -104,7 +104,7 @@ export default function Tools() {
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-center gap-3">
-                      <div className={`p-2 rounded-lg ${tool.type === 'api' ? 'bg-blue-50 text-blue-600' : tool.type === 'transfer' ? 'bg-green-50 text-green-600' : 'bg-purple-50 text-purple-600'}`}>
+                      <div className={`p-2 rounded-lg ${tool.type === 'api' ? 'bg-stone-100 text-amber-600' : tool.type === 'transfer' ? 'bg-green-50 text-green-600' : 'bg-stone-100 text-amber-600'}`}>
                         {tool.type === 'api' ? <Globe className="w-5 h-5" /> : tool.type === 'transfer' ? <Phone className="w-5 h-5" /> : <Code className="w-5 h-5" />}
                       </div>
                       <div>
@@ -177,7 +177,7 @@ export default function Tools() {
         )}
 
         {deleteConfirm && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setDeleteConfirm(null)}>
+          <div className="fixed inset-0 bg-stone-900/50 flex items-center justify-center z-50 p-4" onClick={() => setDeleteConfirm(null)}>
             <div className="bg-white rounded-2xl w-full max-w-sm p-6" onClick={(e) => e.stopPropagation()}>
               <h3 className="text-lg font-semibold text-stone-900 mb-2">Delete Tool?</h3>
               <p className="text-sm text-stone-500 mb-6">This will remove the tool from all agents that use it. This action cannot be undone.</p>
@@ -251,7 +251,7 @@ function CreateToolModal({ onClose, onCreated }: { onClose: () => void; onCreate
   const update = (field: string, value: string) => setForm((f) => ({ ...f, [field]: value }));
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={onClose}>
+    <div className="fixed inset-0 bg-stone-900/50 flex items-center justify-center z-50 p-4" onClick={onClose}>
       <div className="bg-white rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
         <div className="sticky top-0 bg-white p-6 border-b border-stone-200 flex items-center justify-between z-10">
           <h2 className="text-lg font-semibold text-stone-900">Create Tool</h2>
@@ -270,7 +270,7 @@ function CreateToolModal({ onClose, onCreated }: { onClose: () => void; onCreate
                 onClick={() => setType('api')}
                 className={`p-4 border rounded-xl text-left transition-colors ${type === 'api' ? 'border-brand-500 bg-amber-50/50' : 'border-stone-200 hover:border-stone-200'}`}
               >
-                <Globe className="w-5 h-5 text-blue-500 mb-2" />
+                <Globe className="w-5 h-5 text-amber-600 mb-2" />
                 <div className="font-medium text-sm text-stone-900">API Request</div>
                 <div className="text-xs text-stone-500">Call external APIs during calls</div>
               </button>
@@ -454,7 +454,7 @@ function EditToolModal({ tool, onClose, onUpdated }: { tool: Tool; onClose: () =
   const update = (field: string, value: string) => setForm((f) => ({ ...f, [field]: value }));
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={onClose}>
+    <div className="fixed inset-0 bg-stone-900/50 flex items-center justify-center z-50 p-4" onClick={onClose}>
       <div className="bg-white rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
         <div className="sticky top-0 bg-white p-6 border-b border-stone-200 flex items-center justify-between z-10">
           <h2 className="text-lg font-semibold text-stone-900">Edit Tool</h2>

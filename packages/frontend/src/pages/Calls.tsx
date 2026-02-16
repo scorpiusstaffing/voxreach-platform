@@ -98,7 +98,7 @@ export default function Calls() {
                   >
                     <div className="flex items-center gap-4">
                       <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
-                        call.direction === 'outbound' ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20' : 'bg-purple-500/10 text-purple-400 border border-purple-500/20'
+                        call.direction === 'outbound' ? 'bg-stone-1000/10 text-blue-400 border border-stone-200' : 'bg-purple-500/10 text-purple-400 border border-purple-500/20'
                       }`}>
                         {call.direction === 'outbound' ? '↗ Out' : '↙ In'}
                       </span>
