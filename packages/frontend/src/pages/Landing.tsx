@@ -10,7 +10,12 @@ export default function Landing() {
       <nav className="flex items-center justify-between px-8 py-6 max-w-7xl mx-auto">
         <div className="text-2xl font-bold text-cyan-400 tracking-tight">Voxreach</div>
         <div className="flex gap-6 items-center">
-          <a href="#pricing" className="text-[#9CA3AF] hover:text-white text-sm font-medium">Pricing</a>
+          <button
+            onClick={() => navigate('/pricing')}
+            className="text-[#9CA3AF] hover:text-white text-sm font-medium"
+          >
+            Pricing
+          </button>
           <a href="#features" className="text-[#9CA3AF] hover:text-white text-sm font-medium">Features</a>
           <button
             onClick={() => navigate('/login')}
