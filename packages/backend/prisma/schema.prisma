@@ -114,6 +114,8 @@ model Credential {
   provider          String   // twilio, vonage, telnyx, byo-sip-trunk
   vapiCredentialId  String?  @unique
   name              String?
+  type              String?  // calcom, etc.
+  config            Json?    // Provider-specific configuration
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 
