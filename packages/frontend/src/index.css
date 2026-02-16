@@ -17,19 +17,22 @@
   /* Grid Pattern Background */
   .bg-grid {
     background-image: 
-      linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
     background-size: 60px 60px;
   }
   
   /* Glass Effect */
   .glass {
     @apply backdrop-blur-xl bg-white/[0.03] border border-white/[0.08] rounded-2xl;
+    box-shadow: 
+      0 0 0 1px rgba(255, 255, 255, 0.05),
+      0 4px 20px rgba(0, 0, 0, 0.5);
   }
   
   /* Gradient Text */
   .text-gradient {
-    @apply bg-gradient-to-br from-cyan-400 via-cyan-500 to-blue-600 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-cyan-300 via-cyan-400 to-blue-500 bg-clip-text text-transparent;
   }
   
   /* Card Hover Effect */
@@ -39,35 +42,32 @@
   
   .card-hover:hover {
     @apply border-cyan-500/50;
-    transform: translateY(-2px);
+    transform: translateY(-4px);
     box-shadow: 
-      0 0 0 1px rgba(6, 182, 212, 0.1),
+      0 0 0 1px rgba(6, 182, 212, 0.3),
       0 20px 40px -10px rgba(0, 0, 0, 0.5),
-      0 0 40px rgba(6, 182, 212, 0.1);
+      0 0 60px rgba(6, 182, 212, 0.15);
+  }
+  
+  /* Glow effect behind text */
+  .glow-text {
+    text-shadow: 0 0 40px rgba(6, 182, 212, 0.3);
+  }
+  
+  /* Animated gradient orb */
+  .gradient-orb {
+    @apply absolute rounded-full blur-3xl opacity-30 pointer-events-none;
+    background: radial-gradient(circle at center, rgba(6, 182, 212, 0.4), transparent 70%);
+    animation: float 8s ease-in-out infinite;
+  }
+  
+  @keyframes float {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(20px, -20px) scale(1.1); }
   }
 }
 
 @layer utilities {
-  /* Custom Scrollbar */
-  ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
-  
-  ::-webkit-scrollbar-track {
-    background: #000;
-  }
-  
-  ::-webkit-scrollbar-thumb {
-    background: #333;
-    border-radius: 4px;
-  }
-  
-  ::-webkit-scrollbar-thumb:hover {
-    background: #444;
-  }
-  
-  /* Selection */
   ::selection {
     @apply bg-cyan-500/30 text-white;
   }

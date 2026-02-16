@@ -5,7 +5,12 @@ export default function Landing() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-black bg-grid">
+    <div className="min-h-screen bg-black bg-grid relative overflow-hidden">
+      {/* Background Gradient Orbs */}
+      <div className="gradient-orb w-[600px] h-[600px] -top-64 -left-64" />
+      <div className="gradient-orb w-[500px] h-[500px] top-1/2 -right-48" style={{ animationDelay: '-4s' }} />
+      <div className="gradient-orb w-[400px] h-[400px] bottom-0 left-1/3" style={{ animationDelay: '-2s' }} />
+      
       {/* Nav */}
       <nav className="flex items-center justify-between px-8 py-6 max-w-7xl mx-auto relative z-10">
         <div className="text-2xl font-bold text-cyan-400 tracking-tight">Voxreach</div>
@@ -28,7 +33,7 @@ export default function Landing() {
 
       {/* Hero */}
       <section className="max-w-4xl mx-auto text-center pt-32 pb-24 px-8 relative z-10">
-        <h1 className="text-6xl md:text-7xl font-bold text-white leading-[1.1] tracking-tight">
+        <h1 className="text-6xl md:text-7xl font-bold text-white leading-[1.1] tracking-tight glow-text">
           AI voice agents<br />
           <span className="text-gradient">that just work.</span>
         </h1>
