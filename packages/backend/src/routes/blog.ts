@@ -16,9 +16,19 @@ function calculateReadTime(content: string): string {
   return `${minutes} min read`;
 }
 
+// Ensure articles directory exists
+async function ensureArticlesDir() {
+  try {
+    await fs.mkdir(ARTICLES_DIR, { recursive: true });
+  } catch (err) {
+    console.error('Error creating articles directory:', err);
+  }
+}
+
 // Get all blog posts
 router.get('/posts', async (req, res) => {
   try {
+    await ensureArticlesDir();
     const files = await fs.readdir(ARTICLES_DIR);
     const posts = [];
 
@@ -67,6 +77,7 @@ router.get('/posts', async (req, res) => {
 // Get single blog post by slug
 router.get('/posts/:slug', async (req, res) => {
   try {
+    await ensureArticlesDir();
     const { slug } = req.params;
     // Find the file with this slug
     const files = await fs.readdir(ARTICLES_DIR);
@@ -108,6 +119,8 @@ router.post('/publish', async (req, res) => {
     if (!title || !content) {
       return res.status(400).json({ error: 'Title and content are required' });
     }
+
+    await ensureArticlesDir();
 
     // Generate slug from title
     const slug = title
