@@ -54,7 +54,7 @@ STRIPE_PROFESSIONAL_PRICE_ID=price_yyyyyy (from Stripe dashboard)
    - `checkout.session.completed`
    - `payment_intent.succeeded`
 5. Click "Add endpoint"
-6. **Copy the webhook secret** (should match what you have in Railway environment variables)
+6. **Copy the webhook secret** (should match what you already have: `whsec_K0WUfyKQWLuYyjKecgHGkIonpNnQrjaK`)
 
 ### Step 5: Test the Integration
 1. **Test webhook:** In Stripe dashboard, send test event to verify

@@ -4,8 +4,6 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import { config, validateConfig } from './config';
 import { prisma } from './db';
-import { apiRateLimit, authRateLimit, publicRateLimit } from './middleware/rateLimit';
-import { serviceMode } from './middleware/maintenance';
 
 // Trigger: Force Railway redeploy - ${new Date().toISOString()}
 
@@ -21,77 +19,24 @@ import dashboardRoutes from './routes/dashboard';
 import toolRoutes from './routes/tools';
 import fileRoutes from './routes/files';
 import billingRoutes from './routes/billing';
-import blogRoutes from './routes/blog';
 // import calendarRoutes from './routes/calendar';
 
 const app = express();
 
-// Maintenance mode (comment out to disable)
-app.use(serviceMode);
-
-// Security middleware
-app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'"],
-      scriptSrc: ["'self'"],
-      imgSrc: ["'self'", "data:", "https:"],
-      connectSrc: ["'self'", config.frontendUrl, 'https://api.vapi.ai', 'https://api.stripe.com'],
-      fontSrc: ["'self'"],
-      objectSrc: ["'none'"],
-      mediaSrc: ["'self'"],
-      frameSrc: ["'self'", 'https://js.stripe.com'],
-    },
-  },
-  crossOriginEmbedderPolicy: false, // Required for Stripe
+// Middleware
+app.use(helmet());
+app.use(cors({
+  origin: [
+    config.frontendUrl,
+    'https://www.voxreach.io',
+    'https://voxreach.io',
+  ],
+  credentials: true
 }));
-
-// CORS configuration - Strict origin validation
-const corsOptions = {
-  origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
-    // Allow requests with no origin (like mobile apps, curl, postman)
-    if (!origin) {
-      return callback(null, true);
-    }
-
-    const allowedOrigins = config.nodeEnv === 'production'
-      ? [
-          'https://www.voxreach.io',
-          'https://voxreach.io',
-          'https://app.voxreach.io',
-        ]
-      : [
-          config.frontendUrl,
-          'http://localhost:5173',
-          'http://localhost:3000',
-          'http://localhost:5174',
-        ];
-
-    if (allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      console.warn(`Blocked CORS request from origin: ${origin}`);
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-  exposedHeaders: ['X-RateLimit-Limit', 'X-RateLimit-Remaining', 'X-RateLimit-Reset'],
-  maxAge: 86400, // 24 hours
-};
-
-app.use(cors(corsOptions));
-
 app.use(morgan('short'));
-app.use(express.json({ limit: '10mb' })); // Limit request size
+app.use(express.json());
 
-// Apply rate limiting
-app.use('/api/auth', authRateLimit);
-app.use('/api', apiRateLimit);
-
-// Health check (no rate limiting)
+// Health check
 app.get('/health', (_req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
@@ -108,7 +53,6 @@ app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/tools', toolRoutes);
 app.use('/api/files', fileRoutes);
 app.use('/api/billing', billingRoutes);
-app.use('/api/blog', blogRoutes);
 // app.use('/api/calendar', calendarRoutes);
 
 // 404 handler

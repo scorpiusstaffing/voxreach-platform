@@ -1,9 +1,7 @@
 {
   "name": "voxreach-platform",
   "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
+  "workspaces": ["packages/*"],
   "scripts": {
     "dev:backend": "cd packages/backend && npm run dev",
     "dev:frontend": "cd packages/frontend && npm run dev",
@@ -16,8 +14,5 @@
   "devDependencies": {
     "concurrently": "^8.2.2",
     "typescript": "^5.4.0"
-  },
-  "dependencies": {
-    "gray-matter": "^4.0.3"
   }
 }
