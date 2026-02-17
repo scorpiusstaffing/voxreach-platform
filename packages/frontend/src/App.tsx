@@ -5,6 +5,8 @@ import Landing from './pages/Landing';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Pricing from './pages/Pricing';
+import Blog from './pages/Blog';
+import BlogPost from './pages/BlogPost';
 import Dashboard from './pages/Dashboard';
 import Agents from './pages/Agents';
 import Tools from './pages/Tools';
@@ -40,6 +42,8 @@ export default function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/pricing" element={<Pricing />} />
+      <Route path="/blog" element={<Blog />} />
+      <Route path="/blog/:slug" element={<BlogPost />} />
       <Route path="/dashboard" element={<ProtectedLayout><Dashboard /></ProtectedLayout>} />
       <Route path="/dashboard/agents" element={<ProtectedLayout><Agents /></ProtectedLayout>} />
       <Route path="/dashboard/tools" element={<ProtectedLayout><Tools /></ProtectedLayout>} />
