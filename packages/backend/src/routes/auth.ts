@@ -5,21 +5,14 @@ import { config } from '../config';
 import { prisma } from '../db';
 import { createCustomer } from '../services/stripe';
 import { authenticate, AuthRequest } from '../middleware/auth';
+import { loginSchema, signupSchema, validate } from '../validation/schemas';
 
 const router = Router();
 
 // POST /api/auth/signup
-router.post('/signup', async (req: Request, res: Response) => {
+router.post('/signup', validate(signupSchema), async (req: Request, res: Response) => {
   try {
-    const { email, password, name, organizationName, intent } = req.body;
-
-    if (!email || !password || !name || !organizationName || !intent) {
-      return res.status(400).json({ success: false, error: 'All fields are required' });
-    }
-
-    if (!['inbound', 'outbound'].includes(intent)) {
-      return res.status(400).json({ success: false, error: 'Intent must be inbound or outbound' });
-    }
+    const { email, password, name, organizationName, intent } = req.validatedData;
 
     const existing = await prisma.user.findUnique({ where: { email } });
     if (existing) {
@@ -83,13 +76,9 @@ router.post('/signup', async (req: Request, res: Response) => {
 });
 
 // POST /api/auth/login
-router.post('/login', async (req: Request, res: Response) => {
+router.post('/login', validate(loginSchema), async (req: Request, res: Response) => {
   try {
-    const { email, password } = req.body;
-
-    if (!email || !password) {
-      return res.status(400).json({ success: false, error: 'Email and password are required' });
-    }
+    const { email, password } = req.validatedData;
 
     const user = await prisma.user.findUnique({
       where: { email },

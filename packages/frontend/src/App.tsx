@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './lib/auth';
 import Layout from './components/Layout';
 import Landing from './pages/Landing';
+import UnderConstruction from './pages/UnderConstruction';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Pricing from './pages/Pricing';
@@ -15,6 +16,11 @@ import Billing from './pages/Billing';
 import Settings from './pages/Settings';
 import CalendarSettings from './pages/CalendarSettings';
 import Meetings from './pages/Meetings';
+import Blog from './pages/Blog';
+import BlogPost from './pages/BlogPost';
+
+// Set this to true to enable under construction mode
+const UNDER_CONSTRUCTION = true;
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
@@ -33,23 +39,33 @@ function ProtectedLayout({ children }: { children: React.ReactNode }) {
   );
 }
 
+// Construction mode wrapper
+function ConstructionWrapper({ children }: { children: React.ReactNode }) {
+  if (UNDER_CONSTRUCTION) {
+    return <UnderConstruction />;
+  }
+  return <>{children}</>;
+}
+
 export default function App() {
   return (
     <Routes>
       <Route path="/" element={<Landing />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<Signup />} />
-      <Route path="/pricing" element={<Pricing />} />
-      <Route path="/dashboard" element={<ProtectedLayout><Dashboard /></ProtectedLayout>} />
-      <Route path="/dashboard/agents" element={<ProtectedLayout><Agents /></ProtectedLayout>} />
-      <Route path="/dashboard/tools" element={<ProtectedLayout><Tools /></ProtectedLayout>} />
-      <Route path="/dashboard/numbers" element={<ProtectedLayout><PhoneNumbers /></ProtectedLayout>} />
-      <Route path="/dashboard/calls" element={<ProtectedLayout><Calls /></ProtectedLayout>} />
-      <Route path="/dashboard/campaigns" element={<ProtectedLayout><Campaigns /></ProtectedLayout>} />
-      <Route path="/dashboard/billing" element={<ProtectedLayout><Billing /></ProtectedLayout>} />
-      <Route path="/dashboard/calendar" element={<ProtectedLayout><CalendarSettings /></ProtectedLayout>} />
-      <Route path="/dashboard/meetings" element={<ProtectedLayout><Meetings /></ProtectedLayout>} />
-      <Route path="/dashboard/settings" element={<ProtectedLayout><Settings /></ProtectedLayout>} />
+      <Route path="/login" element={<ConstructionWrapper><Login /></ConstructionWrapper>} />
+      <Route path="/signup" element={<ConstructionWrapper><Signup /></ConstructionWrapper>} />
+      <Route path="/pricing" element={<ConstructionWrapper><Pricing /></ConstructionWrapper>} />
+      <Route path="/blog" element={<ConstructionWrapper><Blog /></ConstructionWrapper>} />
+      <Route path="/blog/:slug" element={<ConstructionWrapper><BlogPost /></ConstructionWrapper>} />
+      <Route path="/dashboard" element={<ConstructionWrapper><ProtectedLayout><Dashboard /></ProtectedLayout></ConstructionWrapper>} />
+      <Route path="/dashboard/agents" element={<ConstructionWrapper><ProtectedLayout><Agents /></ProtectedLayout></ConstructionWrapper>} />
+      <Route path="/dashboard/tools" element={<ConstructionWrapper><ProtectedLayout><Tools /></ProtectedLayout></ConstructionWrapper>} />
+      <Route path="/dashboard/numbers" element={<ConstructionWrapper><ProtectedLayout><PhoneNumbers /></ProtectedLayout></ConstructionWrapper>} />
+      <Route path="/dashboard/calls" element={<ConstructionWrapper><ProtectedLayout><Calls /></ProtectedLayout></ConstructionWrapper>} />
+      <Route path="/dashboard/campaigns" element={<ConstructionWrapper><ProtectedLayout><Campaigns /></ProtectedLayout></ConstructionWrapper>} />
+      <Route path="/dashboard/billing" element={<ConstructionWrapper><ProtectedLayout><Billing /></ProtectedLayout></ConstructionWrapper>} />
+      <Route path="/dashboard/calendar" element={<ConstructionWrapper><ProtectedLayout><CalendarSettings /></ProtectedLayout></ConstructionWrapper>} />
+      <Route path="/dashboard/meetings" element={<ConstructionWrapper><ProtectedLayout><Meetings /></ProtectedLayout></ConstructionWrapper>} />
+      <Route path="/dashboard/settings" element={<ConstructionWrapper><ProtectedLayout><Settings /></ProtectedLayout></ConstructionWrapper>} />
     </Routes>
   );
 }

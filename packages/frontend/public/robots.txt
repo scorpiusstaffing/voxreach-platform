@@ -1,0 +1,80 @@
+# VoxReach Robots.txt
+# Last Updated: 2026-02-16
+
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /dashboard/*/edit
+Disallow: /dashboard/*/delete
+Disallow: /*.json$
+Disallow: /*.xml$
+Disallow: /*/feed/
+
+# Crawl delay (requests per second)
+Crawl-delay: 2
+
+# Sitemaps
+Sitemap: https://voxreach.io/sitemap.xml
+Sitemap: https://voxreach.io/sitemap-index.xml
+
+# Special bots
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+# Block bad bots
+User-agent: AhrefsBot
+Crawl-delay: 10
+
+User-agent: SemrushBot
+Crawl-delay: 10
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: dotbot
+Disallow: /
+
+User-agent: rogerbot
+Disallow: /
+
+# Development/Staging
+User-agent: *
+Disallow: /staging/
+Disallow: /dev/
+Disallow: /test/
+
+# API documentation (allow for LLMs)
+User-agent: *
+Allow: /docs/
+Allow: /api-docs/
+Allow: /swagger/
+
+# Media files
+Allow: /assets/*.jpg$
+Allow: /assets/*.png$
+Allow: /assets/*.svg$
+Allow: /assets/*.webp$
+Allow: /assets/*.gif$
+
+# JavaScript and CSS
+Allow: /assets/*.js$
+Allow: /assets/*.css$
+
+# Fonts
+Allow: /assets/*.woff$
+Allow: /assets/*.woff2$
+Allow: /assets/*.ttf$
+Allow: /assets/*.eot$

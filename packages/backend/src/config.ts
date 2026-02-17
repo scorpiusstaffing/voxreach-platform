@@ -23,6 +23,9 @@ export const config = {
   // App
   frontendUrl: process.env.FRONTEND_URL || 'http://localhost:5173',
   webhookUrl: process.env.WEBHOOK_URL || '',
+  
+  // Maintenance
+  maintenanceToken: process.env.MAINTENANCE_TOKEN || 'maintenance-bypass-token',
 };
 
 export function validateConfig() {
