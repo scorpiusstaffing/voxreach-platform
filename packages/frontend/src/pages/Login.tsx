@@ -32,8 +32,8 @@ export default function Login() {
       
       <div className="w-full max-w-md relative z-10">
         <div className="text-center mb-8">
-          <Link to="/" className="flex items-center justify-center">
-            <img src="/assets/logo-large.svg" alt="Voxreach" className="h-10 w-auto" />
+          <Link to="/" className="flex items-center justify-center gap-2 text-2xl font-bold text-amber-600 tracking-tight">
+            Voxreach
           </Link>
           <h1 className="mt-6 text-2xl font-semibold text-stone-900">Welcome back</h1>
           <p className="mt-1 text-stone-500">Sign in to your account</p>
