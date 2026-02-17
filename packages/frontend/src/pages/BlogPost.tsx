@@ -8,6 +8,7 @@ interface BlogPost {
   slug: string;
   title: string;
   date: string;
+  publishedAt: string;
   content: string;
   author?: string;
   readTime?: string;
@@ -93,11 +94,21 @@ export default function BlogPost() {
           <div className="flex items-center gap-4 text-sm text-stone-500 mb-6">
             <div className="flex items-center gap-1">
               <Calendar className="w-4 h-4" />
-              <span>{new Date(post.date).toLocaleDateString('en-US', { 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
-              })}</span>
+              <span>{(() => {
+                const dateStr = post.date || post.publishedAt;
+                if (!dateStr) return 'No date';
+                try {
+                  const date = new Date(dateStr);
+                  if (isNaN(date.getTime())) return 'Invalid Date';
+                  return date.toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                  });
+                } catch {
+                  return 'Invalid Date';
+                }
+              })()}</span>
             </div>
             {post.author && (
               <div className="flex items-center gap-1">
