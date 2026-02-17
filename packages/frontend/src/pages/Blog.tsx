@@ -25,8 +25,9 @@ export default function Blog() {
     try {
       setLoading(true);
       const response = await api.get('/blog/posts');
-      if (response.data.success) {
-        setPosts(response.data.posts);
+      // API returns { success: true, posts: [...] } directly (not axios response)
+      if (response.success) {
+        setPosts(response.posts);
       } else {
         setError('Failed to load blog posts');
       }
