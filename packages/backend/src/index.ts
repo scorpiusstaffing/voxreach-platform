@@ -5,7 +5,7 @@ import morgan from 'morgan';
 import { config, validateConfig } from './config';
 import { prisma } from './db';
 
-// Trigger: Force Railway redeploy - ${new Date().toISOString()}
+// Trigger: Force Railway redeploy - Blog API deployment - ${new Date().toISOString()}
 
 // Routes
 import authRoutes from './routes/auth';
