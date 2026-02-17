@@ -6,7 +6,7 @@ import matter from 'gray-matter';
 const router = Router();
 
 // Path to SEO articles
-const ARTICLES_DIR = path.join(__dirname, '../seo-articles');
+const ARTICLES_DIR = path.join(__dirname, '../../seo-articles');
 
 // Helper to calculate read time
 function calculateReadTime(content: string): string {
