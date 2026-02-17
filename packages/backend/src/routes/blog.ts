@@ -6,7 +6,7 @@ import matter from 'gray-matter';
 const router = Router();
 
 // Path to SEO articles
-const ARTICLES_DIR = path.join(__dirname, '../../seo-articles');
+const ARTICLES_DIR = path.join(__dirname, '../seo-articles');
 
 // Helper to calculate read time
 function calculateReadTime(content: string): string {
@@ -57,10 +57,10 @@ router.get('/posts', async (req, res) => {
 
     // Sort by date (newest first)
     posts.sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
-    res.json(posts);
+    res.json({ success: true, posts });
   } catch (error) {
     console.error('Error fetching blog posts:', error);
-    res.status(500).json({ error: 'Failed to fetch blog posts' });
+    res.status(500).json({ success: false, error: 'Failed to fetch blog posts' });
   }
 });
 
@@ -93,10 +93,10 @@ router.get('/posts/:slug', async (req, res) => {
       metaDescription: frontmatter.metaDescription
     };
 
-    res.json(post);
+    res.json({ success: true, post });
   } catch (error) {
     console.error('Error fetching blog post:', error);
-    res.status(500).json({ error: 'Failed to fetch blog post' });
+    res.status(500).json({ success: false, error: 'Failed to fetch blog post' });
   }
 });
 
