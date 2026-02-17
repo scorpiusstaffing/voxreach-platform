@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Calendar, User, ArrowLeft, Share2, Bookmark, MessageCircle } from 'lucide-react';
+import { Calendar, User, ArrowLeft, Share2, Bookmark, MessageCircle, Menu, X, Phone } from 'lucide-react';
 import { api } from '../lib/api';
+import '../styles/blog.css';
 
 interface BlogPost {
   id: string;
@@ -19,6 +20,7 @@ export default function BlogPost() {
   const [post, setPost] = useState<BlogPost | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     if (slug) {
@@ -30,7 +32,6 @@ export default function BlogPost() {
     try {
       setLoading(true);
       const response = await api.get(`/blog/posts/${postSlug}`);
-      // API returns { success: true, post: {...} } directly (not axios response)
       if (response.success) {
         setPost(response.post);
       } else {
@@ -77,8 +78,92 @@ export default function BlogPost() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-stone-50 to-stone-100">
+      {/* Top Navigation Bar */}
+      <nav className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-md border-b border-stone-200 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            {/* Logo */}
+            <Link to="/" className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-gradient-to-br from-amber-500 to-amber-600 rounded-lg flex items-center justify-center">
+                <Phone className="w-4 h-4 text-white" />
+              </div>
+              <span className="text-xl font-bold text-stone-900">Voxreach</span>
+            </Link>
+
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center gap-8">
+              <Link to="/" className="text-stone-600 hover:text-stone-900 font-medium transition-colors">
+                Home
+              </Link>
+              <Link to="/features" className="text-stone-600 hover:text-stone-900 font-medium transition-colors">
+                Features
+              </Link>
+              <Link to="/pricing" className="text-stone-600 hover:text-stone-900 font-medium transition-colors">
+                Pricing
+              </Link>
+              <Link to="/blog" className="text-amber-600 font-medium transition-colors">
+                Blog
+              </Link>
+            </div>
+
+            {/* CTA Buttons */}
+            <div className="hidden md:flex items-center gap-4">
+              <Link
+                to="/login"
+                className="text-stone-600 hover:text-stone-900 font-medium transition-colors"
+              >
+                Login
+              </Link>
+              <Link
+                to="/signup"
+                className="px-4 py-2 bg-gradient-to-r from-amber-500 to-amber-600 text-white font-semibold rounded-lg hover:from-amber-600 hover:to-amber-700 transition-all"
+              >
+                Get Started
+              </Link>
+            </div>
+
+            {/* Mobile Menu Button */}
+            <button
+              className="md:hidden p-2 text-stone-600"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
+
+          {/* Mobile Menu */}
+          {mobileMenuOpen && (
+            <div className="md:hidden py-4 border-t border-stone-200">
+              <div className="flex flex-col gap-4">
+                <Link to="/" className="text-stone-600 hover:text-stone-900 font-medium">
+                  Home
+                </Link>
+                <Link to="/features" className="text-stone-600 hover:text-stone-900 font-medium">
+                  Features
+                </Link>
+                <Link to="/pricing" className="text-stone-600 hover:text-stone-900 font-medium">
+                  Pricing
+                </Link>
+                <Link to="/blog" className="text-amber-600 font-medium">
+                  Blog
+                </Link>
+                <Link to="/login" className="text-stone-600 hover:text-stone-900 font-medium">
+                  Login
+                </Link>
+                <Link
+                  to="/signup"
+                  className="px-4 py-2 bg-gradient-to-r from-amber-500 to-amber-600 text-white font-semibold rounded-lg text-center"
+                >
+                  Get Started
+                </Link>
+              </div>
+            </div>
+          )}
+        </div>
+      </nav>
+
       {/* Back Navigation */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-4">
         <Link
           to="/blog"
           className="inline-flex items-center gap-2 text-stone-600 hover:text-stone-900 transition-colors"
@@ -89,9 +174,9 @@ export default function BlogPost() {
       </div>
 
       {/* Article Header */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-12">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-12">
         <div className="bg-white rounded-2xl shadow-lg p-8 md:p-12 border border-stone-200">
-          <div className="flex items-center gap-4 text-sm text-stone-500 mb-6">
+          <div className="flex flex-wrap items-center gap-4 text-sm text-stone-500 mb-6">
             <div className="flex items-center gap-1">
               <Calendar className="w-4 h-4" />
               <span>{(() => {
@@ -124,12 +209,12 @@ export default function BlogPost() {
             )}
           </div>
           
-          <h1 className="text-4xl md:text-5xl font-bold text-stone-900 mb-6">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-stone-900 mb-6 leading-tight">
             {post.title}
           </h1>
           
           {/* Action Buttons */}
-          <div className="flex flex-wrap gap-4 mb-8">
+          <div className="flex flex-wrap gap-4">
             <button className="flex items-center gap-2 px-4 py-2 bg-stone-100 text-stone-700 rounded-lg hover:bg-stone-200 transition-colors">
               <Share2 className="w-4 h-4" />
               Share
@@ -144,16 +229,16 @@ export default function BlogPost() {
 
       {/* Article Content */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
-        <div className="bg-white rounded-2xl shadow-lg p-8 md:p-12 border border-stone-200">
+        <article className="bg-white rounded-2xl shadow-lg p-8 md:p-12 border border-stone-200">
           <div 
-            className="prose prose-lg max-w-none prose-headings:text-stone-900 prose-p:text-stone-700 prose-li:text-stone-700 prose-a:text-amber-600 hover:prose-a:text-amber-700 prose-strong:text-stone-900"
+            className="blog-content prose prose-lg max-w-none"
             dangerouslySetInnerHTML={{ __html: post.content }}
           />
-        </div>
+        </article>
 
         {/* CTA Section */}
         <div className="mt-12 bg-gradient-to-r from-amber-500 to-amber-600 rounded-2xl p-8 md:p-12 shadow-lg">
-          <h2 className="text-3xl font-bold text-white mb-4">
+          <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
             Automate Your Customer Conversations
           </h2>
           <p className="text-amber-100 text-lg mb-8">
@@ -192,6 +277,27 @@ export default function BlogPost() {
           </Link>
         </div>
       </div>
+
+      {/* Sticky Bottom CTA for Mobile */}
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-stone-200 p-4 md:hidden z-40">
+        <div className="flex gap-3">
+          <Link
+            to="/pricing"
+            className="flex-1 px-4 py-2 bg-gradient-to-r from-amber-500 to-amber-600 text-white font-semibold rounded-lg text-center text-sm"
+          >
+            View Pricing
+          </Link>
+          <Link
+            to="/signup"
+            className="flex-1 px-4 py-2 bg-stone-900 text-white font-semibold rounded-lg text-center text-sm"
+          >
+            Get Started
+          </Link>
+        </div>
+      </div>
+
+      {/* Spacer for mobile bottom bar */}
+      <div className="h-20 md:hidden"></div>
     </div>
   );
 }
