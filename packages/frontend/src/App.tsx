@@ -20,7 +20,7 @@ import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
 
 // Set this to true to enable under construction mode
-const UNDER_CONSTRUCTION = true;
+const UNDER_CONSTRUCTION = false;
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();

@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { config } from '../config';
 
 // Set this to true to enable maintenance mode
-const MAINTENANCE_MODE = true;
+const MAINTENANCE_MODE = false;
 
 // List of endpoints that should still work during maintenance
 const ALLOWED_ENDPOINTS = [
@@ -10,6 +10,7 @@ const ALLOWED_ENDPOINTS = [
   '/api/auth/login',
   '/api/auth/signup',
   '/api/auth/me',
+  '/api/blog',
 ];
 
 // List of IP addresses that can bypass maintenance mode (admins, developers)
