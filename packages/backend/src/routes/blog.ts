@@ -2,11 +2,12 @@ import { Router } from 'express';
 import fs from 'fs/promises';
 import path from 'path';
 import matter from 'gray-matter';
+import { marked } from 'marked';
 
 const router = Router();
 
-// Path to SEO articles
-const ARTICLES_DIR = path.join(__dirname, '../../seo-articles');
+// Path to SEO articles (relative to project root)
+const ARTICLES_DIR = path.join(process.cwd(), 'seo-articles');
 
 // Helper to calculate read time
 function calculateReadTime(content: string): string {
@@ -52,7 +53,7 @@ router.get('/posts', async (req, res) => {
           slug,
           title: frontmatter.title || slug.replace(/-/g, ' '),
           excerpt,
-          content: markdownContent,
+          content: marked(markdownContent), // Convert markdown to HTML
           author: frontmatter.author || 'VoxReach Team',
           publishedAt: frontmatter.date || file.substring(0, 10),
           readTime: calculateReadTime(markdownContent),
@@ -95,7 +96,7 @@ router.get('/posts/:slug', async (req, res) => {
       slug,
       title: frontmatter.title || slug.replace(/-/g, ' '),
       excerpt: frontmatter.excerpt || markdownContent.substring(0, 200) + '...',
-      content: markdownContent,
+      content: marked(markdownContent), // Convert markdown to HTML
       author: frontmatter.author || 'VoxReach Team',
       publishedAt: frontmatter.date || file.substring(0, 10),
       readTime: calculateReadTime(markdownContent),
